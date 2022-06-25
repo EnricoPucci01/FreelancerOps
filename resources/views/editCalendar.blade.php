@@ -29,10 +29,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="date" name="start_Event" class="form-control">
+                            <input type="date" name="start_Event" value={{Carbon\Carbon::now()->format('Y-m-d')}} class="form-control">
                         </td>
                         <td>
-                            <input type="time" name="timeStart_Event" class="form-control ml-2">
+                            <input type="time" name="timeStart_Event" value={{Carbon\Carbon::now()->format('H:i')}} class="form-control ml-2">
                         </td>
                     </tr>
 
@@ -44,11 +44,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="date" name="end_Event" class="form-control">
+                            <input type="date" name="end_Event" value={{Carbon\Carbon::now()->addDay(1)->format('Y-m-d')}} class="form-control">
                         </td>
 
                         <td>
-                            <input type="time" name="timeEnd_Event" class="form-control ml-2">
+                            <input type="time" name="timeEnd_Event" value={{Carbon\Carbon::now()->format('H:i')}} class="form-control ml-2">
                         </td>
                     </tr>
 

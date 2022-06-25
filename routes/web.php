@@ -194,8 +194,7 @@ Route::get('/loadDetailModulFreelancer/{modulId}/{custId}',[projectController::c
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route load browse project recommended
-Route::get('/loadRecomendKategori',[projectController::class,'loadRecomendedProjectKategori']);
-Route::get('/loadRecomendTag',[projectController::class,'loadRecomendedProjectTag']);
+Route::get('/loadRecomend/{tipeRecommend}',[projectController::class,'loadRecomendedProject']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -243,7 +242,7 @@ Route::get('/reUploadPDF/{idModultaken}',[pdfController::class,'reUploadPDF']);
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route List Kontrak
-Route::get('/listKontrak',[pdfController::class,'loadListKontrak']);
+Route::get('/listKontrak/{statusKontrak}',[pdfController::class,'loadListKontrak']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

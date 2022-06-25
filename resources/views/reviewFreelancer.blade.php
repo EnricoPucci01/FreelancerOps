@@ -20,55 +20,58 @@
             </div>
           </div>
         </div>
-    <table class="mb-3">
-        @foreach ($dataReview as $review)
-            <tr>
-                <div class="card" style="width: 30rem; margin-top: 20px">
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            @foreach ($client as $item)
-                                @if ($review['client_id']==$item['cust_id'])
-                                    {{$item['nama']}}
-                                @endif
-                            @endforeach
-                        </h3>
-
-                        <h5 class="card-subtitle">
-                            @foreach ($modul as $itemModul)
-                                @if ($review['modul_id']==$itemModul['modul_id'])
-                                    <p class="text-muted ">{{$itemModul['title']}}</p>
-                                @endif
-                            @endforeach
-                                <p class="fs-6">{{$review['review_time']}}</p>
-                        </h5>
-                            <p class="card-text"><div class="mb-1">
-                                <div class="rate" >
-                                    @php
-                                        $star=$review['bintang'];
-                                        for($i = 0; $i < 5; $i++){
-                                            if($star>=1){
-                                                echo"<i class='bi bi-star-fill' style='color:#ffc700'></i>";
-                                            }
-                                            else if($star>0){
-                                                echo"<i class='bi bi-star-half' style='color:#ffc700'></i>";
-                                            }
-                                            else if($star<=0){
-                                                echo"<i class='bi bi-star' style='color:gray'></i>";
-                                            }
-                                            $star--;
-                                        }
-                                    @endphp
-                                  </div>
-                            </div></p>
-                        <hr>
-                        <div class="card-text">
-                            <p class="card-text">{{$review['review_desc']}}</p>
-                        </div>
-
-                    </div>
-                </div>
-            </tr>
-        @endforeach
-    </table>
+    </div>
 </center>
+            <div style="margin: auto; width: 60%; padding: 10px;">
+                <div style="margin: auto; width:65%; padding:10px">
+                    <table class="mb-3">
+                        @foreach ($dataReview as $review)
+                            <tr>
+                                <div class="card" style="width: 30rem; margin-top: 20px">
+                                    <div class="card-body">
+                                        <h3 >
+                                            @foreach ($client as $item)
+                                                @if ($review['client_id']==$item['cust_id'])
+                                                    {{$item['nama']}}
+                                                @endif
+                                            @endforeach
+                                        </h3>
+
+                                        <h5 >
+                                            @foreach ($modul as $itemModul)
+                                                @if ($review['modul_id']==$itemModul['modul_id'])
+                                                    <p class="text-muted">{{$itemModul['title']}}</p>
+                                                @endif
+                                            @endforeach
+                                        </h5>
+                                            <p>
+                                                @php
+                                                $star=$review['bintang'];
+                                                for($i = 0; $i < 5; $i++){
+                                                    if($star>=1){
+                                                        echo"<i class='bi bi-star-fill' style='color:#ffc700'></i>";
+                                                    }
+                                                    else if($star>0){
+                                                        echo"<i class='bi bi-star-half' style='color:#ffc700'></i>";
+                                                    }
+                                                    else if($star<=0){
+                                                        echo"<i class='bi bi-star' style='color:gray'></i>";
+                                                    }
+                                                    $star--;
+                                                }
+                                                @endphp
+                                            </p>
+                                        <hr>
+                                        <div class="card-text">
+                                            <p class="card-text">{{$review['review_desc']}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+
+
 @endsection

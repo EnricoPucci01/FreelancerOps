@@ -9,13 +9,8 @@
 <center>
 @if (session()->get('role')=='freelancer')
 <div class="p-3 mb-2  mt-3 alert bg-warning fw-bold" role="alert" style="width: 70%;">
-    <a href={{url("/loadRecomendKategori")}} class="text-light">
-        Lihat Rekomendasi Proyek Berdasarkan Kategori Proyek <i class="bi bi-arrow-right"></i>
-    </a>
-</div>
-<div class="p-3 mb-2  mt-3 alert bg-success fw-bold" role="alert" style="width: 70%;">
-    <a href="" class="text-light">
-        Lihat Rekomendasi Proyek Berdasarkan Tag Proyek <i class="bi bi-arrow-right"></i>
+    <a href={{url("/loadRecomend/Kategori")}} class="text-light">
+        Lihat Rekomendasi Proyek Dari Kita <i class="bi bi-arrow-right"></i>
     </a>
 </div>
 @endif

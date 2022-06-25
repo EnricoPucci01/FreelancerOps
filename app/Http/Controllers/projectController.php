@@ -229,7 +229,6 @@ class projectController extends Controller
             where('nama_proyek','like','%'.$request->searchProyek.'%')->paginate(5)->appends($request->all());
         }
 
-        // dd($listProyek);
         return view('browseproject',[
             'listkategori'=>$listKategori,
             'listkategoriJob'=>$listKategoriJob,
@@ -361,6 +360,7 @@ class projectController extends Controller
         $insertTakenModul->kontrak_kerja=$nama_kontrak;
         $insertTakenModul->status='pengerjaan';
         $insertTakenModul->save();
+
         if($insertTakenModul){
             $delApplicant=applicant::find($applicantId);
             $delApplicant->status='diterima';
@@ -698,67 +698,63 @@ class projectController extends Controller
 
     }
 
-    public function loadRecomendedProjectKategori(){
-        $proyekCount = DB::table('modul_diambil')
-                 ->select('proyek_id', DB::raw('count(proyek_id) as total'))
-                 ->where('cust_id',Session::get('cust_id'))
-                 ->groupBy('proyek_id')
-                 ->orderBy('total','desc')
-                 ->first();
-        $proyekCount=json_decode(json_encode($proyekCount),true);
+    public function loadRecomendedProject($tipeRecommend){
+        if($tipeRecommend=='Kategori'){
+            $proyekCount = DB::table('modul_diambil')
+            ->select('proyek_id', DB::raw('count(proyek_id) as total'))
+            ->where('cust_id',Session::get('cust_id'))
+            ->groupBy('proyek_id')
+            ->orderBy('total','desc')
+            ->first();
+            $proyekCount=json_decode(json_encode($proyekCount),true);
 
-        $proyekList=proyek::whereIn('proyek_id',$proyekCount['proyek_id'])->get('kategorijob_id');
-        $proyekList=json_decode(json_encode($proyekList),true);
+            $proyekList=proyek::whereIn('proyek_id',$proyekCount)->get('kategorijob_id');
+            $proyekList=json_decode(json_encode($proyekList),true);
 
-        $recommendedProyek=proyek::whereIn('kategorijob_id',$proyekList)->get();
-        $recommendedProyek=json_decode(json_encode($recommendedProyek),true);
+            $recommendedProyek=proyek::whereIn('kategorijob_id',$proyekList)->get();
+            $recommendedProyek=json_decode(json_encode($recommendedProyek),true);
+            $listTag=tag::get();
+            $listTag=json_decode(json_encode($listTag),true);
 
-        $listKategori=kategori::get();
-        $listKategori=json_decode(json_encode($listKategori),true);
+            $listKategori=kategori::get();
+            $listKategori=json_decode(json_encode($listKategori),true);
+            return view('RekomendasiProyek',[
+                'recomendProyek'=>$recommendedProyek,
+                'listkategori'=>$listKategori,
+                'listtag'=>$listTag,
+                'tipeRekomen'=>'Kategori'
+            ]);
 
-        $listTag=tag::get();
-        $listTag=json_decode(json_encode($listTag),true);
-        //dd($recommendedProyek);
+        }else{
+            $modulTaken=modulDiambil::where('cust_id',Session::get("cust_id"))->get('proyek_id');
+            $modulTaken=json_decode(json_encode($modulTaken),true);
 
-        return view('RekomendasiProyek',[
-            'recomendProyek'=>$recommendedProyek,
-            'listkategori'=>$listKategori,
-            'listtag'=>$listTag,
-            'tipeRekomen'=>'Kategori'
-        ]);
-    }
+            $proyekCount = DB::table('tag')
+            ->select('kategori_id', DB::raw('count(kategori_id) as total'))
+            ->whereIn('proyek_id',$modulTaken)
+            ->groupBy('kategori_id')
+            ->orderBy('total','desc')
+            ->first();
+            $proyekCount=json_decode(json_encode($proyekCount),true);
 
-    public function loadRecomendedProjectTag(){
+            $tag=tag::where('kategori_id',$proyekCount['kategori_id'])->get('proyek_id');
+            $tag=json_decode(json_encode($tag),true);
 
-        $modulTaken=modulDiambil::where('cust_id',Session::get("cust_id"))->get('proyek_id');
-        $modulTaken=json_decode(json_encode($modulTaken),true);
+            $recommendedProyek=proyek::whereIn('proyek_id',$tag)->get();
+            $recommendedProyek=json_decode(json_encode($recommendedProyek),true);
 
-        $proyekCount = DB::table('tag')
-        ->select('kategori_id', DB::raw('count(kategori_id) as total'))
-        ->whereIn('proyek_id',$modulTaken)
-        ->groupBy('kategori_id')
-        ->orderBy('total','desc')
-        ->first();
-        $proyekCount=json_decode(json_encode($proyekCount),true);
+            $listTag=tag::get();
+            $listTag=json_decode(json_encode($listTag),true);
 
-        $tag=tag::where('kategori_id',$proyekCount['kategori_id'])->get('proyek_id');
-        $tag=json_decode(json_encode($tag),true);
+            $listKategori=kategori::get();
+            $listKategori=json_decode(json_encode($listKategori),true);
 
-        $recommendedProyek=proyek::whereIn('proyek_id',$tag)->get();
-        $recommendedProyek=json_decode(json_encode($recommendedProyek),true);
-
-        $listTag=tag::get();
-        $listTag=json_decode(json_encode($listTag),true);
-
-        $listKategori=kategori::get();
-        $listKategori=json_decode(json_encode($listKategori),true);
-
-        //dd($recommendedProyek);
-        return view('RekomendasiProyek',[
-            'recomendProyek'=>$recommendedProyek,
-            'listkategori'=>$listKategori,
-            'listtag'=>$listTag,
-            'tipeRekomen'=>'Tag'
-        ]);
+            return view('RekomendasiProyek',[
+                'recomendProyek'=>$recommendedProyek,
+                'listkategori'=>$listKategori,
+                'listtag'=>$listTag,
+                'tipeRekomen'=>'Tag'
+            ]);
+        }
     }
 }

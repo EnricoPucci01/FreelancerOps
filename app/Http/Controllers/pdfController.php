@@ -43,9 +43,9 @@ class pdfController extends Controller
         return Response::download("storage/kontrak/".$kontrakKerja,$kontrakKerja,['Cache-Control' => 'no-cache, must-revalidate']);
     }
 
-    public function loadListKontrak(){
+    public function loadListKontrak($statusKontrak){
         if(Session::get('role')=='freelancer'){
-            $listKontrak=modulDiambil::where('cust_id',Session::get('cust_id'))->get();
+            $listKontrak=modulDiambil::where('cust_id',Session::get('cust_id'))->where('status',$statusKontrak)->get();
         }else {
             $idProyek=proyek::where('cust_id',Session::get('cust_id'))->get('proyek_id');
             $idProyek=json_decode(json_encode($idProyek),true);
@@ -53,7 +53,8 @@ class pdfController extends Controller
             $listKontrak=modulDiambil::whereIn('proyek_id',$idProyek)->get();
         }
         return view('listKontrak',[
-            'listKontrak'=>$listKontrak
+            'listKontrak'=>$listKontrak,
+            'status'=>$statusKontrak
         ]);
     }
 

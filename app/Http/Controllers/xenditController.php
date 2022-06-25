@@ -95,9 +95,6 @@ class xenditController extends Controller
             }
 
         }
-        // return response()->json([
-        //     'data'=>$createVA
-        // ])->setStatusCode(200);
     }
 
     public function callbackVA($externalId){

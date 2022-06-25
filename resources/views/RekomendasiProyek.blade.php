@@ -7,6 +7,10 @@
             Proyek Rekomendasi Dari Kita Berdasarkan {{$tipeRekomen}} !
         </span>
     </div>
+    <nav class="nav nav-pills nav-fill">
+        <a class="{{$tipeRekomen=="Kategori"?"nav-item nav-link active":"nav-item nav-link"}}" href={{url("/loadRecomend/Kategori")}}>Kategori</a>
+        <a class="{{$tipeRekomen=="Tag"?"nav-item nav-link active":"nav-item nav-link"}}" href={{url("/loadRecomend/Tag")}}>Tag</a>
+      </nav>
     <table>
         @foreach ($recomendProyek as $proyek)
             <tr>
