@@ -22,6 +22,7 @@
                         @endforeach
 
                         <p class="card-text">{{$proyek['desc_proyek']}}</p>
+                        <p class="card-text">Proyek Dimulai Pada {{Carbon\Carbon::parse($proyek->start_proyek)->format("d-m-Y")}}</p>
                         <hr>
                         <div class="card-text">
                             @foreach ($listtag as $tag)

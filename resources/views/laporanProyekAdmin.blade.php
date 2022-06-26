@@ -5,10 +5,51 @@
             <div class="card-header">
                <h4>Laporan Proyek</h4>
             </div>
+            <ul class="nav nav-tabs mt-2">
+                <li class="nav-item">
+                  <a class="{{$status == 'pengerjaan' ? "nav-link active" : "nav-link"}}" href={{url("/laporanProyekAdmin/pengerjaan")}}>Pengerjaan</a>
+                </li>
+                <li class="nav-item">
+                  <a class="{{$status == 'selesai' ? "nav-link active" : "nav-link"}}" href={{url("/laporanProyekAdmin/selesai")}}>Selesai</a>
+                </li>
+                <li class="nav-item">
+                  <a class="{{$status == 'dibatalkan' ? "nav-link active" : "nav-link"}}" href={{url("/laporanProyekAdmin/dibatalkan")}}>Dibatalkan</a>
+                </li>
+            </ul>
+
             <div class="card-body">
+
+                <form method="POST" action={{($status=='selesai')? url("/filterLaporanAdmin/selesai")
+                :($status=="dibatalkan")? url("/filterLaporanAdmin/dibatalkan")
+                :url("/filterLaporanAdmin/pengerjaan")}}>
+                    @csrf
+                    @method('POST')
+
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="date" name='dateStart' value={{Carbon\Carbon::now()->subDays(1)}} class="form-control">
+                            </td>
+                            <td>
+                                 -
+                            </td>
+                            <td>
+                                <input type="date" name='dateEnd' value={{Carbon\Carbon::now()}} class="form-control">
+                            </td>
+                            <td>
+                                <button class="btn btn-warning text-light form-control" type="submit" style="padding: 10px"><i class="bi bi-search"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+
                 <table class="table table-striped">
                     <thead class="fw-bold">
                         <tr>
+                            <td>
+                                Tanggal
+                            </td>
                             <td>
                                 Client
                             </td>
@@ -29,6 +70,9 @@
                     <tbody>
                         @foreach ($modulDiambil as $item)
                             <tr>
+                                <td>
+                                    {{$item->created_at->format('d-m-Y')}}
+                                </td>
                                 <td>
                                     @foreach ($proyek as $itemProyek)
                                         @if ($itemProyek->proyek_id==$item->proyek_id)

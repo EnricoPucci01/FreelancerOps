@@ -37,44 +37,6 @@
         }
     }, false);
 
-    var jenisProyek=document.getElementById("tipeProyek");
-    jenisProyek.addEventListener('change',function(){
-        console.log("jenis: "+jenisProyek.value);
-        if(jenisProyek.value=="magang"){
-            document.getElementById("rentang_pembayaran_label").style.visibility = "visible";
-            document.getElementById("rentang_pembayaran_input").style.visibility = "visible";
-            document.getElementById("modul_table_Magang").style.visibility = "visible";
-
-            document.getElementById("rentang_pembayaran_label").style.display = "block";
-            document.getElementById("rentang_pembayaran_input").style.display = "block";
-            document.getElementById("modul_table_Magang").style.display = "block";
-
-            document.getElementById("modul_table").style.visibility = "hidden";
-            document.getElementById("total_pembayaran_label").style.visibility = "hidden";
-            document.getElementById("totalPembayaran").style.visibility = "hidden";
-
-            document.getElementById("modul_table").style.display = "none";
-            document.getElementById("total_pembayaran_label").style.display = "none";
-            document.getElementById("totalPembayaran").style.display = "none";
-        }else{
-            document.getElementById("rentang_pembayaran_label").style.visibility = "hidden";
-            document.getElementById("rentang_pembayaran_input").style.visibility = "hidden";
-            document.getElementById("modul_table_Magang").style.visibility = "hidden";
-
-            document.getElementById("rentang_pembayaran_label").style.display = "none";
-            document.getElementById("rentang_pembayaran_input").style.display = "none";
-            document.getElementById("modul_table_Magang").style.display = "none";
-
-            document.getElementById("modul_table").style.visibility = "visible";
-            document.getElementById("total_pembayaran_label").style.visibility = "visible";
-            document.getElementById("totalPembayaran").style.visibility = "visible";
-
-            document.getElementById("modul_table").style.display = "block";
-            document.getElementById("total_pembayaran_label").style.display = "block";
-            document.getElementById("totalPembayaran").style.display = "block";
-        }
-    },false);
-
 })();
 
 

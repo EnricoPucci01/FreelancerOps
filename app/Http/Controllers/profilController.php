@@ -234,6 +234,8 @@ class profilController extends Controller
         $modul=modul::whereIn('modul_id',$reviewmodul)->get();
         $modul=json_decode(json_encode($modul),true);
 
+        $profile= profil::get();
+
         $proyekSelesai=modulDiambil::where('cust_id',$custId)->where('status','selesai')->count();
 
         $totalBintang=0;
@@ -256,7 +258,8 @@ class profilController extends Controller
             'rataRata'=>$rataRata,
             'proyekSelesai'=>$proyekSelesai,
             'totalBintang'=>$totalBintang,
-            'jumlahReview'=>$jumlahReview
+            'jumlahReview'=>$jumlahReview,
+            'profil'=>$profile
         ]);
     }
 

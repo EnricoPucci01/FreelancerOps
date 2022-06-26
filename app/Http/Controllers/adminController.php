@@ -414,8 +414,8 @@ class adminController extends Controller
         ]);
     }
 
-    public function laporanProyekAdmin(){
-        $modulDiambil=modulDiambil::get();
+    public function laporanProyekAdmin($status){
+        $modulDiambil=modulDiambil::where('status',$status)->get();
         $proyekId=array();
         $modulId=array();
 
@@ -427,11 +427,38 @@ class adminController extends Controller
         $proyek=proyek::whereIn('proyek_id',$proyekId)->get();
         $modul=modul::whereIn('modul_id',$modulId)->get();
         $cust=customer::get();
+
         return view("laporanProyekAdmin",[
             'modulDiambil'=>$modulDiambil,
             'proyek'=>$proyek,
             'modul'=>$modul,
-            'cust'=>$cust
+            'cust'=>$cust,
+            'status'=>$status
+        ]);
+    }
+
+    public function filterLaporanAdmin(Request $request ,$status){
+        $modulDiambil=modulDiambil::where('status',$status)->where('created_at','>=',$request->input('dateStart'))->
+        where('created_at','<=',$request->input('dateEnd'))->get();
+        $proyekId=array();
+        $modulId=array();
+
+        //dd($modulDiambil);
+        foreach($modulDiambil as $modul){
+            array_push($proyekId,$modul->proyek_id);
+            array_push($modulId,$modul->modul_id);
+        }
+
+        $proyek=proyek::whereIn('proyek_id',$proyekId)->get();
+        $modul=modul::whereIn('modul_id',$modulId)->get();
+        $cust=customer::get();
+
+        return view("laporanProyekAdmin",[
+            'modulDiambil'=>$modulDiambil,
+            'proyek'=>$proyek,
+            'modul'=>$modul,
+            'cust'=>$cust,
+            'status'=>$status
         ]);
     }
 

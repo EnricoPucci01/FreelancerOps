@@ -42,7 +42,6 @@
 
         <center>
             <button type="submit" id='btSub' class="btn btn-success mt-3">Update Progress</button>
-            <a href={{url("/loadError/$dataModul[modul_id]")}} class="btn btn-warning mt-3">Lihat Laporan Error</a>
             <a href={{url("/listProyekFreelancer/$custId")}} class="btn btn-secondary mt-3">Kembali</a>
         </center>
     </form>

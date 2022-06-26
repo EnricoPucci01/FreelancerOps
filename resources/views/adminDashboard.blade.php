@@ -41,7 +41,7 @@
                             <table style="width: 109%">
                                 <tr>
                                     <td>
-                                        <a href="/laporanProyekAdmin"><button type="button" class="btn btn-outline-primary fw-bold" style="width: 92%">Laporan Proyek</button></a>
+                                        <a href="/laporanProyekAdmin/pengerjaan"><button type="button" class="btn btn-outline-primary fw-bold" style="width: 92%">Laporan Proyek</button></a>
                                     </td>
                                 </tr>
                                 <tr>

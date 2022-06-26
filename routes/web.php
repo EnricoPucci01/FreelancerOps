@@ -18,6 +18,7 @@ use App\Http\Middleware\cekCLient;
 use App\Http\Middleware\cekFreelancer;
 use App\Http\Middleware\cekLogin;
 use App\Models\profil;
+use Google\Service\MyBusinessAccountManagement\Admin;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -113,6 +114,7 @@ Route::post('/submitReview/{freelancerId}/{clientId}/{modulId}',[projectControll
 Route::get('/listprojectclient/{idCust}',[projectController::class,'loadBrowseProjectClient']);
 Route::get('/loadDetailProyekClient/{id}/{accessor}/{idCust}',[projectController::class,'loadProyekClient']);
 Route::get('/postproject',[projectController::class,'loadPostProject']);
+Route::Post('/postmodul',[projectController::class,'loadPostModul']);
 Route::post('/submitpostproject',[projectController::class,'submitPostProject']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -341,10 +343,11 @@ Route::get('/laporanClient',[adminController::class,'laporanClient']);
 Route::get('/ketepatanPembayaran',[adminController::class,'ketepatanPembayaran']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Route::get('/laporanProyekAdmin',[adminController::class,'laporanProyekAdmin']);
+Route::get('/laporanProyekAdmin/{status}',[adminController::class,'laporanProyekAdmin']);
 Route::get('/loadPenarikanDanaAdmin',[xenditController::class,'loadPenarikanDanaAdmin']);
 Route::get('/historiSaldoAdmin',[adminController::class,'historiSaldoAdmin']);
 Route::post('/penarikanDanaAdmin',[xenditController::class,'penarikanDanaAdmin']);
+Route::post('/filterLaporanAdmin/{status}',[adminController::class,'filterLaporanAdmin']);
 
 //========================================================================================================================
 //========================================================================================================================

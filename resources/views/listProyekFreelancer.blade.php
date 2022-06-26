@@ -18,6 +18,7 @@
                                 <p class="card-text">{{$proyek->start}} - {{$proyek->end}}</p>
                             <hr>
                             <a href="{{url("/loadDetailModulFreelancer/$proyek->modul_id/$custId")}}" class="btn btn-primary btn-sm">Lihat Detail</a>
+                            <a href={{url("/loadError/$proyek[modul_id]")}} class="btn btn-warning btn-sm">Lihat Laporan Error</a>
                         </div>
                     </div>
                 </tr>
