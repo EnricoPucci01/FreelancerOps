@@ -24,46 +24,65 @@ class gCalendarController extends Controller
 // Pakai Spatie
 //==============================================================================================================
     public function insertEvent(Request $request){
-
-        $formValidate=$request->validate
-        (
-            [
-                'name_Event'=>'required',
-                'start_Event'=>'required',
-                'end_Event'=>'required',
-                'timeStart_Event'=>'required',
-                'timeEnd_Event'=>'required'],
-            [
-            'name_Event.required'=>'Nama tidak dapat kosong!',
-            'start_Event.required'=>'Tanggal mulai tidak dapat kosong!',
-            'end_Event.required'=>'Tanggal berakhir tidak dapat kosong!',
-            'timeStart_Event.required'=>'Jam mulai tidak dapat kosong!',
-            'timeEnd_Event.required'=>'Jam berakhir tidak dapat kosong!']
-        );
-
-        $startDate=$request->input('start_Event').' '.$request->input('timeStart_Event');
-        $endDate=$request->input('end_Event').' '.$request->input('timeEnd_Event');
-
         $getProf=profil::where('cust_id',Session::get('cust_id'))->first();
+        $events= Event::get(Carbon::parse($request->input('start_Event')),Carbon::parse($request->input('end_Event')),[],$getProf->calendar_id);
 
-        $inEvent=Event::create([
-            'name' => $request->input('name_Event'),
-            'startDateTime' => Carbon::parse($startDate),
-            'endDateTime' => Carbon::parse($endDate),
-        ],$getProf->calendar_id);
-        // $event = new Event;
-        // $event->name = $request->input('name_Event');
-        // $event->startDateTime =Carbon::parse($startDate);
-        // $event->endDateTime = Carbon::parse($endDate);
-        // $event->save();
+        //dd($events);
+        if($request->input('warningCal')=='noinsert'){
+            $formValidate=$request->validate
+            (
+                [
+                    'name_Event'=>'required',
+                    'start_Event'=>'required',
+                    'end_Event'=>'required',
+                    'timeStart_Event'=>'required',
+                    'timeEnd_Event'=>'required'],
+                [
+                'name_Event.required'=>'Nama tidak dapat kosong!',
+                'start_Event.required'=>'Tanggal mulai tidak dapat kosong!',
+                'end_Event.required'=>'Tanggal berakhir tidak dapat kosong!',
+                'timeStart_Event.required'=>'Jam mulai tidak dapat kosong!',
+                'timeEnd_Event.required'=>'Jam berakhir tidak dapat kosong!']
+            );
+            $startDate=$request->input('start_Event').' '.$request->input('timeStart_Event');
+            $endDate=$request->input('end_Event').' '.$request->input('timeEnd_Event');
+            Session::put('startDate',$startDate);
+            Session::put('endDate',$endDate);
+            Session::put('eventname',$request->input('name_Event'));
+            if($events!=null){
+                Session::put('errorCal','error');
+                return Redirect::back();
+             }else{
+                 $inEvent=Event::create([
+                     'name' =>  Session::get('eventname'),
+                     'startDateTime' => Carbon::parse(Session::get('startDate')),
+                     'endDateTime' => Carbon::parse(Session::get('endDate')),
+                 ],$getProf->calendar_id);
 
-        //dd($inEvent);
-        if($inEvent!=null){
-            return Redirect::back()->with('success','Acara Berhasil Di Tambahkan, Silahkan Cek Google Calendar Anda!');
+                 //dd($inEvent);
+                 if($inEvent!=null){
+                     return Redirect::back()->with('success','Acara Berhasil Di Tambahkan, Silahkan Cek Google Calendar Anda!');
+                 }else{
+                     return Redirect::back()->with('error','Acara Gagal Di Tambahkan!');
+                 }
+             }
         }else{
-            return Redirect::back()->with('error','Acara Gagal Di Tambahkan!');
+            $inEvent=Event::create([
+                'name' =>  Session::get('eventname'),
+                'startDateTime' => Carbon::parse(Session::get('startDate')),
+                'endDateTime' => Carbon::parse(Session::get('endDate')),
+            ],$getProf->calendar_id);
+            Session::forget('errorCal');
+            Session::forget('startDate');
+            Session::forget('endDate');
+            Session::forget('eventname');
+            //dd($inEvent);
+            if($inEvent!=null){
+                return Redirect::back()->with('success','Acara Berhasil Di Tambahkan, Silahkan Cek Google Calendar Anda!');
+            }else{
+                return Redirect::back()->with('error','Acara Gagal Di Tambahkan!');
+            }
         }
-
     }
 
     public function changeENV(Request $request){

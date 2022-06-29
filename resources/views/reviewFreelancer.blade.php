@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?php echo asset('reviewCss.css')?>" type="text/css">
 @extends('header')
 @section('content')
 
@@ -6,65 +7,58 @@
         <div class="col-sm-6">
           <div class="card">
             <div class="card-body">
-                <table style="width: 70%">
-                            <tr style="text-align: left;">
-                                <td>
-                                    <h2><i class='bi bi-star-fill' style='color:#ffc700'></i> {{$rataRata}}</h2>
-                                </td>
+                <table>
+                            <tr >
                                 <td >
-                                    <h5 class="mt-2 text-muted">/5</h5>
-                                </td>
-                                <td>
-                                    <div style="margin-left: 50%">
-                                        <table>
-                                            <tr>
-                                                <td>
-                                                    <i class='bi bi-star-fill' style='color:#ffc700'></i> 5
-                                                </td>
-                                                <td>
-                                                    5
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <i class='bi bi-star-fill' style='color:#ffc700'></i> 4
-                                                </td>
-                                                <td>
-                                                    4
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <i class='bi bi-star-fill' style='color:#ffc700'></i>  3
-                                                </td>
-                                                <td>
-                                                    3
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <i class='bi bi-star-fill' style='color:#ffc700'></i>   2
-                                                </td>
-                                                <td>
-                                                    2
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <i class='bi bi-star-fill' style='color:#ffc700'></i>   1
-                                                </td>
-                                                <td>
-                                                    1
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="card-text text-muted fw-bold">Total Review:  {{$jumlahReview}}</p>
+                                    <div class="ml-3 row" style="width: 70%">
+                                        <div class="side">
+                                          <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 5</div>
+                                        </div>
+                                        <div class="middle">
+                                          <div class="bar-container">
+                                            <div style="width: {{$bintang5}}%; height: 10px; background-color: #ffc700;"></div>
+                                          </div>
+                                        </div>
+                                        <div class="side">
+                                          <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 4</div>
+                                        </div>
+                                        <div class="middle">
+                                          <div class="bar-container">
+                                            <div style="width:{{$bintang4}}%; height: 10px; background-color: #ffc700;"></div>
+                                          </div>
+                                        </div>
+                                        <div class="side">
+                                          <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 3</div>
+                                        </div>
+                                        <div class="middle">
+                                          <div class="bar-container">
+                                            <div style="width: {{$bintang3}}%; height: 10px; background-color: #ffc700;"></div>
+                                          </div>
+                                        </div>
+                                        <div class="side">
+                                          <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 2</div>
+                                        </div>
+                                        <div class="middle">
+                                          <div class="bar-container">
+                                            <div style="width: {{$bintang2}}%; height: 10px; background-color: #ffc700;"></div>
+                                          </div>
+                                        </div>
+                                        <div class="side">
+                                          <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 1</div>
+                                        </div>
+                                        <div class="middle">
+                                          <div class="bar-container">
+                                            <div style="width:{{$bintang1}}%; height: 10px; background-color: #ffc700;"></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <td style="text-align: left; text-align:center">
+                                        <div style="width: 100%"><h2><i class='bi bi-star-fill' style='color:#ffc700'></i>
+                                            {{$rataRata}} <i class="text-muted" style="font-size: 25px">/5</i>
+                                        </h2>
+                                        </div>
+                                        <p class="fw-bold text-muted">{{$jumlahReview}} Reviews</p>
+                                     </td>
                                 </td>
                             </tr>
                 </table>
@@ -132,6 +126,5 @@
                     </table>
                 </div>
             </div>
-
 
 @endsection

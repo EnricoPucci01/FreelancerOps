@@ -308,7 +308,7 @@ Route::get('/adminDashboard',[adminController::class,'loadAdminDashboard']);
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route Membuat disbursement untuk penarikan dana
-Route::get('/createDisb/{custName}/{penarikanId}',[xenditController::class,'createDisburse']);
+Route::post('/createDisb/{custName}/{penarikanId}',[xenditController::class,'createDisburse']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

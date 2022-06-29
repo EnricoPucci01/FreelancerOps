@@ -241,15 +241,42 @@ class profilController extends Controller
         $totalBintang=0;
         $rataRata=0;
         $jumlahReview=0;
+        $bintang5=0;
+        $bintang4=0;
+        $bintang3=0;
+        $bintang2=0;
+        $bintang1=0;
         if(count($review)>0){
             $jumlahReview= count($review);
             foreach ($review as $bintang) {
                 $totalBintang= $totalBintang+$bintang['bintang'];
+
+                if($bintang['bintang']==5){
+                    $bintang5++;
+                }
+                else if($bintang['bintang']==4){
+                    $bintang4++;
+                }
+                else if($bintang['bintang']==3){
+                    $bintang3++;
+                }
+                else if($bintang['bintang']==2){
+                    $bintang2++;
+                }
+                else if($bintang['bintang']==1){
+                    $bintang1++;
+                }
             }
 
             $rataRata= $totalBintang/$jumlahReview;
             //dd($jumlahReview);
         }
+
+        $bintang5=$bintang5/$jumlahReview*100;
+        $bintang4=$bintang4/$jumlahReview*100;
+        $bintang3=$bintang3/$jumlahReview*100;
+        $bintang2=$bintang2/$jumlahReview*100;
+        $bintang1=$bintang1/$jumlahReview*100;
 
         return view('reviewFreelancer',[
             'dataReview'=>$review,
@@ -257,9 +284,13 @@ class profilController extends Controller
             'modul'=>$modul,
             'rataRata'=>$rataRata,
             'proyekSelesai'=>$proyekSelesai,
-            'totalBintang'=>$totalBintang,
             'jumlahReview'=>$jumlahReview,
-            'profil'=>$profile
+            'profil'=>$profile,
+            'bintang5'=>$bintang5,
+            'bintang4'=>$bintang4,
+            'bintang3'=>$bintang3,
+            'bintang2'=>$bintang2,
+            'bintang1'=>$bintang1,
         ]);
     }
 

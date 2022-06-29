@@ -7,7 +7,7 @@
                 <td>
                     <div class="card recentProjectContainer">
                         <div class="card-body">
-                          <h5 class="card-title">Request Penarikan</h5>
+                          <h5 class="card-title">Permohonan Penarikan Dana Freelancer</h5>
                           <div class="listRecentProject">
                             <table>
                                 @php
@@ -18,9 +18,10 @@
                                         if($i<4){
                                             echo"<div class='card text-center  mt-2'>
                                             <div class='card-body'>
-                                            <h5 class='card-title'>Request Penarikan Dana $penarikan[bank]</h5>
-                                            <h6 class='card-subtitle text-muted'>".@money($penarikan['jumlah'],'IDR',true)."</h6>
-                                            <p class='card-text'>Tanggal: $penarikan[tanggal_request]</p>
+                                            <h5 class='card-title'>Request Penarikan Dana $penarikan->nama</h5>
+                                            <h6 class='card-title'>Bank $penarikan->bank</h6>
+                                            <h6 class='card-subtitle text-muted'>".@money($penarikan->jumlah,'IDR',true)."</h6>
+                                            <p class='card-text'>Tanggal: ".Carbon\Carbon::parse($penarikan->tanggal)->format('d-m-Y')."</p>
                                             </div>
                                         </div>";
                                         }

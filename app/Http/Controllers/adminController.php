@@ -12,6 +12,7 @@ use App\Models\penarikan;
 use App\Models\proyek;
 use Carbon\Carbon;
 use Chartisan\PHP\Chartisan;
+use Google\Service\Monitoring\Custom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -26,12 +27,14 @@ class adminController extends Controller
 
         $saldoAdmin=customer::where('cust_id',Session::get('adminCustId'))->first();
 
-        $requestPenarikanDana=penarikan::get();
-        $requestPenarikanDana=json_decode(json_encode($requestPenarikanDana),true);
+        $query="SELECT customer.nama AS nama, penarikan.jumlah AS jumlah, penarikan.tanggal_request AS tanggal, penarikan.bank AS bank
+            FROM customer,penarikan
+            WHERE penarikan.tanggal_admit is NULL AND penarikan.cust_id=customer.cust_id ";
+        $db=DB::select($query);
 
         return view('adminDashboard',[
             'total'=>$saldoAdmin->saldo,
-            'dataPenarikan'=>$requestPenarikanDana
+            'dataPenarikan'=>$db
         ]);
     }
 
@@ -69,10 +72,10 @@ class adminController extends Controller
     }
 
     public function loadPenarikanDana(){
-        $dataPenarikan=penarikan::get();
+        $dataPenarikan=penarikan::where('cust_id',"!=",'0')->get();
         $dataPenarikan=json_decode(json_encode($dataPenarikan),true);
 
-        $custId=penarikan::get('cust_id');
+        $custId=penarikan::where('cust_id',"!=",'0')->get('cust_id');
         $custId=json_decode(json_encode($custId),true);
 
         $dataCust= customer::whereIn('cust_id',$custId)->get();
