@@ -8,6 +8,7 @@ use App\Models\modulDiambil;
 use App\Models\payment;
 use App\Models\penarikan;
 use App\Models\proyek;
+use App\Models\tambahRekening;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Xendit\Xendit;
@@ -368,8 +369,12 @@ class xenditController extends Controller
         Xendit::setApiKey($this->privateKey);
         $getList = \Xendit\VirtualAccounts::getVABanks();
         $getList = json_decode(json_encode($getList), true);
+
+        $rekeningpenarikan=tambahRekening::where('cust_id',Session::get('cust_id'))->get();
+        $rekeningpenarikan=json_decode(json_encode($rekeningpenarikan),true);
         return view('requestTarik', [
-            'dataBank' => $getList
+            'dataBank' => $getList,
+            'dataRekening'=>$rekeningpenarikan
         ]);
     }
 
@@ -378,8 +383,12 @@ class xenditController extends Controller
         Xendit::setApiKey($this->privateKey);
         $getList = \Xendit\VirtualAccounts::getVABanks();
         $getList = json_decode(json_encode($getList), true);
+
+        $norek=tambahRekening::where('cust_id',session()->get('cust_id'))->get();
+        $norek=json_decode(json_encode($norek),true);
         return view('penarikanDanaAdmin', [
-            'dataBank' => $getList
+            'dataBank' => $getList,
+            'dataRekening'=>$norek
         ]);
     }
 
@@ -417,5 +426,13 @@ class xenditController extends Controller
             DB::rollBack();
             return Redirect::back()->with('error', 'Penarikan Dana Gagal Dilakukan!');
         }
+    }
+
+    public function loadTambahRekening(){
+        Xendit::setApiKey($this->privateKey);
+        $getList = \Xendit\VirtualAccounts::getVABanks();
+        return view('tambahRekening',[
+            'dataBank' => $getList
+        ]);
     }
 }

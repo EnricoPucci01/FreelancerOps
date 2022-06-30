@@ -127,11 +127,11 @@
                                 <p class="fw-bold">@money($penarikan['jumlah'], 'IDR', true)</p>
                             </td>
                             <td>
-                                <button class="btn btn-primary " class="btn btn-success" type="button" data-bs-target="#modalPost"
+                                <button class="btn btn-primary " class="btn btn-success" type="button" data-bs-target="#modalPost{{$penarikan['penarikan_id']}}"
                                 data-bs-toggle="modal">Lihat Bukti</button>
 
                                 {{-- Modal Post --}}
-                                <div class="modal fade" tabindex="-1"aria-hidden="true" id="modalPost">
+                                <div class="modal fade" tabindex="-1"aria-hidden="true" id="modalPost{{$penarikan['penarikan_id']}}">
 
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
@@ -141,7 +141,8 @@
                                                         data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img src="{{asset("storage/buktiTransfer/$penarikan[bukti_tf]")}}" width="100" height="100" alt="">
+                                                    <center> <img src={{asset("storage/buktiTransfer/$penarikan[bukti_tf]")}} width="300" height="300"></center>
+
                                                 </div>
                                             </div>
                                         </div>

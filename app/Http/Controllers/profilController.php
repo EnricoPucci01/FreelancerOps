@@ -17,6 +17,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Xendit\Xendit;
+use App\Models\tambahRekening;
+use Illuminate\Support\Facades\Redirect;
 
 class profilController extends Controller
 {
@@ -330,5 +332,32 @@ class profilController extends Controller
             'dataFreelancer'=>$dataFreelancer,
             'dataModul'=>$dataModul
         ]);
+    }
+
+    public function tambahRekening(Request $request){
+        $formValidate=$request->validate([
+            'no_rek'=>'required|numeric|digits_between:10,16',
+            'bank'=>'required',
+        ],[
+            'no_rek.required'=>'Nomor rekening tidak dapat kosong!',
+            'bank.required'=>'Bank tidak dapat kosong!',
+            'no_rek.numeric'=>'Nomor rekening hanya dapat berisi angka!',
+            'no_rek.digits_between'=>'Nomor rekening anda melebihi 16 digit atau kurang dari 10 digit!',
+        ]);
+
+        DB::beginTransaction();
+        $rekening= new tambahRekening();
+        $rekening->nomor_rek=$request->input('no_rek');
+        $rekening->bank=$request->input('bank');
+        $rekening->cust_id=session()->get('cust_id');
+        $rekening->save();
+
+        if($rekening){
+            DB::commit();
+            return Redirect::back()->with('success','Nomor Rekening Berhasil Di Tambah');
+        }else{
+            DB::rollback();
+            return Redirect::back()->with('error','Nomor Rekening Gagal Di Tambahkan');
+        }
     }
 }

@@ -207,6 +207,13 @@ Route::get('/histori',[profilController::class,'loadHistori']);
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Route Tambah nomor rekening Freelancer
+Route::get('/loadTambahRekening',[xenditController::class,'loadTambahRekening']);
+Route::post('/tambahRekening',[profilController::class,'tambahRekening']);
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route CV Load, pengajuan, upload, dan preview
 Route::get('/previewcv/{direktori}',[cvController::class,'previewCV']);
 Route::post('/ajukancv',[projectController::class,'ajukancv']);
@@ -327,6 +334,13 @@ Route::get('/loadClosePayment',[adminController::class,'loadClosedModul']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route meneruskan pembayaran ke freelancer
 Route::get('/teruskanPembayaran/{paymentId}',[adminController::class,'teruskanPembayaran']);
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Route Tambah nomor rekening Freelancer
+Route::get('/loadTambahRekening',[xenditController::class,'loadTambahRekening']);
+Route::post('/tambahRekening',[profilController::class,'tambahRekening']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

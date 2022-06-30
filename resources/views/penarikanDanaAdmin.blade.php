@@ -16,7 +16,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="number" name="no_rek" id='norek' class="form-control">
+                                <div class="input-group mb-3">
+                                    <select class="form-select" name="no_rek" id="norek" aria-label="Default select example">
+                                        @foreach ($dataRekening as $item)
+                                            <option value={{$item['nomor_rek']}}>{{$item['nomor_rek']}}</option>
+                                        @endforeach
+                                    </select>
+                                  </div>
                             </td>
                         </tr>
 
@@ -79,7 +85,17 @@
 
                 <script>
                     document.getElementById("myBtn").addEventListener("click", createModal);
+                    let norek= document.getElementById('norek');
+                    let bank= document.getElementById('bank');
+                    var arr=@json($dataRekening);
 
+                    norek.addEventListener('change',function() {
+                        arr.forEach(element => {
+                            if(element['nomor_rek']==norek.value){
+                                bank.value=element['bank'];
+                        }
+                        });
+                    });
                     function createModal(){
                         const modal = document.getElementById('modalTarik');
                         var norek=document.getElementById('norek').value;

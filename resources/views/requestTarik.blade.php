@@ -1,6 +1,7 @@
 @extends('header')
 @section('content')
 <center>
+
     <div class="card" style="width: 70%; margin-top: 20px;" >
         <div class="card-body">
           <h3 class="card-title">Tarik Dana</h5>
@@ -16,7 +17,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="number" name="no_rek" id='norek' class="form-control">
+                                <div class="input-group mb-3">
+                                    <select class="form-select" id='norek' name="no_rek" aria-label="Default select example">
+                                        @foreach ($dataRekening as $item)
+                                            <option value={{$item["nomor_rek"]}}>{{$item['nomor_rek']}}</option>
+                                        @endforeach
+                                    </select>
+                                  </div>
                             </td>
                         </tr>
 
@@ -77,49 +84,22 @@
                     </div>
                 {{-------------------------------------------------------------------------------------------------------}}
 
-                <script>
-                    document.getElementById("myBtn").addEventListener("click", createModal);
+                <script type="text/javascript">
+                    let norek= document.getElementById('norek');
+                    let bank= document.getElementById('bank');
+                    var arr=@json($dataRekening);
 
-                    function createModal(){
-                        const modal = document.getElementById('modalTarik');
-                        var norek=document.getElementById('norek').value;
-                        var bank=document.getElementById('bank').value;
-                        var jumlah=document.getElementById('totalPenarikan').value;
-
-                        var formatter = new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-
-                                        // These options are needed to round to whole numbers if that's what you want.
-                                        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-                                        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-                                        });
-
-                        var idr=formatter.format(jumlah);
-
-                        modal.innerHTML = `
-                            <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalToggleLabel2">Lakukan Penarikan?</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Anda akan melakukan penarikan dana sejumlah <b>`+idr+`</b>, Melalui bank <b>`+bank+`</b> dengan nomor rekening <b>`+norek+`</b>. <br>
-
-                                        Tekan <b>Ya</b> untuk melanjutkan proses penarikan.
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Ya</button>
-                                    </div>
-                            </div>
-                            `;
-                    }
+                    norek.addEventListener('change',function() {
+                        arr.forEach(element => {
+                            if(element['nomor_rek']==norek.value){
+                                bank.value=element['bank'];
+                        }
+                        });
+                    });
                 </script>
                 {{-- <button type="button" class="btn btn-primary" id='tambah' style="margin-top: 10px">tambah</button> --}}
           </form>
         </div>
       </div>
 </center>
-<script src="<?php echo asset('postProjectJS.js')?>"></script>
 @endsection
