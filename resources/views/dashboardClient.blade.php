@@ -58,7 +58,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <a href={{url('/listKontrak')}} class="btn btn-outline-primary mb-2 fw-bold" style="width: 92%">List Kontrak</a>
+                                    <a href={{url('/listKontrak/pengerjaan')}} class="btn btn-outline-primary mb-2 fw-bold" style="width: 92%">List Kontrak</a>
                                 </td>
                             </tr>
                         </table>

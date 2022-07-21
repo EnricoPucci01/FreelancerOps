@@ -97,8 +97,8 @@ Route::get('/loadHistoriTransaksi',[profilController::class,'loadHistoriTransaks
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route Error Report
-Route::get('/errorReport/{modulId}',[projectController::class,'loadErrorReport']);
-Route::post('/fileError/{modulId}/{freelancerId}',[projectController::class,'reportError']);
+Route::get('/errorReport/{modulId}/{progressId}',[projectController::class,'loadErrorReport']);
+Route::post('/fileError/{modulId}/{freelancerId}/{progressId}',[projectController::class,'reportError']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

@@ -10,9 +10,9 @@
             <h2 class="mb-3">
                 Laporan Error {{$listModul['title']}}
             </h2>
-            <table class="table table-stipped">
+            <table class="table table-stipped" style="table-layout: fixed; width: 100%">
                 <thead class="fw-bold">
-                    <td>
+                    <td style="width:15%">
                         Tanggal Error
                     </td>
                     <td>
@@ -21,14 +21,17 @@
                     <td>
                         Aksi
                     </td>
+                    <td style="width:15%">
+                        Tanggal Progress Terjadinya Error
+                    </td>
                     <td>
                         Deskripsi
                     </td>
-                    <td>
+                    <td style="width:5%">
                         File
                     </td>
-                    <td style="width: 4%">
-
+                    <td style="width:7%">
+                        Selesaikan Error
                     </td>
                 </thead>
 
@@ -41,10 +44,13 @@
                         <td>
                             {{$error['halaman_error']}}
                         </td>
-                        <td>
+                        <td style="word-wrap: break-word">
                             {{$error['aksi']}}
                         </td>
-                        <td>
+                        <td style="word-wrap: break-word">
+                            {{$error['tanggal_progress']}}
+                        </td>
+                        <td style="word-wrap: break-word">
                             {{$error['report_desc']}}
                         </td>
                         <td>

@@ -381,13 +381,14 @@ class projectController extends Controller
         $dateTime = date('Y-m-d');
         $nama = customer::where('cust_id', $custId)->first();
         $modul = modul::where('modul_id', $modulId)->first();
-        $nama_kontrak = 'KontrakKerja_' . $nama->nama . '_' . str_replace(' ', '', $modul->title) . '_' . $dateTime . '.pdf';
+        $nama_kontrak = 'Modul ' . $modul->title.'.pdf';
         DB::beginTransaction();
         $insertTakenModul = new modulDiambil();
         $insertTakenModul->cust_id = $custId;
         $insertTakenModul->proyek_id = $proyekId;
         $insertTakenModul->modul_id = $modulId;
         $insertTakenModul->kontrak_kerja = $nama_kontrak;
+        $insertTakenModul->urlkontrak = str_replace(' ', '%20', $nama_kontrak);
         $insertTakenModul->status = 'pengerjaan';
         $insertTakenModul->save();
 
@@ -635,13 +636,14 @@ class projectController extends Controller
         }
     }
 
-    public function reportError(Request $request, $modulId, $freelancerId)
+    public function reportError(Request $request, $modulId, $freelancerId,$progressId)
     {
         DB::beginTransaction();
 
         $date = date('Y-m-d H:i:s');
         $filename = date('YmdHis') . '_' . $modulId . "." . $request->file("fileError")->getClientOriginalExtension();
         $path = $request->file('fileError')->storeAs("error", $filename, 'public');
+        $progressDate=progress::find($progressId);
 
         if ($path != "" && $path != null) {
             $image = $request->file('fileError'); //image file from frontend
@@ -658,6 +660,7 @@ class projectController extends Controller
         $insertError = new error_report();
         $insertError->modul_id = $modulId;
         $insertError->freelancer_id = $freelancerId;
+        $insertError->tanggal_progress= $progressDate->upload_time;
         $insertError->halaman_error = $request->input('errPage');
         $insertError->aksi = $request->input('errAct');
         $insertError->report_desc = $request->input('errDesc');
@@ -674,12 +677,16 @@ class projectController extends Controller
         }
     }
 
-    public function loadErrorReport($modulId)
+    public function loadErrorReport($modulId,$progressId)
     {
         $freelancerId = modulDiambil::where('modul_id', $modulId)->where('status', '!=', 'dibatalkan')->first();
+        $progressData = progress::where('progress_id',$progressId)->first();
+        $namaModul= modul::find($modulId);
         return view('errorReportPage', [
             'modulId' => $modulId,
-            'freelancerId' => $freelancerId->cust_id
+            'freelancerId' => $freelancerId->cust_id,
+            'progressData'=>$progressData,
+            'modulTitle'=>$namaModul->title
         ]);
     }
 

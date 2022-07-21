@@ -2,7 +2,8 @@
 @section('content')
 
 <div style="margin: 20px 20px 20px 20px">
-    <form action="{{url("/fileError/$modulId/$freelancerId")}}" method="post" enctype="multipart/form-data">
+    <H3>Laporkan error untuk progress {{$modulTitle}} pada tanggal {{$progressData->upload_time}}</H3>
+    <form action="{{url("/fileError/$modulId/$freelancerId/$progressData->progress_id")}}" method="post" enctype="multipart/form-data">
         @method('POST')
         @csrf
 
