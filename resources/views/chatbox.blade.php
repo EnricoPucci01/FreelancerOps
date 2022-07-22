@@ -6,7 +6,7 @@
     <div class="menu bg-warning">
         {{-- <div class="back"><i class="fa fa-chevron-left"></i> <img src="https://i.imgur.com/DY6gND0.png"
                 draggable="false" /></div> --}}
-        <div class="name fw-bold">{{$recieverName}}</div>
+        <div class="name fw-bold"><span class="mr-3">{{$recieverName}}</span>  ( {{$topik}} )</div>
     </div>
     <ol class="chat">
 

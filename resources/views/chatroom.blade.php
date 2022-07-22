@@ -1,36 +1,36 @@
 @extends('header')
 @section('content')
-<center>
+<div style="  margin: auto;
+width: 50%;
+padding: 10px;">
     <table>
-        <tr>
-            @foreach ($chatroom as $item)
-            <a href={{url("/loadChatbox/$item[room_id]")}}>
-                <div class="card mt-3" style="width: 70%;">
-                    <div class="card-body">
-                        @foreach ($cust as $custData)
-                            @if (session()->get('role')=='client')
-                                @if ($custData['cust_id']==$item['freelancer_id'])
-                                    <h4 class="card-title">{{$custData['nama']}}</h4>
+        @foreach ($chatroom as $item)
+            <tr>
+                <a href={{url("/loadChatbox/$item[room_id]")}}>
+                    <div class="card mt-3" style="width: 100%;">
+                        <div class="card-body">
+                            @foreach ($cust as $custData)
+                                @if (session()->get('role')=='client')
+                                    @if ($custData['cust_id']==$item['freelancer_id'])
+                                        <h4 class="card-title">{{$custData['nama']}} <span class="ml-3 badge badge-danger">{{$item['unread_sender']}}</span></h4>
+                                    @endif
+                                @elseif (session()->get('role')=='freelancer')
+                                    @if ($custData['cust_id']==$item['client_id'])
+                                        <h4 class="card-title">{{$custData['nama']}} <span class="ml-3 badge badge-danger">{{$item['unread_sender']}}</span></h4>
+                                    @endif
                                 @endif
-                            @elseif (session()->get('role')=='freelancer')
-                                @if ($custData['cust_id']==$item['client_id'])
-                                    <h4 class="card-title">{{$custData['nama']}}</h4>
-                                @endif
-                            @endif
-                        @endforeach
-                        @foreach ($chat as $itemChat)
-                            @if ($itemChat['room_id']==$item['room_id'])
-                                <p class="card-subtitle mb-2 text-muted">{{$itemChat['message_time']}}</p>
-                                <h6 class="card-subtitle mb-2">{{$itemChat['message']}}</h6>
-                            @endif
-                        @endforeach
+                            @endforeach
+                            <h6 class="card-subtitle mb-2">{{$item['topik_proyek']}}</h6>
+                            <p class="card-subtitle mb-2 text-muted"> <span class="mr-3" style="font-size: 20px">{{$chat['message']}}</span>  -{{$chat['message_time']}}</p>
+                        </div>
                     </div>
-                </div>
-            </a>
-            @endforeach
-        </tr>
+                </a>
+            </tr>
+        @endforeach
     </table>
-</center>
+</div>
+
+
 
 <style>
     body {font-family: Arial, Helvetica, sans-serif;}
@@ -128,7 +128,38 @@
             </table>
 
             <label for="formFile" class="form-label">Kirim Pesan Ke</label>
-            <input class="form-control" type="text" name='tujuan' id="formFile" placeholder="johndoe@gmail.com">
+            <select class="form-select" name="reciever" aria-label="Default select example">
+            @if (session()->get('role')=='client')
+                @foreach ($dataModulDiambil as $key)
+                    @foreach ($modulData as $keyModul)
+                        @if ($keyModul["modul_id"] == $key['modul_id'])
+                            @foreach ($customerData as $keyCust)
+                                @if ($keyCust['cust_id'] == $key['cust_id'])
+                                    <option value={{$keyCust['cust_id']."_".str_replace(" ",'%20',$keyModul['title'])}}>{{$keyCust['nama']." (".$keyModul['title'].")"}}</option>
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endforeach
+            @else
+                @foreach ($dataModulDiambil as $key)
+                    @foreach ($dataProyek as $keyProyek)
+                        @if ($key['proyek_id']==$keyProyek['proyek_id'])
+                            @foreach ($modulData as $keyModul)
+                                @if ($keyModul["modul_id"] == $key['modul_id'])
+                                    @foreach ($customerData as $keyCust)
+                                        @if ($keyCust['cust_id'] == $keyProyek['cust_id'])
+                                            <option value={{$keyCust['cust_id']."_".str_replace(" ",'%20',$keyModul['title'])}}>{{$keyCust['nama']." (".$keyModul['title'].")"}}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endforeach
+            @endif
+
+              </select>
             <label for="desc" class="form-label mt-3" >Pesan Anda</label>
             <textarea class="form-control" aria-label="Deskripsikan dalam 1000 huruf" name="pesan" maxlength="1200" id='desc' placeholder="Ketikan Pesan Disini"></textarea>
 
