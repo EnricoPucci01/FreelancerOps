@@ -9,19 +9,27 @@ padding: 10px;">
                 <a href={{url("/loadChatbox/$item[room_id]")}}>
                     <div class="card mt-3" style="width: 100%;">
                         <div class="card-body">
-                            @foreach ($cust as $custData)
-                                @if (session()->get('role')=='client')
-                                    @if ($custData['cust_id']==$item['freelancer_id'])
-                                        <h4 class="card-title">{{$custData['nama']}} <span class="ml-3 badge badge-danger">{{$item['unread_sender']}}</span></h4>
-                                    @endif
-                                @elseif (session()->get('role')=='freelancer')
-                                    @if ($custData['cust_id']==$item['client_id'])
-                                        <h4 class="card-title">{{$custData['nama']}} <span class="ml-3 badge badge-danger">{{$item['unread_sender']}}</span></h4>
-                                    @endif
+                                @if (session()->get('cust_id')==$item['sender_id'])
+                                    @foreach ($cust as $custData)
+                                        @if ($custData['cust_id']== $item['reciever_id'])
+                                            <h4 class="card-title">{{$custData['nama']}} <span class="ml-3 badge badge-danger">{{$item['unread_sender']}}</span></h4>
+                                        @endif
+                                    @endforeach
+                                @elseif (session()->get('cust_id')==$item['reciever_id'])
+                                    @foreach ($cust as $custData)
+                                        @if ($custData['cust_id']==$item['sender_id'])
+                                            <h4 class="card-title">{{$custData['nama']}} <span class="ml-3 badge badge-danger">{{$item['unread_reciever']}}</span></h4>
+                                        @endif
+                                    @endforeach
+                                @endif
+
+                            <h6 class="card-subtitle mb-2">{{$item['topik_proyek']}}</h6>
+
+                            @foreach ($chat as $itemChat)
+                                @if ($itemChat['room_id'] == $item['room_id'])
+                                    <p class="card-subtitle mb-2 text-muted"> <span class="mr-3" style="font-size: 20px">{{$itemChat['message']}}</span>  -{{$itemChat['message_time']}}</p>
                                 @endif
                             @endforeach
-                            <h6 class="card-subtitle mb-2">{{$item['topik_proyek']}}</h6>
-                            <p class="card-subtitle mb-2 text-muted"> <span class="mr-3" style="font-size: 20px">{{$chat['message']}}</span>  -{{$chat['message_time']}}</p>
                         </div>
                     </div>
                 </a>

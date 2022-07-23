@@ -18,15 +18,24 @@ use Illuminate\Support\Facades\Session;
 class chatController extends Controller
 {
     public function loadChatroom(){
-        $chatRoom=chatroom::where('client_id',Session::get('cust_id'))->orWhere('freelancer_id',Session::get('cust_id'))->get();
-        $Room=chatroom::where('client_id',Session::get('cust_id'))->orWhere('freelancer_id',Session::get('cust_id'))->get('room_id');
-
+        $chatRoom=chatroom::where('sender_id',Session::get('cust_id'))->orWhere('reciever_id',Session::get('cust_id'))->get();
         $chatRoom=json_decode(json_encode($chatRoom),true);
+
+        $Room=chatroom::where('sender_id',Session::get('cust_id'))->orWhere('reciever_id',Session::get('cust_id'))->get('room_id');
+
         $cust=customer::get();
         $cust=json_decode(json_encode($cust),true);
 
-        $chat=chat::whereIn('room_id',$Room)->orderBy('message_time','DESC')->first();
-        $chat=json_decode(json_encode($chat),true);
+        $lastChat=array();
+        foreach($Room as $key){
+            $chat=chat::where('room_id',$key->room_id)->orderBy('chat_id','DESC')->first();
+            $chat=json_decode(json_encode($chat),true);
+            array_push($lastChat,$chat);
+        }
+
+        //dd($lastChat);
+
+        $dataProyek=null;
 
         if(Session::get("role")=="client"){
             //get topik proyek
@@ -64,7 +73,7 @@ class chatController extends Controller
         return view('chatroom',[
             'chatroom'=>$chatRoom,
             'cust'=>$cust,
-            'chat'=>$chat,
+            'chat'=>$lastChat,
             'modulData'=>$modulData,
             'customerData'=>$customerData,
             'dataModulDiambil'=>$dataModulDiambil,
@@ -86,18 +95,10 @@ class chatController extends Controller
         $topik= $target[1];
 
         DB::beginTransaction();
-        if(Session::get('role')=='client'){
-            $clientId=Session::get('cust_id');
-            $freelancerId=$reciever;
-
-        }else{
-            $freelancerId=Session::get('cust_id');
-            $clientId=$reciever;
-        }
 
         $chatRoom= new chatroom();
-        $chatRoom->client_id=$clientId;
-        $chatRoom->freelancer_id=$freelancerId;
+        $chatRoom->sender_id=Session::get("cust_id");
+        $chatRoom->reciever_id=$reciever;
         $chatRoom->topik_proyek=str_replace('%20',' ',$topik);
         $chatRoom->unread_msg='1';
         $chatRoom->save();
@@ -133,24 +134,40 @@ class chatController extends Controller
         $room= chatroom::where('room_id',$roomId)->first();
         $room=json_decode(json_encode($room),true);
 
+        //update Status Read
+        $upchat = chat::where('room_id',$roomId)->where('sender_id',"!=",Session::get('cust_id'))->get();
+        foreach($upchat as $updateItem){
+            $updateItem->status_read="R";
+            $updateItem->save();
+        }
 
-        if($room['freelancer_id']==Session::get('cust_id')){
-            $name= customer::where('cust_id',$room['client_id'])->first();
+        //update jumlah pesan sudah di read
+        $upRoom= chatroom::where('room_id',$roomId)->first();
+        if($upRoom->sender_id == Session::get('cust_id')){
+            $upRoom->unread_sender="0";
+            $upRoom->save();
+        }else if($upRoom->reciever_id == Session::get('cust_id')){
+            $upRoom->unread_reciever="0";
+            $upRoom->save();
+        }
+
+        if($room['reciever_id']==Session::get('cust_id')){
+            $name= customer::where('cust_id',$room['sender_id'])->first();
             $recieverName=$name->nama;
         }else{
-            $name= customer::where('cust_id',$room['freelancer_id'])->first();
+            $name= customer::where('cust_id',$room['reciever_id'])->first();
             $recieverName=$name->nama;
         }
 
-        $freelancerPic=profil::where('cust_id',$room['freelancer_id'])->first();
-        $clientPic=profil::where('cust_id',$room['client_id'])->first();
+        $recieverPic=profil::where('cust_id',$room['reciever_id'])->first();
+        $senderPic=profil::where('cust_id',$room['sender_id'])->first();
 
         return view('chatbox',[
             'chat'=>$chat,
             'roomId'=>$roomId,
             'recieverName'=>$recieverName,
-            'freelancerPic'=>$freelancerPic,
-            'clientPic'=>$clientPic,
+            'recieverPic'=>$recieverPic,
+            'senderPic'=>$senderPic,
             'topik'=>$room['topik_proyek']
         ]);
     }
@@ -165,11 +182,28 @@ class chatController extends Controller
         $insertChat->sender_id=Session::get('cust_id');
         $insertChat->message=$request->input('message');
         $insertChat->message_time=$jam;
+        $insertChat->status_read="S";
         $insertChat->save();
 
         if($insertChat){
-            DB::commit();
-            return Redirect::back();
+            $chatroom= chatroom::where("room_id",$roomId)->first();
+            $chat_count= chat::where("room_id",$roomId)->where("sender_id",Session::get("cust_id"))->count();
+
+            if($chatroom->sender_id == Session::get('cust_id')){
+                $chatroom->unread_reciever=$chat_count;
+
+            }else if($chatroom->reciever_id == Session::get('cust_id')){
+                $chatroom->unread_sender=$chat_count;
+            }
+
+            $chatroom->save();
+            if($chatroom){
+                DB::commit();
+                return Redirect::back();
+            }else{
+                DB::rollBack();
+                return Redirect::back()->with('error','Pesan Gagal Dikirim!');
+            }
         }else{
             DB::rollBack();
             return Redirect::back()->with('error','Pesan Gagal Dikirim!');
