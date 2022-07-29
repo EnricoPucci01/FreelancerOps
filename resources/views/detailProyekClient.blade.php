@@ -85,8 +85,6 @@
                             @endif
 
                             @if ($modul['status']=="finish")
-
-
                                 @if ($dataproyek['tipe_proyek']=='magang' && !collect($datapayment)->contains('modul_id',$modul['modul_id']))
                                     @foreach ($modulDiambil as $diambil)
                                         @if ($diambil['modul_id']==$modul['modul_id'])
@@ -114,8 +112,6 @@
                                                 @endif
                                             @endforeach
                                             <button class="btn btn-info btn-sm" data-bs-target={{'#modalTutup'.$pay['modul_id']}} data-bs-toggle="modal">Tutup Modul</button>
-
-
 
                                                 {{---------------------------------------------------MODAL-------------------------------------------------}}
                                                     {{-- Modal Tutup --}}

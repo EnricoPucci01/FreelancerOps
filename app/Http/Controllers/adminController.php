@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Charts\chartControl;
 use App\Charts\chartGen;
 use App\Models\customer;
+use App\Models\jobKategori;
 use App\Models\modul;
 use App\Models\modulDiambil;
 use App\Models\payment;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use Chartisan\PHP\Chartisan;
 use Google\Service\Monitoring\Custom;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -146,54 +148,75 @@ class adminController extends Controller
     }
 
     public function loadLaporanBulanAktif(){
-        $chart_options = [
-            'chart_title' => 'Laporan Bulan Paling Aktif',
-            'report_type' => 'group_by_date',
-            'model' => 'App\Models\proyek',
-            'group_by_field' => 'created_at',
-            'group_by_period' => 'month',
-            'aggregate_function' => 'count',
-            'aggregate_field' => 'proyek_id',
-            'chart_type' => 'line',
-            'chart_color'=>'255, 0, 30, 1'
-        ];
-        $chart1 = new LaravelChart($chart_options);
 
-        $query="SELECT kategori_job.judul_kategori,count(proyek.created_at)
-        FROM proyek,kategori_job
-        WHERE proyek.kategorijob_id=kategori_job.kategorijob_id
-        GROUP BY kategori_job.judul_kategori";
+        $query="SELECT modul_diambil.created_at as tanggal ,kategori_job.judul_kategori,count(proyek.created_at) as counts
+        FROM proyek,kategori_job,modul_diambil
+        WHERE proyek.kategorijob_id=kategori_job.kategorijob_id and proyek.proyek_id=modul_diambil.proyek_id
+        GROUP BY modul_diambil.created_at, kategori_job.judul_kategori";
         $db=DB::select($query);
         $db=json_decode(json_encode($db),true);
-        $nama=array();
-        //dd($db);
-        $totalproject=array();
-        $tanggal=array();
-        foreach($db as $Valnama){
-            array_push($nama,$Valnama['judul_kategori']);
-            array_push($totalproject,$Valnama['count(proyek.created_at)']);
-        }
-        $chart = new chartControl;
-        $chart->labels($nama);
-        $chart->dataset('Kategori Proyek', 'bar', $totalproject)->options(
-            [
-                'backgroundColor'=>["rgb(54, 162, 235)",
-                'rgb(255, 99, 132)',
-                'rgb(255, 205, 86)',
-                'rgb(55, 212, 79)',
-                'rgb(60, 66, 61)',
-                'rgb(245, 118, 7)',
-                'rgb(8, 69, 115)',
-                'rgb(88, 8, 115)']
-            ]
-        );
-        //$chart
 
-        return view('chart', [
-            'chart'=>$chart,
-            'chart1'=>$chart1,
-            'chart2'=>'0',
-            'judul'=>'Jumlah Proyek Diambil Berdasar Kategori'
+        $newSortedArray=[];
+        $kategorijob= jobKategori::get();
+        $sameDate=false;
+
+        foreach($db as $dataArr){
+            if($newSortedArray!=null){
+                foreach($newSortedArray as $sortArr){
+                    if($sortArr['tanggal'] == $dataArr['tanggal']){
+                        $data=[
+                            "judul_kategori"=>$dataArr['judul_kategori'] ,
+                            "counts"=> $dataArr['counts']
+                        ];
+                        array_pop($newSortedArray);
+                        array_push($sortArr['data'],$data);
+                        $newArrData=[];
+                        $newArrData['tanggal']=$dataArr['tanggal'];
+                        $newArrData["data"]=$sortArr['data'];
+                        array_push($newSortedArray,$newArrData);
+                        $sameDate=true;
+                    }else{
+                        $sameDate=false;
+                    }
+                }
+            }
+
+            if(!$sameDate){
+                $data=[
+                    [
+                        "judul_kategori"=>$dataArr['judul_kategori'] ,
+                        "counts"=> $dataArr['counts']
+                    ]
+                ];
+                $newArr=[];
+                $newArr['tanggal']=$dataArr['tanggal'];
+                $newArr['data'] = $data;
+                array_push($newSortedArray,$newArr);
+            }
+        }
+
+
+        $query="SELECT MONTHNAME(modul_diambil.created_at) as months ,count(modul_diambil.modultaken_id) as counts
+        FROM modul_diambil
+        GROUP BY months
+        ORDER BY counts DESC";
+        $dbSortedMonth=DB::select($query);
+        $dbSortedMonth=json_decode(json_encode($dbSortedMonth),true);
+
+
+        $query="SELECT kategori_job.judul_kategori as judul,count(proyek.created_at) as counts
+        FROM proyek,kategori_job,modul_diambil
+        WHERE proyek.kategorijob_id=kategori_job.kategorijob_id and proyek.proyek_id=modul_diambil.proyek_id
+        GROUP BY kategori_job.judul_kategori
+        ORDER BY counts DESC";
+        $dbKategori=DB::select($query);
+        $dbKategori=json_decode(json_encode($dbKategori),true);
+        //dd($dbKategori);
+        return view('laporanBulanAktif', [
+            "dataBulan"=>$newSortedArray,
+            "kategoriJob"=>$kategorijob,
+            'rekap'=>$dbSortedMonth,
+            'rekapKategori'=>$dbKategori
         ]);
     }
 

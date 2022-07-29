@@ -38,7 +38,7 @@
                             @endforeach
                         </div>
                         <hr>
-                        <a href="{{url("/loadDetailProyekClient/$proyek->proyek_id/c/$idCust")}}" class="btn btn-primary">Lihat Lebih Detail</a>
+                        <a href="{{url("/loadDetailProyekClient/$proyek->proyek_id/c")}}" class="btn btn-primary">Lihat Lebih Detail</a>
                     </div>
                 </div>
             </tr>

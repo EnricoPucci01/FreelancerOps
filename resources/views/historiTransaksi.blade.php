@@ -37,14 +37,14 @@
                         <td>
                             @foreach ($dataModul as $modul)
                                 @if ($modul['modul_id']==$payment['modul_id'])
-                                    {{$modul['title']}}
+                                    <a href={{url("/loadDetailProyekClient/$modul[proyek_id]/c")}}>{{$modul['title']}}</a>
                                 @endif
                             @endforeach
                         </td>
                         <td>
                             @foreach ($dataFreelancer as $freelancer)
                                 @if ($freelancer['cust_id']==$payment['cust_id'])
-                                    {{$freelancer['nama']}}
+                                    <a href={{url("/loadProfil/v/$freelancer[cust_id]")}}>{{$freelancer['nama']}}</a>
                                 @endif
                             @endforeach
                         </td>

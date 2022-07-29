@@ -210,9 +210,9 @@ class projectController extends Controller
         ]);
     }
 
-    public function loadBrowseProjectClient($idCust)
+    public function loadBrowseProjectClient()
     {
-        $listProject = proyek::where('cust_id', $idCust)->paginate(5);
+        $listProject = proyek::where('cust_id', Session::get('cust_id'))->paginate(5);
         //$listProject=json_decode(json_encode($listProject),true);
 
         $listKategori = kategori::get();
@@ -228,7 +228,7 @@ class projectController extends Controller
             'listkategori' => $listKategori,
             'listtag' => $listTag,
             'listproyek' => $listProject,
-            'idCust' => $idCust,
+            'idCust' => Session::get('cust_id'),
             'listkategoriJob' => $listKategoriJob
         ]);
     }
@@ -281,7 +281,7 @@ class projectController extends Controller
         ]);
     }
 
-    public function loadProyekClient($id, $accessor, $idCust)
+    public function loadProyekClient($id, $accessor)
     {
         $dataproyek = proyek::where('proyek_id', $id)->first();
         $dataproyek = json_decode(json_encode($dataproyek), true);
@@ -301,7 +301,7 @@ class projectController extends Controller
             'modulDiambil' => $modulTaken,
             'datapayment' => $payment,
             'accessor' => $accessor,
-            'id' => $idCust
+            'id' => Session::get("cust_id")
         ]);
     }
 

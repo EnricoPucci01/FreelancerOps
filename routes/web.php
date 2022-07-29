@@ -111,8 +111,8 @@ Route::post('/submitReview/{freelancerId}/{clientId}/{modulId}',[projectControll
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route Proyek Client load browse dan list proyek
-Route::get('/listprojectclient/{idCust}',[projectController::class,'loadBrowseProjectClient']);
-Route::get('/loadDetailProyekClient/{id}/{accessor}/{idCust}',[projectController::class,'loadProyekClient']);
+Route::get('/listprojectclient',[projectController::class,'loadBrowseProjectClient']);
+Route::get('/loadDetailProyekClient/{id}/{accessor}',[projectController::class,'loadProyekClient']);
 Route::get('/postproject',[projectController::class,'loadPostProject']);
 Route::Post('/postmodul',[projectController::class,'loadPostModul']);
 Route::post('/submitpostproject',[projectController::class,'submitPostProject']);

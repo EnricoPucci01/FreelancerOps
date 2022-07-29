@@ -129,7 +129,7 @@
             <div class="mt-3">
                 @if ($role=='f')
                 <a href={{url('/loadUploadSertifikat')}} class="btn btn-primary mt-3">+ Tambahkan Sertifikat</a>
-                @else
+                @elseif($role == 'c')
                     <a href="{{url("/terimaApplicant/$dataCust[cust_id]/$modulId/$proyekId/$applicantId")}}" class="btn btn-success">Terima</a>
                     <a href="{{url("/")}}" class="btn btn-danger">Tolak</a>
                 @endif

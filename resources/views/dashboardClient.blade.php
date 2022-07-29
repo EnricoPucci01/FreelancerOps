@@ -28,7 +28,7 @@
                                 @endphp
                             </table>
                         </div>
-                      <a href="{{url("/listprojectclient/".session()->get('cust_id'))}}" class="card-link mt-3">Lihat Semua</a>
+                      <a href={{url("/listprojectclient")}} class="card-link mt-3">Lihat Semua</a>
                     </div>
                   </div>
             </td>
