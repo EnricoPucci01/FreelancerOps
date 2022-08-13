@@ -539,40 +539,27 @@ class adminController extends Controller
 
     public function freelancerAktif()
     {
-        $query = "SELECT customer.nama, count(modul_diambil.cust_id)
-            FROM customer,modul_diambil
-            WHERE modul_diambil.cust_id=customer.cust_id
-            Group By customer.nama";
+        $query = "SELECT TableAktif.*
+            FROM (
+                SELECT customer.nama, 0 as Jumlah
+                FROM customer,modul_diambil
+                WHERE customer.role = 'freelancer' AND customer.cust_id NOT IN(Select(modul_diambil.cust_id)FROM modul_diambil)
+                Group By customer.nama
+
+                UNION ALL
+
+                SELECT customer.nama as nama, count(modul_diambil.cust_id) as Jumlah
+                FROM customer,modul_diambil
+                WHERE customer.role = 'freelancer' AND customer.cust_id=modul_diambil.cust_id
+                Group By customer.nama
+            ) as TableAktif
+            ORDER BY TableAktif.Jumlah DESC";
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
-        $nama = array();
-        $totalproject = array();
-        foreach ($db as $Valnama) {
-            array_push($nama, $Valnama['nama']);
-            array_push($totalproject, $Valnama['count(modul_diambil.cust_id)']);
-        }
-        $chart = new chartControl;
-        $chart->labels($nama);
-        $chart->dataset('Jumlah Proyek Selesai', 'bar', $totalproject)->options(
-            [
-                'backgroundColor' => [
-                    "rgb(54, 162, 235)",
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)',
-                    'rgb(55, 212, 79)',
-                    'rgb(60, 66, 61)',
-                    'rgb(245, 118, 7)',
-                    'rgb(8, 69, 115)',
-                    'rgb(88, 8, 115)'
-                ]
-            ]
-        );
 
-        return view('chart', [
-            'chart' => $chart,
-            'chart1' => "0",
-            'chart2' => '0',
-            'judul' => 'Laporan Freelancer Aktif'
+
+        return view('LaporanFreelancerAktif', [
+            "dataFreelancer" =>$db
         ]);
     }
 
