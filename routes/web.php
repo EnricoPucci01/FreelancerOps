@@ -363,7 +363,7 @@ Route::get('/loadPenarikanDanaAdmin',[xenditController::class,'loadPenarikanDana
 Route::get('/historiSaldoAdmin',[adminController::class,'historiSaldoAdmin']);
 Route::post('/penarikanDanaAdmin',[xenditController::class,'penarikanDanaAdmin']);
 Route::post('/filterLaporanAdmin/{status}',[adminController::class,'filterLaporanAdmin']);
-
+Route::get("/detailLaporanFreelancerAktif/{custId}",[adminController::class,'detailLaporanFreelancerAktif']);
 //========================================================================================================================
 //========================================================================================================================
 

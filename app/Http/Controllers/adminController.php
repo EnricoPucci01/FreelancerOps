@@ -133,24 +133,7 @@ class adminController extends Controller
 
     public function loadLaporanPendapatan()
     {
-        $chart_options = [
-            'chart_title' => 'Laporan Pendapatan',
-            'report_type' => 'group_by_date',
-            'model' => 'App\Models\payment',
-            'group_by_field' => 'payment_time',
-            'group_by_period' => 'month',
-            'aggregate_function' => 'sum',
-            'aggregate_field' => 'service_fee',
-            'chart_type' => 'bar',
-            'chart_color' => '245, 0, 30, 1'
-        ];
-        $chart1 = new LaravelChart($chart_options);
 
-        return view('chart', [
-            'chart1' => $chart1,
-            'chart2' => '0',
-            'chart' => '0',
-        ]);
     }
 
     public function loadLaporanBulanAktif()
@@ -244,29 +227,29 @@ class adminController extends Controller
                 'path' => LengthAwarePaginator::resolveCurrentPath(),
                 'pageName' => 'page',
             ]
-          );
+        );
         //dd($paginationData);
         Carbon::setLocale('id');
         return view('listProyekBulan', [
             "listproyek" => $paginationData,
-            'month'=>Carbon::parse($months)->translatedFormat('F')
+            'month' => Carbon::parse($months)->translatedFormat('F')
         ]);
     }
 
     public function laporanFreelancer()
     {
-        $queryUmur = "SELECT FLOOR(DATEDIFF(CURDATE(),customer.tanggal_lahir)/365) AS umur, count(customer.cust_id) AS Jumlah
-            FROM customer
-            WHERE customer.role='freelancer'
-            Group By umur";
-        $dbumur = DB::select($queryUmur);
-        $dbumur = json_decode(json_encode($dbumur), true);
-        $umur = array();
-        $jumlah = array();
-        foreach ($dbumur as $Valnama) {
-            array_push($umur, $Valnama['umur']);
-            array_push($jumlah, $Valnama['Jumlah']);
-        }
+        // $queryUmur = "SELECT FLOOR(DATEDIFF(CURDATE(),customer.tanggal_lahir)/365) AS umur, count(customer.cust_id) AS Jumlah
+        //     FROM customer
+        //     WHERE customer.role='freelancer'
+        //     Group By umur";
+        // $dbumur = DB::select($queryUmur);
+        // $dbumur = json_decode(json_encode($dbumur), true);
+        // $umur = array();
+        // $jumlah = array();
+        // foreach ($dbumur as $Valnama) {
+        //     array_push($umur, $Valnama['umur']);
+        //     array_push($jumlah, $Valnama['Jumlah']);
+        // }
 
 
         $querySpesialisasi = "SELECT skill.nama_skill AS nama, count(spesialisasi.spesialisasi_id) AS jumlah
@@ -283,36 +266,36 @@ class adminController extends Controller
         }
 
 
-        $chart_options = [
-            'chart_title' => 'Tingkat Edukasi',
-            'report_type' => 'group_by_string',
-            'model' => 'App\Models\customer',
-            'group_by_field' => 'pendidikan',
-            'aggregate_function' => 'count',
-            'aggregate_field' => 'pendidikan',
-            'chart_type' => 'bar',
-            'chart_color' => '255, 0, 30, 1',
-            'where_raw' => "role = 'freelancer'"
-        ];
-        $chart1 = new LaravelChart($chart_options);
+        // $chart_options = [
+        //     'chart_title' => 'Tingkat Edukasi',
+        //     'report_type' => 'group_by_string',
+        //     'model' => 'App\Models\customer',
+        //     'group_by_field' => 'pendidikan',
+        //     'aggregate_function' => 'count',
+        //     'aggregate_field' => 'pendidikan',
+        //     'chart_type' => 'bar',
+        //     'chart_color' => '255, 0, 30, 1',
+        //     'where_raw' => "role = 'freelancer'"
+        // ];
+        // $chart1 = new LaravelChart($chart_options);
 
 
-        $chartumur = new chartControl;
-        $chartumur->labels($umur);
-        $chartumur->dataset('Umur Customer', 'pie', $jumlah)->options(
-            [
-                'backgroundColor' => [
-                    "rgb(54, 162, 235)",
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)',
-                    'rgb(55, 212, 79)',
-                    'rgb(60, 66, 61)',
-                    'rgb(245, 118, 7)',
-                    'rgb(8, 69, 115)',
-                    'rgb(88, 8, 115)'
-                ]
-            ]
-        );
+        // $chartumur = new chartControl;
+        // $chartumur->labels($umur);
+        // $chartumur->dataset('Umur Customer', 'pie', $jumlah)->options(
+        //     [
+        //         'backgroundColor' => [
+        //             "rgb(54, 162, 235)",
+        //             'rgb(255, 99, 132)',
+        //             'rgb(255, 205, 86)',
+        //             'rgb(55, 212, 79)',
+        //             'rgb(60, 66, 61)',
+        //             'rgb(245, 118, 7)',
+        //             'rgb(8, 69, 115)',
+        //             'rgb(88, 8, 115)'
+        //         ]
+        //     ]
+        // );
 
         $chartspesialisasi = new chartControl;
         $chartspesialisasi->labels($skill);
@@ -332,9 +315,9 @@ class adminController extends Controller
         );
 
         return view("chart", [
-            'chart' => $chartumur,
-            'judul' => 'Grafik Umur Freelancer',
-            'chart1' => $chart1,
+            'chart' => '0',
+            'judul' => '',
+            'chart1' => '0',
             'chart2' => $chartspesialisasi,
             'judul2' => 'Grafik Spesialisasi Freelancer'
         ]);
@@ -469,6 +452,42 @@ class adminController extends Controller
 
     public function chartProyekTidakBayar()
     {
+        // Grafik Pendapatan perBulan
+        $query = "SELECT MONTHNAME(created_at) as bulan, SUM(service_fee) as total
+        FROM payment
+        GROUP BY MONTHNAME(created_at)
+        ORDER BY total DESC";
+        $db = DB::select($query);
+        $db = json_decode(json_encode($db), true);
+
+        //dd($db);
+
+        $bulan = array();
+        $total = array();
+        foreach ($db as $Valnama) {
+            array_push($bulan, $Valnama['bulan']);
+            array_push($total, $Valnama['total']);
+        }
+
+
+        $chartPendapatan = new chartControl;
+        $chartPendapatan->labels($bulan);
+        $chartPendapatan->dataset('Pendapatan', 'line', $total)->options(
+            [
+                'backgroundColor' => [
+                    "rgb(54, 162, 235)",
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)',
+                    'rgb(55, 212, 79)',
+                    'rgb(60, 66, 61)',
+                    'rgb(245, 118, 7)',
+                    'rgb(8, 69, 115)',
+                    'rgb(88, 8, 115)'
+                ]
+            ]
+        );
+
+        //Grafik Belum di proyek bayar
         $chart_options = [
             'chart_title' => 'Laporan Proyek Belum Di Bayar',
             'report_type' => 'group_by_string',
@@ -479,11 +498,13 @@ class adminController extends Controller
             'chart_type' => 'pie',
             'chart_color' => '255, 0, 30, 1'
         ];
+
         $chart1 = new LaravelChart($chart_options);
 
         return view('chart', [
             'chart1' => $chart1,
-            'chart2' => '0',
+            'chart2' => $chartPendapatan,
+            'judul2' => 'Grafik Laporan Pendapatan',
             'chart' => '0'
         ]);
     }
@@ -541,17 +562,17 @@ class adminController extends Controller
     {
         $query = "SELECT TableAktif.*
             FROM (
-                SELECT customer.nama, 0 as Jumlah
+                SELECT customer.cust_id as id,customer.nama as nama, 0 as Jumlah
                 FROM customer,modul_diambil
                 WHERE customer.role = 'freelancer' AND customer.cust_id NOT IN(Select(modul_diambil.cust_id)FROM modul_diambil)
-                Group By customer.nama
+                Group By customer.nama, customer.cust_id
 
                 UNION ALL
 
-                SELECT customer.nama as nama, count(modul_diambil.cust_id) as Jumlah
+                SELECT customer.cust_id as id,customer.nama as nama, count(modul_diambil.cust_id) as Jumlah
                 FROM customer,modul_diambil
                 WHERE customer.role = 'freelancer' AND customer.cust_id=modul_diambil.cust_id
-                Group By customer.nama
+                Group By customer.nama,customer.cust_id
             ) as TableAktif
             ORDER BY TableAktif.Jumlah DESC";
         $db = DB::select($query);
@@ -559,7 +580,95 @@ class adminController extends Controller
 
 
         return view('LaporanFreelancerAktif', [
-            "dataFreelancer" =>$db
+            "dataFreelancer" => $db
+        ]);
+    }
+
+    public function detailLaporanFreelancerAktif($custId)
+    {
+        $query = "SELECT kategori.nama_kategori as nama, COUNT(tag.tag_id) as jumlah
+        FROM (
+            SELECT DISTINCT modul_diambil.proyek_id as proid
+            FROM modul_diambil
+            WHERE cust_id=$custId
+        ) as TableAktif, tag, kategori
+        WHERE TableAktif.proid =  tag.proyek_id AND kategori.kategori_id = tag.kategori_id
+        GROUP BY nama
+        ORDER BY nama DESC";
+        $db = DB::select($query);
+        $db = json_decode(json_encode($db), true);
+        //dd($db);
+        $nama = array();
+        $jumlah = array();
+        foreach ($db as $Valnama) {
+            array_push($nama, $Valnama['nama']);
+            array_push($jumlah, $Valnama['jumlah']);
+        }
+
+        $chartumur = new chartControl;
+        $chartumur->labels($nama);
+        $chartumur->dataset('Tag Proyek', 'pie', $jumlah)->options(
+            [
+                'backgroundColor' => [
+                    "rgb(54, 162, 235)",
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)',
+                    'rgb(55, 212, 79)',
+                    'rgb(60, 66, 61)',
+                    'rgb(245, 118, 7)',
+                    'rgb(8, 69, 115)',
+                    'rgb(88, 8, 115)'
+                ]
+            ]
+        );
+
+
+        $query = "SELECT kategori_job.judul_kategori as nama, COUNT(kategori_job.kategorijob_id) as jumlah
+        FROM (
+            SELECT DISTINCT modul_diambil.proyek_id as proid, proyek.kategorijob_id as idjob
+            FROM modul_diambil, proyek
+            WHERE modul_diambil.cust_id=$custId And modul_diambil.proyek_id =  proyek.proyek_id
+        ) as TableAktif, kategori_job
+        WHERE kategori_job.kategorijob_id = TableAktif.idjob
+        GROUP BY nama
+        ORDER BY nama DESC";
+        // $query=" SELECT DISTINCT modul_diambil.proyek_id as proid, proyek.kategorijob_id as idjob
+        // FROM modul_diambil, proyek
+        // WHERE modul_diambil.cust_id=$custId And modul_diambil.proyek_id =  proyek.proyek_id";
+        $db = DB::select($query);
+        $db = json_decode(json_encode($db), true);
+        //dd($db);
+
+        $namaKategori = array();
+        $jumlahKategori = array();
+        foreach ($db as $Valnama) {
+            array_push($namaKategori, $Valnama['nama']);
+            array_push($jumlahKategori, $Valnama['jumlah']);
+        }
+
+        $chartKategori = new chartControl;
+        $chartKategori->labels($namaKategori);
+        $chartKategori->dataset('Kategori Proyek', 'pie', $jumlahKategori)->options(
+            [
+                'backgroundColor' => [
+                    "rgb(54, 162, 235)",
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)',
+                    'rgb(55, 212, 79)',
+                    'rgb(60, 66, 61)',
+                    'rgb(245, 118, 7)',
+                    'rgb(8, 69, 115)',
+                    'rgb(88, 8, 115)'
+                ]
+            ]
+        );
+
+        return view("chart", [
+            'chart' => $chartumur,
+            'judul' => 'Grafik Tag Proyek Favorit',
+            'chart1' => '0',
+            'chart2' => $chartKategori,
+            'judul2' => 'Grafik Kategori Proyek Favorit'
         ]);
     }
 

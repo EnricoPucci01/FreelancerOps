@@ -16,7 +16,7 @@
 
 
         @if ($chart1!='0')
-            <div class="card mt-3" style="width: 70%;">
+            <div class="card mt-3" style="width: 50%;">
                 <div class="row justify-content-center">
                     <div class="card-body">
 

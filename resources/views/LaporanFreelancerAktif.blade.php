@@ -21,7 +21,7 @@
             @foreach ($dataFreelancer as $itemFreelancer)
                 <tr>
                     <td style="text-align: center ;width:10%">
-                        {{ $itemFreelancer['nama'] }}
+                        <a href={{url("/detailLaporanFreelancerAktif/$itemFreelancer[id]")}}>{{ $itemFreelancer['nama'] }}</a>
                     </td>
                     <td style="text-align:center">
                        {{$itemFreelancer['Jumlah']}}

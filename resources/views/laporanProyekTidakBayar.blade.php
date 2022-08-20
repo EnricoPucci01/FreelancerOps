@@ -2,7 +2,7 @@
 @section('content')
     <center>
         <div class="card mt-3" style="width: 80%">
-            <h3 class="card-title">Laporan Proyek Tidak Terbayar</h3>
+            <h3 class="card-title">Laporan Pendapatan</h3>
             <div class="card-body" >
                 <table class="table table-striped">
                     <thead class="fw-bold">
