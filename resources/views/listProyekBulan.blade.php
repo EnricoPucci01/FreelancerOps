@@ -11,7 +11,7 @@
                 Daftar Proyek Diambil Pada Bulan {{$month}}
             </h1></div>
             @if (count($listproyek) > 0)
-                <table class="table table-stiped">
+                <table class="table table-striped">
                     <thead class="fw-bold">
                         <tr>
                             <td>
