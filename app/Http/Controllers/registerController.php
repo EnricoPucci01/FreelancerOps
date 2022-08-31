@@ -1,10 +1,12 @@
 <?php
 use App\Http\Controllers\DB;
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\customer;
 use App\Models\skill;
 use App\Models\spesialisasi;
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -57,7 +59,7 @@ class registerController extends Controller
             Session::put('pendidikan',$request->input('pendidikan_register'));
         }
 
-        return redirect("/sendEmail");
+        return redirect("/registerUser");
     }
 
     public function registerUser(Request $request){
@@ -94,6 +96,14 @@ class registerController extends Controller
                         $insertSpesialisasi->save();
                     }
                 }
+                $user = User::create([
+                    'name' => Session::get('name_register'),
+                    'email' => Session::get('email_register'),
+                    'password' => Session::get('pass_register'),
+                ]);
+
+                event(new Registered($user));
+
                 DB::commit();
                 return \redirect("/")->with("success", "Account registration success");
             }else{

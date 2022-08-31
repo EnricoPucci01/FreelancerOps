@@ -6,12 +6,14 @@ use App\Models\applicant;
 use App\Models\customer;
 use App\Models\modul;
 use App\Models\modulDiambil;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\payment;
 use App\Models\proyek;
 use DateTime;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session as FacadesSession;
@@ -44,13 +46,16 @@ class loginController extends Controller
                 FacadesSession::put('role',$dataLogin[0]['role']);
 
 
+
                 if($dataLogin[0]['role']=="freelancer"){
                     FacadesSession::put('cust_id',$dataLogin[0]['cust_id']);
                     DB::commit();
                     return \redirect("/autoRejectApplicant");
                 }else if($dataLogin[0]['role']=="client"){
+                    //Auth::login($dataLogin[0]['email']);
                     FacadesSession::put('cust_id',$dataLogin[0]['cust_id']);
                     DB::commit();
+
                     return \redirect('/dashboardClient');
                 }else if($dataLogin[0]['role']=="admin"){
                     FacadesSession::put('cust_id','0');
@@ -117,6 +122,6 @@ class loginController extends Controller
             }
         }
         DB::commit();
-        return \redirect("/dashboard");
+        return \redirect("/dashboardfreelancer");
     }
 }

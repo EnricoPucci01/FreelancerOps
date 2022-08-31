@@ -21,7 +21,7 @@
     <div class="card" style="width: 30rem;" >
         <div class="card-body">
           <h3 class="card-title">Login</h5>
-          <form action={{url("/login")}} method="GET">
+          <form action={{url("/loginops")}} method="GET">
             @csrf
             @method('GET')
               <table>

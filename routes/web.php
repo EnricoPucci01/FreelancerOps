@@ -44,7 +44,7 @@ use Illuminate\Support\Facades\Session;
 Route::get('/', function () {
     return view('login');
 });
-Route::get('/login',[loginController::class,'login']);
+Route::get('/loginops',[loginController::class,'login']);
 Route::get('/register', [registerController::class,'loadRegister']);
 Route::post('/submitregister',[registerController::class,'generateCode']);
 Route::get('/sendEmail',[emailController::class,'sendEmail']);
@@ -143,7 +143,8 @@ Route::get('/batalFreelancer/{modulTakenId}',[projectController::class,'batalkan
 Route::middleware([cekFreelancer::class])->group(function(){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route Dashboard Freelancer
-Route::get('/dashboard',[loginController::class,'loadDashboardFreelancer']);
+//Route::get('/dashboardfreelancer', [loginController::class,'loadDashboardFreelancer'])->middleware(['auth'])->name('dashboardfreelancer');
+Route::get('/dashboardfreelancer',[loginController::class,'loadDashboardFreelancer']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -355,7 +356,6 @@ Route::get('/chartProyekTidakBayar',[adminController::class,'chartProyekTidakBay
 Route::get('/laporanFreelancer',[adminController::class,'laporanFreelancer']);
 Route::get('/laporanClient',[adminController::class,'laporanClient']);
 Route::get('/ketepatanPembayaran',[adminController::class,'ketepatanPembayaran']);
-Route::get("/listProyekBulan/{months}",[adminController::class,'listProyekBulan']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Route::get('/laporanProyekAdmin/{status}',[adminController::class,'laporanProyekAdmin']);
@@ -363,7 +363,7 @@ Route::get('/loadPenarikanDanaAdmin',[xenditController::class,'loadPenarikanDana
 Route::get('/historiSaldoAdmin',[adminController::class,'historiSaldoAdmin']);
 Route::post('/penarikanDanaAdmin',[xenditController::class,'penarikanDanaAdmin']);
 Route::post('/filterLaporanAdmin/{status}',[adminController::class,'filterLaporanAdmin']);
-Route::get("/detailLaporanFreelancerAktif/{custId}",[adminController::class,'detailLaporanFreelancerAktif']);
+
 //========================================================================================================================
 //========================================================================================================================
 
@@ -382,3 +382,11 @@ Route::get('/info',[firebaseController::class,'info']);
 //========================================================================================================================
 
 });
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+
+
+require __DIR__.'/auth.php';

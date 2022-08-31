@@ -159,7 +159,7 @@
 
         </table>
         <center>
-            <a href={{url("/listprojectclient/$id")}} class="btn btn-secondary"> Kembali </a>
+            <a href={{url("/listprojectclient")}} class="btn btn-secondary"> Kembali </a>
         </center>
 
 

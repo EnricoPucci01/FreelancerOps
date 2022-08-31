@@ -21,6 +21,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \Fruitcake\Cors\HandleCors::class,
+        \App\Http\Middleware\Cors::class,
     ];
 
     /**
@@ -66,5 +68,6 @@ class Kernel extends HttpKernel
         'cekLogin'=> \App\Http\Middleware\cekLogin::class,
         'cekClient'=> \App\Http\Middleware\cekCLient::class,
         'cekFreelancer'=> \App\Http\Middleware\cekFreelancer::class,
+        'cors' => \App\Http\Middleware\Cors::class,
     ];
 }

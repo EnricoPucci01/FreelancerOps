@@ -4,7 +4,7 @@
     <center>
         <div class="card" style="width: 70%; margin-top: 20px;">
             <div class="card-body">
-                <h3 class="card-title">Edit Kalender</h5>
+                <h3 class="card-title">Tambah Acara</h5>
                     <form action={{ url('/insertEvent') }} method="POST">
                         @csrf
                         @method('POST')

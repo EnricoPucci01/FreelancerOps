@@ -35,7 +35,7 @@
         <div class="container-fluid">
             @if (session()->has('active'))
                 @if (session()->get('role') == 'freelancer')
-                    <a href="{{ url('/dashboard') }}">Dashboard</a>
+                    <a href="{{ url('/dashboardfreelancer') }}">Dashboard</a>
                     <a href={{ url('/browse') }}>Browse</a>
                     <a href={{ url('/listProyekFreelancer/' . session()->get('cust_id')) }}>My Projects</a>
                 @endif
