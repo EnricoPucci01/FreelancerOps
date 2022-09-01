@@ -3,10 +3,28 @@
     var select=document.getElementById('btnok');
     var table = document.getElementById("modul_table");
     var table_magang=document.getElementById("modul_table_Magang");
+    var hid_val=document.getElementById('hid_val');
     select.addEventListener('click', function(){
         if(jenisProyek.value=="magang"){
-            var hid_val=document.getElementById('hid_val');
+
             var row = table_magang.insertRow(1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            cell1.innerHTML = '<input type="text" name="nama_modul'+hid_val.value+'">';
+            cell2.innerHTML = '<textarea name="desc_modul'+hid_val.value+'"></textarea>';
+            cell3.innerHTML = '<input type="number" value="0" onkeyup="editTotal()" id="rentang1_bayaran'+hid_val.value+'" name="rentang1_bayaran'+hid_val.value+'">';
+            cell4.innerHTML = '<input type="number" value="0" onkeyup="editTotal()" id="rentang2_bayaran'+hid_val.value+'" name="rentang2_bayaran'+hid_val.value+'">';
+            cell5.innerHTML = '<input type="date" name="deadline_modul'+hid_val.value+'">';
+            hid_val.value= parseInt(hid_val.value)+1;
+            cell6.innerHTML = "<button type='button' class='btn-danger' onclick='delFunction("+hid_val.value+")'> <i class='bi bi-trash-fill'></i> </button>";
+
+            console.log("hidval: "+hid_val.value);
+        }else{
+            var row = table.insertRow(1);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
@@ -14,31 +32,23 @@
             var cell5 = row.insertCell(4);
             cell1.innerHTML = '<input type="text" name="nama_modul'+hid_val.value+'">';
             cell2.innerHTML = '<textarea name="desc_modul'+hid_val.value+'"></textarea>';
-            cell3.innerHTML = '<input type="number" value="0" onkeyup="editTotal()" id="rentang1_bayaran'+hid_val.value+'" name="rentang1_bayaran'+hid_val.value+'">';
-            cell4.innerHTML = '<input type="number" value="0" onkeyup="editTotal()" id="rentang2_bayaran'+hid_val.value+'" name="rentang2_bayaran'+hid_val.value+'">';
-            cell5.innerHTML = '<input type="date" name="deadline_modul'+hid_val.value+'">';
-
-            hid_val.value= parseInt(hid_val.value)+1;
-            console.log("hidval: "+hid_val.value);
-        }else{
-            var hid_val=document.getElementById('hid_val');
-            var row = table.insertRow(1);
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var cell4 = row.insertCell(3);
-            cell1.innerHTML = '<input type="text" name="nama_modul'+hid_val.value+'">';
-            cell2.innerHTML = '<textarea name="desc_modul'+hid_val.value+'"></textarea>';
             cell3.innerHTML = '<input type="number" value="0" onkeyup="editTotal()" id="bayaran'+hid_val.value+'" name="bayaran'+hid_val.value+'">';
             cell4.innerHTML = '<input type="date" name="deadline_modul'+hid_val.value+'">';
-
             hid_val.value= parseInt(hid_val.value)+1;
+            cell5.innerHTML = '<button type="button" class="btn btn-danger deletebtn" onclick="delFunction('+hid_val.value+')"> <i class="bi bi-trash-fill"></i> </button>';
+
             console.log("hidval: "+hid_val.value);
         }
     }, false);
 
 })();
 
+function delFunction(idx){
+    var hid_val=document.getElementById('hid_val');
+    hid_val.value = parseInt(hid_val.value)-1;
+    document.getElementById("modul_table").deleteRow(idx);
+    console.log("hidval: "+hid_val.value);
+}
 
 function editTotal(){
     var jenisProyek=document.getElementById("tipeProyek");

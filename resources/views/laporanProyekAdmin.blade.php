@@ -16,39 +16,60 @@
                   <a class="{{$status == 'dibatalkan' ? "nav-link active" : "nav-link"}}" href={{url("/laporanProyekAdmin/dibatalkan")}}>Dibatalkan</a>
                 </li>
             </ul>
-
-            <div class="card-body">
-
+            <div style="padding: 10px">
                 <form method="POST" action={{($status=='selesai')? url("/filterLaporanAdmin/selesai")
-                :($status=="dibatalkan")? url("/filterLaporanAdmin/dibatalkan")
-                :url("/filterLaporanAdmin/pengerjaan")}}>
-                    @csrf
-                    @method('POST')
+                                :($status=="dibatalkan")? url("/filterLaporanAdmin/dibatalkan")
+                                :url("/filterLaporanAdmin/pengerjaan")}}>
+                                    @csrf
+                                    @method('POST')
 
-                    <table>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input type="date" name='dateStart' value={{Carbon\Carbon::now()->subDays(1)}} class="form-control">
+                                            </td>
+                                            <td>
+                                                -
+                                            </td>
+                                            <td>
+                                                <input type="date" name='dateEnd' value={{Carbon\Carbon::now()}} class="form-control">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-warning text-light form-control" type="submit" style="padding: 10px"><i class="bi bi-search"></i></button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                </form>
+                <div style="width: 100%;">
+                    <table style="width:50%;margin-left:auto; margin-right:auto">
                         <tr>
                             <td>
-                                <input type="date" name='dateStart' value={{Carbon\Carbon::now()->subDays(1)}} class="form-control">
+                                <div class="bg-danger" style="width:30px;height:20px">
+
+                                </div>
                             </td>
                             <td>
-                                 -
+                                15 hari atau kurang dari Deadline
                             </td>
                             <td>
-                                <input type="date" name='dateEnd' value={{Carbon\Carbon::now()}} class="form-control">
+                                <div class="bg-dark"  style="width:30px;height:20px">
+
+                                </div>
                             </td>
                             <td>
-                                <button class="btn btn-warning text-light form-control" type="submit" style="padding: 10px"><i class="bi bi-search"></i></button>
+                                Terlambat
                             </td>
                         </tr>
                     </table>
-                </form>
+                </div>
 
-
-                <table class="table table-striped">
+            </div>
+            <div class="card-body">
+                <table class="table">
                     <thead class="fw-bold">
                         <tr>
                             <td>
-                                Tanggal
+                                Tanggal Pengambilan
                             </td>
                             <td>
                                 Client
@@ -60,16 +81,32 @@
                                 Proyek
                             </td>
                             <td>
+                                Deadline Proyek
+                            </td>
+                            <td>
                                 Modul
                             </td>
                             <td>
-                                Status
+                                Deadline Modul
                             </td>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($modulDiambil as $item)
-                            <tr>
+                            <tr
+
+                                @foreach ($modul as $itemModul)
+                                    @if ($item->modul_id == $itemModul->modul_id)
+                                        @if ((int) Carbon\Carbon::now()->diffInDays(Carbon\Carbon::parse($itemModul->end)) <= 15)
+                                            class="bg-danger text-light"
+                                        @endif
+                                        @if (Carbon\Carbon::now()->gt(Carbon\Carbon::parse($itemModul->end)))
+                                            class="bg-dark text-light"
+                                        @endif
+                                    @endif
+                                @endforeach
+
+                            >
                                 <td>
                                     {{$item->created_at->format('d-m-Y')}}
                                 </td>
@@ -78,7 +115,19 @@
                                         @if ($itemProyek->proyek_id==$item->proyek_id)
                                             @foreach ($cust as $namaCust)
                                                 @if ($namaCust->cust_id==$itemProyek->cust_id)
-                                                    {{$namaCust->nama}}
+                                                    @foreach ($modul as $itemModul)
+                                                        @if ($item->modul_id == $itemModul->modul_id)
+                                                            @if ((int) Carbon\Carbon::now()->diffInDays(Carbon\Carbon::parse($itemModul->end)) <= 15)
+                                                                <a href={{url("/loadProfil/v/$namaCust[cust_id]")}} ><u class="fw-bold text-light">{{$namaCust->nama}}</u></a>
+                                                            @else
+                                                                @if (Carbon\Carbon::now()->gt(Carbon\Carbon::parse($itemModul->end)))
+                                                                    <a href={{url("/loadProfil/v/$namaCust[cust_id]")}} ><u class="fw-bold text-light">{{$namaCust->nama}}</u></a>
+                                                                @else
+                                                                    <a href={{url("/loadProfil/v/$namaCust[cust_id]")}} ><u class="fw-bold text-dark">{{$namaCust->nama}}</u></a>
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
                                                 @endif
                                             @endforeach
                                         @endif
@@ -87,7 +136,19 @@
                                 <td>
                                     @foreach ($cust as $namaCust)
                                         @if ($namaCust->cust_id==$item->cust_id)
-                                            {{$namaCust->nama}}
+                                            @foreach ($modul as $itemModul)
+                                                @if ($item->modul_id == $itemModul->modul_id)
+                                                    @if ((int) Carbon\Carbon::now()->diffInDays(Carbon\Carbon::parse($itemModul->end)) <= 15)
+                                                        <a href={{url("/loadProfil/v/$namaCust[cust_id]")}} ><u class="fw-bold text-light">{{$namaCust->nama}}</u></a>
+                                                    @else
+                                                        @if (Carbon\Carbon::now()->gt(Carbon\Carbon::parse($itemModul->end)))
+                                                            <a href={{url("/loadProfil/v/$namaCust[cust_id]")}} ><u class="fw-bold text-light">{{$namaCust->nama}}</u></a>
+                                                        @else
+                                                            <a href={{url("/loadProfil/v/$namaCust[cust_id]")}} ><u class="fw-bold text-dark">{{$namaCust->nama}}</u></a>
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                            @endforeach
                                         @endif
                                     @endforeach
                                 </td>
@@ -99,6 +160,13 @@
                                     @endforeach
                                 </td>
                                 <td>
+                                    @foreach ($proyek as $itemProyek)
+                                        @if ($itemProyek->proyek_id==$item->proyek_id)
+                                            {{Carbon\Carbon::parse($itemProyek->deadline)->format('d-m-Y')}}
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td>
                                     @foreach ($modul as $itemModul)
                                         @if ($itemModul->modul_id==$item->modul_id)
                                             {{$itemModul->title}}
@@ -106,16 +174,11 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    @if ($item->status=='selesai')
-                                       <span class="text-success fw-bold">{{$item->status}}</span>
-                                    @endif
-                                    @if ($item->status=='pengerjaan')
-                                        <span class="text-warning fw-bold">{{$item->status}}</span>
-                                    @endif
-                                    @if ($item->status=='dibatalkan')
-                                        <span class="text-danger fw-bold">{{$item->status}}</span>
-                                    @endif
-
+                                    @foreach ($modul as $itemModul)
+                                        @if ($itemModul->modul_id==$item->modul_id)
+                                            {{Carbon\Carbon::parse($itemModul->end)->format('d-m-Y')}}
+                                        @endif
+                                    @endforeach
                                 </td>
                             </tr>
                         @endforeach

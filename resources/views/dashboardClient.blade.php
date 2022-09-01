@@ -36,36 +36,38 @@
                   </div>
             </td>
             <td class='tdPersonalInfo'>
-                <div class="card personalInfo bg-warning">
+                <div class="card personalInfo ">
                     <div class="card-body ">
-                        <div class="bg-warning" style="height:8rem; padding:5px; margin-bottom:3px">
+                        <div class="bg-warning rounded" style="height:8rem; padding:5px; margin-bottom:3px">
                             <h6 class="card-subtitle mb-2 text-light fs-4">Selamat Datang,</h6>
                             <h5 class="card-title text-light text-uppercase fw-bold fs-2">{{session()->get('name')}}</h5>
                         </div>
-                        <table style="width: 109%">
+                        <div class="bg-warning rounded" style="padding: 10px">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td>
+                                        {{-- <a href={{url("/login")}} class="btn btn-outline-primary mb-2 mt-2 fw-bold" style="width: 92%">Obrolan</a> --}}
+                                        <a href={{url("/loadChatroom")}} class="btn btn-outline-light mb-2 mt-2 fw-bold" style="width: 100%"> Obrolan</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href={{url("/loadEditCalendar")}} class="btn btn-outline-light mb-2 fw-bold" style="width: 100%">Kalender</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href={{url("/loadHistoriTransaksi")}} class="btn btn-outline-light mb-2 fw-bold" style="width: 100%">Histori Transaksi</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href={{url('/listKontrak/pengerjaan')}} class="btn btn-outline-light mb-2 fw-bold" style="width: 100%">List Kontrak</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
 
-                            <tr>
-                                <td>
-                                    {{-- <a href={{url("/login")}} class="btn btn-outline-primary mb-2 mt-2 fw-bold" style="width: 92%">Obrolan</a> --}}
-                                    <a href={{url("/loadChatroom")}} class="btn btn-outline-light mb-2 mt-2 fw-bold" style="width: 92%"> Obrolan</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href={{url("/loadEditCalendar")}} class="btn btn-outline-light mb-2 fw-bold" style="width: 92%">Kalender</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href={{url("/loadHistoriTransaksi")}} class="btn btn-outline-light mb-2 fw-bold" style="width: 92%">Histori Transaksi</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href={{url('/listKontrak/pengerjaan')}} class="btn btn-outline-light mb-2 fw-bold" style="width: 92%">List Kontrak</a>
-                                </td>
-                            </tr>
-                        </table>
 
                     </div>
                 </div>

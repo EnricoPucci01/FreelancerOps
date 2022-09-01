@@ -88,20 +88,21 @@
                     @if (session()->get('tipe_proyek') == 'normal')
                         <table id="modul_table" class="table table-striped mt-2">
                             <thead class='thead-light'>
-                                <tr>
-                                    <td>
-                                        Nama
-                                    </td>
-                                    <td>
-                                        Deskripsi
-                                    </td>
-                                    <td>
-                                        Bayaran
-                                    </td>
-                                    <td>
-                                        Deadline
-                                    </td>
-                                </tr>
+                                <td>
+                                    Nama
+                                </td>
+                                <td>
+                                    Deskripsi
+                                </td>
+                                <td>
+                                    Bayaran
+                                </td>
+                                <td>
+                                    Deadline
+                                </td>
+                                <td>
+
+                                </td>
                             </thead>
                         </table>
                     @endif
@@ -125,6 +126,9 @@
                                     <td>
                                         Deadline
                                     </td>
+                                    <td>
+
+                                    </td>
                                 </tr>
                             </thead>
                         </table>
@@ -135,26 +139,26 @@
                 </div>
             </div>
             {{-- -------------------------------------------------MODAL----------------------------------------------- --}}
-        {{-- Modal Post --}}
-        <div class="modal fade" tabindex="-1"aria-hidden="true" id="modalPost">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalToggleLabel2">Post Proyek?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Anda akan menerbitkan proyek ini, apakah anda yakin?<br>
+            {{-- Modal Post --}}
+            <div class="modal fade" tabindex="-1"aria-hidden="true" id="modalPost">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalToggleLabel2">Post Proyek?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Anda akan menerbitkan proyek ini, apakah anda yakin?<br>
 
-                        Tekan <b>Ya</b> untuk melanjutkan proses pendaftaran proyek.
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Ya</button>
+                            Tekan <b>Ya</b> untuk melanjutkan proses pendaftaran proyek.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Ya</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {{-- --------------------------------------------------------------------------------------------------- --}}
+            {{-- --------------------------------------------------------------------------------------------------- --}}
         </form>
 
 

@@ -2,7 +2,7 @@
 @section('content')
 <center>
 
-        <table>
+        <table style="height: 100%">
             <tr>
                 <td>
                     <div class="card recentProjectContainer">

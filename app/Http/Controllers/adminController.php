@@ -314,12 +314,10 @@ class adminController extends Controller
             ]
         );
 
-        return view("chart", [
-            'chart' => '0',
-            'judul' => '',
-            'chart1' => '0',
+        return view("laporanFreelancer", [
             'chart2' => $chartspesialisasi,
-            'judul2' => 'Grafik Spesialisasi Freelancer'
+            'judul2' => 'Grafik Spesialisasi Freelancer',
+            'dataFreelancer'=>$dbspesialisasi
         ]);
     }
 
@@ -442,11 +440,35 @@ class adminController extends Controller
         ]);
     }
 
-    public function proyekTidakTerbayar()
+    public function proyekTidakTerbayar($bulan)
     {
-        $payment = payment::paginate(10);
+        if($bulan =="Tahun"){
+            $payment = payment::where('status','Completed')->orWhere('status','Paid')->paginate(10);
+            $total=0;
+            $paymentitem = payment::where('status','Completed')->orWhere('status','Paid')->get();
+            foreach($paymentitem as $itemPay){
+                $total=$total+(int)$itemPay->service_fee;
+            }
+        }else{
+            $payment = payment::where(DB::raw('MONTHNAME(created_at)'),$bulan)->where(function($q) {
+                $q->where('status', "Completed")
+                  ->orWhere('status', "Paid");
+            })->paginate(10);
+            $total=0;
+            $paymentitem = payment::where(DB::raw('MONTHNAME(created_at)'),$bulan)->where(function($q) {
+                $q->where('status', "Completed")
+                  ->orWhere('status', "Paid");
+            })->get();
+            foreach($paymentitem as $itemPay){
+                $total=$total+(int)$itemPay->service_fee;
+            }
+        }
+
+        //dd($paymentitem);
         return view('laporanProyekTidakBayar', [
-            'dataPayment' => $payment
+            'dataPayment' => $payment,
+            'totalSaldo' =>$total,
+            'bulan' =>$bulan
         ]);
     }
 
@@ -455,6 +477,7 @@ class adminController extends Controller
         // Grafik Pendapatan perBulan
         $query = "SELECT MONTHNAME(created_at) as bulan, SUM(service_fee) as total
         FROM payment
+        WHERE payment.status='Completed' OR payment.status = 'Paid'
         GROUP BY MONTHNAME(created_at)
         ORDER BY total DESC";
         $db = DB::select($query);
@@ -511,6 +534,13 @@ class adminController extends Controller
 
     public function laporanProyekAdmin($status)
     {
+        // $query = "SELECT tanggalAmbil,client,freelancer,proyek,deadlineproyek,modul,deadlinemodul
+        // FROM modul_diambil,proyek,customer,modul
+        // WHERE";
+        // $db = DB::select($query);
+        // $db = json_decode(json_encode($db), true);
+
+
         $modulDiambil = modulDiambil::where('status', $status)->get();
         $proyekId = array();
         $modulId = array();

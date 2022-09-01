@@ -71,12 +71,12 @@
                                     </li>
                                     {{-- <li><a class="dropdown-item" href={{ url('/ketepatanPembayaran') }}>Laporan
                                             Ketepatan Pembayaran</a></li> --}}
-                                    <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar') }}>Laporan
+                                    <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar/Tahun') }}>Laporan
                                             Pendapatan</a></li>
                                     <li><a class="dropdown-item" href={{ url('/loadFreelancerAktif') }}>Laporan
                                             Freelancer Aktif</a></li>
-                                    <li><a class="dropdown-item" href={{ url('/loadProyekBerhasil') }}>Laporan Proyek
-                                            Gagal/Berhasil</a></li>
+                                    {{-- <li><a class="dropdown-item" href={{ url('/loadProyekBerhasil') }}>Laporan Proyek
+                                            Gagal/Berhasil</a></li> --}}
                                 </ul>
                             </li>
                         </ul>

@@ -351,7 +351,7 @@ Route::get('/loadLaporanPendapatan',[adminController::class,'loadLaporanPendapat
 Route::get('/loadLaporanBulanAktif',[adminController::class,'loadLaporanBulanAktif']);
 Route::get('/loadProyekBerhasil',[adminController::class,'loadProyekBerhasil']);
 Route::get('/loadFreelancerAktif',[adminController::class,'freelancerAktif']);
-Route::get('/loadLaporanProyekTidakBayar',[adminController::class,'proyekTidakTerbayar']);
+Route::get('/loadLaporanProyekTidakBayar/{bulan}',[adminController::class,'proyekTidakTerbayar']);
 Route::get('/chartProyekTidakBayar',[adminController::class,'chartProyekTidakBayar']);
 Route::get('/laporanFreelancer',[adminController::class,'laporanFreelancer']);
 Route::get('/laporanClient',[adminController::class,'laporanClient']);
