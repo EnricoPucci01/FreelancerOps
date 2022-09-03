@@ -23,7 +23,7 @@
         <h5 class="text-start">Deadline: {{$dataproyek['deadline']}}</h5>
     <hr>
         <table class="table table-striped">
-            <tr>
+            <thead class="fw-bold">
                 <td>
                     Nama
                 </td>
@@ -44,7 +44,7 @@
 
                     </td>
                 @endif
-            </tr>
+            </thead>
             <input type="hidden" name='id_proyek' value="{{$dataproyek['proyek_id']}}">
 
             @foreach ($datamodul as $modul)
@@ -67,7 +67,11 @@
                         {{$modul['end']}}
                     </td>
                     <td>
-                        -
+                        @foreach ($dataApplicant as $applicant)
+                            @if ($applicant['idModul'] == $modul['modul_id'])
+                                {{$applicant['pendaftar']}}
+                            @endif
+                        @endforeach
                     </td>
                     <td>
                         @if ($accessor=='c')

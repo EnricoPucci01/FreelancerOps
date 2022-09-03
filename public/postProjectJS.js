@@ -20,7 +20,7 @@
             cell4.innerHTML = '<input type="number" value="0" onkeyup="editTotal()" id="rentang2_bayaran'+hid_val.value+'" name="rentang2_bayaran'+hid_val.value+'">';
             cell5.innerHTML = '<input type="date" name="deadline_modul'+hid_val.value+'">';
             hid_val.value= parseInt(hid_val.value)+1;
-            cell6.innerHTML = "<button type='button' class='btn-danger' onclick='delFunction("+hid_val.value+")'> <i class='bi bi-trash-fill'></i> </button>";
+            cell6.innerHTML = "<button type='button' class='btn btn-danger' onclick='delFunction("+hid_val.value+")'> <i class='bi bi-trash-fill'></i> </button>";
 
             console.log("hidval: "+hid_val.value);
         }else{

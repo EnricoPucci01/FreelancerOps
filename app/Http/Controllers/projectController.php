@@ -295,13 +295,30 @@ class projectController extends Controller
         $payment = payment::get();
         $payment = json_decode(json_encode($payment), true);
 
+        $query = "SELECT modul_id AS idModul, COUNT(applicant_id) AS pendaftar
+        FROM applicant
+        WHERE applicant.proyek_id = $id
+        GROUP BY idModul
+
+        UNION ALL
+
+        SELECT modul.modul_id AS idModul, '0' AS pendaftar
+        FROM modul
+        WHERE modul.proyek_id = $id AND modul.modul_id NOT IN(SELECT applicant.modul_id FROM applicant)
+        ";
+
+        $db = DB::select($query);
+        $db = json_decode(json_encode($db), true);
+        //dd($db);
+
         return view('detailProyekClient', [
             "dataproyek" => $dataproyek,
             "datamodul" => $datamodul,
             'modulDiambil' => $modulTaken,
             'datapayment' => $payment,
             'accessor' => $accessor,
-            'id' => Session::get("cust_id")
+            'id' => Session::get("cust_id"),
+            'dataApplicant'=>$db
         ]);
     }
 
@@ -758,7 +775,8 @@ class projectController extends Controller
             $proyekList = proyek::whereIn('proyek_id', $proyekCount)->get('kategorijob_id');
             $proyekList = json_decode(json_encode($proyekList), true);
 
-            $recommendedProyek = proyek::whereIn('kategorijob_id', $proyekList)->get();
+            //dd($proyekList);
+            $recommendedProyek = proyek::where('start_proyek','>=',Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
             $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
             $listTag = tag::get();
             $listTag = json_decode(json_encode($listTag), true);
@@ -786,7 +804,8 @@ class projectController extends Controller
             $tag = tag::where('kategori_id', $proyekCount['kategori_id'])->get('proyek_id');
             $tag = json_decode(json_encode($tag), true);
 
-            $recommendedProyek = proyek::whereIn('proyek_id', $tag)->get();
+            //dd($proyekCount);
+            $recommendedProyek = proyek::where('start_proyek','>=',Carbon::now())->whereIn('proyek_id', $tag)->get();
             $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
 
             $listTag = tag::get();

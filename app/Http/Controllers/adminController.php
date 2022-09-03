@@ -133,7 +133,6 @@ class adminController extends Controller
 
     public function loadLaporanPendapatan()
     {
-
     }
 
     public function loadLaporanBulanAktif()
@@ -317,7 +316,7 @@ class adminController extends Controller
         return view("laporanFreelancer", [
             'chart2' => $chartspesialisasi,
             'judul2' => 'Grafik Spesialisasi Freelancer',
-            'dataFreelancer'=>$dbspesialisasi
+            'dataFreelancer' => $dbspesialisasi
         ]);
     }
 
@@ -442,33 +441,33 @@ class adminController extends Controller
 
     public function proyekTidakTerbayar($bulan)
     {
-        if($bulan =="Tahun"){
-            $payment = payment::where('status','Completed')->orWhere('status','Paid')->paginate(10);
-            $total=0;
-            $paymentitem = payment::where('status','Completed')->orWhere('status','Paid')->get();
-            foreach($paymentitem as $itemPay){
-                $total=$total+(int)$itemPay->service_fee;
+        if ($bulan == "Tahun") {
+            $payment = payment::where('status', 'Completed')->orWhere('status', 'Paid')->paginate(10);
+            $total = 0;
+            $paymentitem = payment::where('status', 'Completed')->orWhere('status', 'Paid')->get();
+            foreach ($paymentitem as $itemPay) {
+                $total = $total + (int)$itemPay->service_fee;
             }
-        }else{
-            $payment = payment::where(DB::raw('MONTHNAME(created_at)'),$bulan)->where(function($q) {
+        } else {
+            $payment = payment::where(DB::raw('MONTHNAME(created_at)'), $bulan)->where(function ($q) {
                 $q->where('status', "Completed")
-                  ->orWhere('status', "Paid");
+                    ->orWhere('status', "Paid");
             })->paginate(10);
-            $total=0;
-            $paymentitem = payment::where(DB::raw('MONTHNAME(created_at)'),$bulan)->where(function($q) {
+            $total = 0;
+            $paymentitem = payment::where(DB::raw('MONTHNAME(created_at)'), $bulan)->where(function ($q) {
                 $q->where('status', "Completed")
-                  ->orWhere('status', "Paid");
+                    ->orWhere('status', "Paid");
             })->get();
-            foreach($paymentitem as $itemPay){
-                $total=$total+(int)$itemPay->service_fee;
+            foreach ($paymentitem as $itemPay) {
+                $total = $total + (int)$itemPay->service_fee;
             }
         }
 
         //dd($paymentitem);
         return view('laporanProyekTidakBayar', [
             'dataPayment' => $payment,
-            'totalSaldo' =>$total,
-            'bulan' =>$bulan
+            'totalSaldo' => $total,
+            'bulan' => $bulan
         ]);
     }
 
@@ -560,6 +559,21 @@ class adminController extends Controller
             'modul' => $modul,
             'cust' => $cust,
             'status' => $status
+        ]);
+    }
+
+    public function loadLaporanBelumBayar()
+    {
+        $query = "SELECT customer.nama as namaClient, payment.email as email, customer.nomorhp as hp,
+         modul.title as judul, payment.amount as hargamodul, payment.service_fee as servicefee,
+         payment.grand_total as grand, payment.created_at as penagihan
+        FROM payment, customer, modul
+        WHERE payment.modul_id=modul.modul_id AND payment.email = customer.email AND payment.status = 'unpaid'";
+        $db = DB::select($query);
+        $db = json_decode(json_encode($db), true);
+        //dd($db);
+        return view("laporanBelumBayar", [
+            'laporanBelumBayar' => $db,
         ]);
     }
 

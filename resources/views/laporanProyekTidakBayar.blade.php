@@ -76,15 +76,11 @@
                         <td>
                             Saluran
                         </td>
-                        <td>
-                            Jumlah
-                        </td>
+
                         <td>
                             Service Fee
                         </td>
-                        <td>
-                            Grand Total
-                        </td>
+
                     </thead>
                     <tbody>
                         @foreach ($dataPayment as $payment)
@@ -101,15 +97,11 @@
                             <td>
                                 {{$payment->payment_channel}}
                             </td>
-                            <td>
-                                @money($payment->amount,'IDR',true)
-                            </td>
+
                             <td>
                                 @money($payment->service_fee,'IDR',true)
                             </td>
-                            <td>
-                                @money($payment->grand_total,'IDR',true)
-                            </td>
+
                         </tr>
                         @endforeach
 
