@@ -6,6 +6,7 @@ use App\Charts\chartControl;
 use App\Charts\chartGen;
 use App\Models\customer;
 use App\Models\jobKategori;
+use App\Models\kategori;
 use App\Models\modul;
 use App\Models\modulDiambil;
 use App\Models\payment;
@@ -135,55 +136,40 @@ class adminController extends Controller
     {
     }
 
-    public function loadLaporanBulanAktif()
+    public function loadLaporanBulanAktif(Request $request)
     {
-
-        $query = "SELECT modul_diambil.created_at as tanggal ,kategori_job.judul_kategori,count(proyek.created_at) as counts
+        //dd($request);
+        $kategoriJobId = ($request->has('ddKategori')) ? $request->input('ddKategori') : "1";
+        $query = "SELECT MONTHNAME(modul_diambil.created_at) as Bulan, count(proyek.created_at) as counts
         FROM proyek,kategori_job,modul_diambil
-        WHERE proyek.kategorijob_id=kategori_job.kategorijob_id and proyek.proyek_id=modul_diambil.proyek_id
-        GROUP BY modul_diambil.created_at, kategori_job.judul_kategori";
+        WHERE proyek.kategorijob_id = $kategoriJobId AND proyek.proyek_id= modul_diambil.proyek_id AND kategori_job.kategorijob_id = proyek.kategorijob_id
+        GROUP BY bulan";
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
-
-        $newSortedArray = [];
-        $kategorijob = jobKategori::get();
-        $sameDate = false;
-
-        foreach ($db as $dataArr) {
-            if ($newSortedArray != null) {
-                foreach ($newSortedArray as $sortArr) {
-                    if ($sortArr['tanggal'] == $dataArr['tanggal']) {
-                        $data = [
-                            "judul_kategori" => $dataArr['judul_kategori'],
-                            "counts" => $dataArr['counts']
-                        ];
-                        array_pop($newSortedArray);
-                        array_push($sortArr['data'], $data);
-                        $newArrData = [];
-                        $newArrData['tanggal'] = $dataArr['tanggal'];
-                        $newArrData["data"] = $sortArr['data'];
-                        array_push($newSortedArray, $newArrData);
-                        $sameDate = true;
-                    } else {
-                        $sameDate = false;
-                    }
-                }
-            }
-
-            if (!$sameDate) {
-                $data = [
-                    [
-                        "judul_kategori" => $dataArr['judul_kategori'],
-                        "counts" => $dataArr['counts']
-                    ]
-                ];
-                $newArr = [];
-                $newArr['tanggal'] = $dataArr['tanggal'];
-                $newArr['data'] = $data;
-                array_push($newSortedArray, $newArr);
-            }
+        $bulan = array();
+        $count = array();
+        foreach ($db as $Valnama) {
+            array_push($bulan, $Valnama['Bulan']);
+            array_push($count, $Valnama['counts']);
         }
-
+        $judulKategori = jobKategori::find($kategoriJobId);
+        $itemKategori = jobKategori::get();
+        $chartBulan = new chartControl;
+        $chartBulan->labels($bulan);
+        $chartBulan->dataset('Bulan Aktif', 'bar', $count)->options(
+            [
+                'backgroundColor' => [
+                    "rgb(54, 162, 235)",
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)',
+                    'rgb(55, 212, 79)',
+                    'rgb(60, 66, 61)',
+                    'rgb(245, 118, 7)',
+                    'rgb(8, 69, 115)',
+                    'rgb(88, 8, 115)'
+                ]
+            ]
+        );
 
         $query = "SELECT MONTHNAME(modul_diambil.created_at) as months ,count(modul_diambil.modultaken_id) as counts
         FROM modul_diambil
@@ -201,11 +187,14 @@ class adminController extends Controller
         $dbKategori = DB::select($query);
         $dbKategori = json_decode(json_encode($dbKategori), true);
         //dd($dbKategori);
+
         return view('laporanBulanAktif', [
-            "dataBulan" => $newSortedArray,
-            "kategoriJob" => $kategorijob,
+            "chart2" => $chartBulan,
+            "judul" => $judulKategori->judul_kategori,
             'rekap' => $dbSortedMonth,
-            'rekapKategori' => $dbKategori
+            'rekapKategori' => $dbKategori,
+            'itemKategori' => $itemKategori,
+            'selected' => $kategoriJobId
         ]);
     }
 
@@ -602,29 +591,58 @@ class adminController extends Controller
         ]);
     }
 
-    public function freelancerAktif()
+    public function freelancerAktif($custType)
     {
-        $query = "SELECT TableAktif.*
+        if ($custType == 'Freelancer') {
+            $query = "SELECT DISTINCT TableAktif.*
+                 FROM (
+                     SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, -1 as lastProject
+                     FROM customer,modul_diambil
+                     WHERE customer.role = 'freelancer' AND customer.cust_id NOT IN(Select(modul_diambil.cust_id)FROM modul_diambil)
+
+
+                     UNION ALL
+
+                     SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, DATEDIFF(NOW(),modul_diambil.created_at) as lastProject
+                     FROM customer,modul_diambil
+                     WHERE customer.cust_id=modul_diambil.cust_id
+                 ) as TableAktif
+                 ORDER BY TableAktif.lastProject ASC
+        ";
+        } elseif ($custType == 'Client') {
+            $query = "SELECT DISTINCT TableAktif.*
             FROM (
-                SELECT customer.cust_id as id,customer.nama as nama, 0 as Jumlah
-                FROM customer,modul_diambil
-                WHERE customer.role = 'freelancer' AND customer.cust_id NOT IN(Select(modul_diambil.cust_id)FROM modul_diambil)
-                Group By customer.nama, customer.cust_id
+                SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, -1 as lastProject
+                FROM customer,proyek
+                WHERE customer.role = 'client' AND customer.cust_id NOT IN(Select(proyek.cust_id)FROM proyek)
+
 
                 UNION ALL
 
-                SELECT customer.cust_id as id,customer.nama as nama, count(modul_diambil.cust_id) as Jumlah
-                FROM customer,modul_diambil
-                WHERE customer.role = 'freelancer' AND customer.cust_id=modul_diambil.cust_id
-                Group By customer.nama,customer.cust_id
+                SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, DATEDIFF(NOW(),proyek.created_at) as lastProject
+                FROM customer,proyek
+                WHERE customer.cust_id=proyek.cust_id
             ) as TableAktif
-            ORDER BY TableAktif.Jumlah DESC";
+            ORDER BY TableAktif.lastProject ASC
+   ";
+        }
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
+        //$dbPro = proyek::get();
+        $sortedArrNama = array();
+        $sortedArr = array();
+        foreach ($db as $key) {
+            if (!in_array($key['nama'], $sortedArrNama)) {
+                array_push($sortedArrNama, $key["nama"]);
+                array_push($sortedArr, $key);
+            }
+        }
 
-
+        $sortedArr =  array_reverse($sortedArr);
+        //dd($sortedArr);
         return view('LaporanFreelancerAktif', [
-            "dataFreelancer" => $db
+            "dataFreelancerClient" => $sortedArr,
+            'custType' => $custType
         ]);
     }
 

@@ -71,53 +71,42 @@
     <div class="card mt-3" style="padding: 20px">
         <div class="card-title">
             <h1>
-                Laporan Bulan Aktif
+                Laporan Jumlah Proyek Di Ambil Untuk Kategori {{$judul}}
             </h1>
         </div>
-        <table class="table table-striped">
-            <thead class="fw-bold">
-                <tr>
-                    <td style="text-align: center">
-                        Tanggal
-                    </td>
-                    @foreach ($kategoriJob as $itemJob)
-                        <td style="text-align: center; font-size: 15px">
-                            {{ $itemJob->judul_kategori }}
-                        </td>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($dataBulan as $itemBulan)
+        <div class="card-body" >
+            <form action={{url("/loadLaporanBulanAktif")}} method="GET">
+                @csrf
+                @method('GET')
+                <table>
                     <tr>
-                        <td style="text-align: center ;width:10%">
-                            {{ $itemBulan['tanggal'] }}
+                        <td>
+                            <select class="custom-select"  name='ddKategori' >
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Pilih Kategori
+                                  </button>
+                                  <div class="dropdown-menu"aria-labelledby="dropdownMenuButton">
+                                    @foreach ($itemKategori as $item)
+                                       <option value={{$item->kategorijob_id}} {{($selected == $item->kategorijob_id)?"Selected":""}}>{{$item->judul_kategori}}</option>
+                                    @endforeach
+                                  </div>
+                            </select>
                         </td>
-                        @foreach ($kategoriJob as $itemJob)
-                            @php
-                                $filled = false;
-                            @endphp
-                            <td style="text-align:center">
-                                @foreach ($itemBulan['data'] as $data)
-                                    @if ($itemJob->judul_kategori == $data['judul_kategori'])
-                                        {{ $data['counts'] }}
-                                        @php
-                                            $filled = true;
-                                        @endphp
-                                    @endif
-                                @endforeach
-
-                                @php
-                                    if (!$filled) {
-                                        echo '0';
-                                    }
-                                @endphp
-                            </td>
-                        @endforeach
-
+                        <td>
+                            <button class="btn btn-warning btn-lg">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </td>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </table>
+
+            </form>
+
+            <div id="app">
+                {!! $chart2->container() !!}
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+            {!! $chart2->script() !!}
+        </div>
     </div>
 @endsection

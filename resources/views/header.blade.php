@@ -68,19 +68,20 @@
                                     <li><a class="dropdown-item" href={{ url('/laporanFreelancer') }}>Laporan
                                             Freelancer</a></li>
                                     {{-- <li><a class="dropdown-item" href={{ url('/laporanClient') }}>Laporan Client</a> --}}
-                                    </li>
-                                    {{-- <li><a class="dropdown-item" href={{ url('/ketepatanPembayaran') }}>Laporan
-                                            Ketepatan Pembayaran</a></li> --}}
-                                    <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar/Tahun') }}>Laporan
-                                            Pendapatan</a></li>
-                                    <li><a class="dropdown-item" href={{ url('/loadLaporanBelumBayar') }}>Laporan
-                                            Proyek Belum Terbayar</a></li>
-                                    <li><a class="dropdown-item" href={{ url('/loadFreelancerAktif') }}>Laporan
-                                            Freelancer Aktif</a></li>
-                                    {{-- <li><a class="dropdown-item" href={{ url('/loadProyekBerhasil') }}>Laporan Proyek
-                                            Gagal/Berhasil</a></li> --}}
-                                </ul>
                             </li>
+                            {{-- <li><a class="dropdown-item" href={{ url('/ketepatanPembayaran') }}>Laporan
+                                            Ketepatan Pembayaran</a></li> --}}
+                            <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar/Tahun') }}>Laporan
+                                    Pendapatan</a></li>
+                            <li><a class="dropdown-item" href={{ url('/loadLaporanBelumBayar') }}>Laporan
+                                    Proyek Belum Terbayar</a></li>
+                            <li><a class="dropdown-item"
+                                    href={{ url('/loadFreelancerClientAktif/Freelancer') }}>Laporan
+                                    Freelancer/Client Aktif</a></li>
+                            {{-- <li><a class="dropdown-item" href={{ url('/loadProyekBerhasil') }}>Laporan Proyek
+                                            Gagal/Berhasil</a></li> --}}
+                        </ul>
+                        </li>
                         </ul>
                         <a href="{{ url('/logout') }}">Keluar</a>
                     </div>
@@ -102,12 +103,14 @@
                                 <ul class="dropdown-menu dropdown-menu-dark"
                                     aria-labelledby="navbarDarkDropdownMenuLink">
                                     <li><a class="dropdown-item"
-                                            href={{ url('/loadProfil/f/' . session()->get('cust_id')) }}>Profile</a></li>
+                                            href={{ url('/loadProfil/f/' . session()->get('cust_id')) }}>Profile</a>
+                                    </li>
                                     {{-- <li><a class="dropdown-item" href={{url("/esign")}}>Upload Tanda Tangan</a></li> --}}
                                     <li><a class="dropdown-item" href={{ url('/calendarId') }}>Upload Calendar Id</a>
                                     </li>
                                     @if (session()->get('role') == 'freelancer')
-                                        <li><a class="dropdown-item" href={{ url('/loadTambahRekening') }}>Tambah Nomor Rekening</a></li>
+                                        <li><a class="dropdown-item" href={{ url('/loadTambahRekening') }}>Tambah Nomor
+                                                Rekening</a></li>
                                     @endif
                                     <li><a class="dropdown-item" href={{ url('/logout') }}>Keluar</a></li>
                                 </ul>
@@ -139,6 +142,40 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+    <script>
+        // Import the functions you need from the SDKs you need
+        import {
+            initializeApp
+        } from "firebase/app";
+        import {
+            getAnalytics
+        } from "firebase/analytics";
+        import {
+            getDatabase
+        } from "firebase/database";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdoggNAdJ08JuC-Ms6CaNtuZ2IWM-cDxg",
+            authDomain: "freelancerops.firebaseapp.com",
+            projectId: "freelancerops",
+            storageBucket: "freelancerops.appspot.com",
+            messagingSenderId: "661837197172",
+            appId: "1:661837197172:web:14284773ee4107fa330621",
+            measurementId: "G-P9S7LLCT2J"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
 </body>
+
+
+@yield('script')
 
 </html>

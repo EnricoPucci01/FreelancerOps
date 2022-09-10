@@ -185,6 +185,8 @@ padding: 10px;">
     function closeForm() {
       document.getElementById("myForm").style.display = "none";
     }
+    const messaging =  firebase.messaging();
+    messaging.usePublicVapidKey('BCCRM4rKZ7m8pW5ISWilGM1JLAKzMYdXvcpVLw3OzAaivycLXveeMDfc7Wc4wF7o1UwJDY3ixm13YLIkUho-WKI');
     </script>
 
 @endsection

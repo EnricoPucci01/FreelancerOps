@@ -94,7 +94,7 @@
                 </tr>
                 <tr>
                     <td>
-                      <select class=" selectpicker form-control" data-width="500px" id="skill" data-style="btn-default btn-lg" name="kategori_project[]" multiple="multiple" data-live-search="true">
+                      <select class="selectpicker form-control" data-width="500px" id="skill" data-style="btn-default btn-lg" name="kategori_project[]" multiple="multiple" data-live-search="true">
                           @foreach ($kategoriList as $kategori)
                             <option value="{{$kategori['kategori_id']}}">{{$kategori['nama_kategori']}}</option>
                           @endforeach
