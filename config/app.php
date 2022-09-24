@@ -166,6 +166,7 @@ return [
         Akaunting\Money\Provider::class,
         Kreait\Laravel\Firebase\ServiceProvider::class,
         ConsoleTVs\Charts\ChartsServiceProvider::class,
+        LaravelFCM\FCMServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -234,6 +235,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
         'Calendar'=> Acaronlex\LaravelCalendar\Facades\Calendar::class,
+        'FCM'      => LaravelFCM\Facades\FCM::class,
+        'FCMGroup' => LaravelFCM\Facades\FCMGroup::class,
     ],
 
 ];

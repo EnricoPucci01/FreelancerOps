@@ -1,6 +1,7 @@
 <?php
-use App\Http\Controllers\DB;
 namespace App\Http\Controllers;
+//use App\Http\Controllers\DB;
+
 use Illuminate\Support\Facades\Auth;
 use App\Models\customer;
 use App\Models\skill;

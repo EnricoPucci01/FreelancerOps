@@ -53,6 +53,9 @@ Route::get('/registerUser',[registerController::class,'registerUser']);
 Route::get('/logout',[loginController::class,'logout']);
 Route::post('/submitregisterAdmin',[registerController::class,'generateCode']);
 Route::View('/registerAdmin','PendaftaranAdmin');
+Route::post('/api/save-token',[chatController::class,'testChat']);
+Route::get('/testChatPage',[chatController::class,'getTestChat']);
+Route::post('/createChat',[chatController::class,'createChat']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //CEK STATUS LOGIN USER YANG INGIN AKSES HALAMAN LAIN SELAIN YANG DI ATAS
