@@ -49,7 +49,7 @@
             </table>
             <a class='btn btn-primary' href={{url("/batalFreelancer/$modulTakenId")}}>Batalkan Freelancer</a>
 
-            <a class='btn btn-secondary' href={{url("/loadDetailProyekClient/$dataProyek[proyek_id]/c/".session()->get('cust_id'))}}>Kembali</a>
+            <a class='btn btn-secondary' href={{url("/loadDetailProyekClient/$dataProyek[proyek_id]/c/")}}>Kembali</a>
         </div>
     </div>
 </center>

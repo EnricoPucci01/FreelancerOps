@@ -82,9 +82,6 @@
                     @endforeach
 
                 </table>
-
-
-                <a class='btn btn-secondary' href={{ url('/dashboard') }}>Kembali</a>
             </div>
         </div>
     </div>

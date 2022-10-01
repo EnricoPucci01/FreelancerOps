@@ -28,9 +28,23 @@
 
         <center>
         <p class="mainLogo">
-            <a href="{{ url('/') }}">
+            @if (session()->get('role')=='freelancer')
+            <a href="{{ url('/dashboardfreelancer') }}">
                 <img src="{{ URL::to('images/LogoTA.png') }}" width="350" height="80">
             </a>
+
+            @endif
+            @if (session()->get('role')=='client')
+            <a href="{{ url('/dashboardClient') }}">
+                <img src="{{ URL::to('images/LogoTA.png') }}" width="350" height="80">
+            </a>
+            @endif
+            @if (session()->get('role')=='admin')
+            <a href="{{ url('/adminDashboard') }}">
+                <img src="{{ URL::to('images/LogoTA.png') }}" width="350" height="80">
+            </a>
+            @endif
+
         </p>
     </center>
 

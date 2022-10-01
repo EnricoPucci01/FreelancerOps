@@ -42,7 +42,6 @@
 
         <center>
             <button type="submit" id='btSub' class="btn btn-success mt-3">Update Progress</button>
-            <a href={{url("/listProyekFreelancer/$custId")}} class="btn btn-secondary mt-3">Kembali</a>
         </center>
     </form>
 <script>

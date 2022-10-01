@@ -65,4 +65,54 @@
         </form>
     </div>
 </div>
+
+<script>
+    const user_id = "{{ session()->get('cust_id') }}";
+    const messaging = firebase.messaging();
+    //const messaging = getMessaging(app);
+    messaging.usePublicVapidKey(
+        'BCCRM4rKZ7m8pW5ISWilGM1JLAKzMYdXvcpVLw3OzAaivycLXveeMDfc7Wc4wF7o1UwJDY3ixm13YLIkUho-WKI');
+
+
+    function sendTokenToServer(fcm_token) {
+        console.log(fcm_token);
+        axios.post('/api/save-token', {
+            fcm_token,
+            user_id
+        }).then(res => {
+            console.log(res);
+        });
+    }
+
+    function retrieveToken(){
+        messaging.getToken().then((currentToken) => {
+            if (currentToken) {
+                sendTokenToServer(currentToken);
+                //updateUIForPushEnabled(currentToken);
+            } else {
+                // Show permission request UI
+                // console.log('No registration token available. Request permission to generate one.');
+                alert('Please Allow The Notification To Use Chat.');
+                // updateUIForPushPermisionRequeired();
+                // setTokenSentToServer(false);
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+            // ...
+        });
+    }
+
+    retrieveToken();
+
+    messaging.onTokenRefresh(() => {
+        retrieveToken();
+    });
+
+    messaging.onMessage((payload)=>{
+        console.log('Message recieved');
+        console.log(payload);
+
+        location.reload();
+    })
+</script>
 @endsection

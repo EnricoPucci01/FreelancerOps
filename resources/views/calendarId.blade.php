@@ -3,7 +3,7 @@
 <center>
     <div class="card" style="width: 70%; margin-top: 20px;" >
         <div class="card-body">
-          <h3 class="card-title">Edit Kalender</h5>
+          <h3 class="card-title">Tambahkan Calendar ID</h5>
           <form action={{url("/updateCalendarId")}} method="POST">
             @csrf
             @method('POST')
@@ -11,7 +11,7 @@
                   <!-- Nama -->
                     <tr>
                         <td>
-                            <label for="name_project" class="form-label">Calendar Id</label>
+                            <div style="width: 300px; overflow-wrap:break-word; text-align: center;" class="text-muted fw-bold">Tambahkan Calender Id anda agar dapat menggunakan fitur Kalender</div>
                         </td>
                     </tr>
                     <tr>
@@ -22,7 +22,7 @@
 
                     <tr>
                         <td>
-                            <button type="button" class=" form-control btn btn-success mt-3" data-toggle="modal" data-target="#modalPost">Ubah</button>
+                            <button type="button" class=" form-control btn btn-success mt-3" data-toggle="modal" data-target="#modalPost">Tambahkan</button>
                         </td>
                     </tr>
 

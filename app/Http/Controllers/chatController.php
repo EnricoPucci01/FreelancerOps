@@ -113,24 +113,24 @@ class chatController extends Controller
         ]);
     }
 
-    public function createChat(Request $request)
-    {
-        $message = $request->input('message');
+    // public function createChat(Request $request)
+    // {
+    //     $message = $request->input('message');
 
-        $chat = new chat();
-        $chat->room_id = 999;
-        $chat->sender_id = Session::get('cust_id');
-        $chat->message = $message;
-        $chat->message_time = Carbon::now();
-        $chat->status_read = "S";
+    //     $chat = new chat();
+    //     $chat->room_id = 999;
+    //     $chat->sender_id = Session::get('cust_id');
+    //     $chat->message = $message;
+    //     $chat->message_time = Carbon::now();
+    //     $chat->status_read = "S";
 
-        $this->broadcastMessage(Session::get('cust_id'),$message);
-        $chat->save();
+    //     $this->broadcastMessage(Session::get('cust_id'),$message);
+    //     $chat->save();
 
-        return redirect()->back();
-    }
+    //     return redirect()->back();
+    // }
 
-    private function broadcastMessage($senderId, $message)
+    private function broadcastMessage($senderId, $message,$roomId)
     {
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60 * 20);
@@ -138,7 +138,7 @@ class chatController extends Controller
         $notificationBuilder = new PayloadNotificationBuilder('New Message From: ' . $senderId);
         $notificationBuilder->setBody($message)
             ->setSound('default')
-            ->setClickAction('https://127.0.0.1:8000/testChatPage');
+            ->setClickAction("https://127.0.0.1:8000/loadChatBox/$roomId");
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData([
             'sender_id' => $senderId,
@@ -175,7 +175,8 @@ class chatController extends Controller
         $chatRoom->sender_id = Session::get("cust_id");
         $chatRoom->reciever_id = $reciever;
         $chatRoom->topik_proyek = str_replace('%20', ' ', $topik);
-        $chatRoom->unread_msg = '1';
+        $chatRoom->unread_reciever = '1';
+        $chatRoom->unread_sender= '0';
         $chatRoom->save();
 
         if ($chatRoom) {
@@ -186,6 +187,7 @@ class chatController extends Controller
             $chat->message_time = $jam;
             $chat->status_read = "S";
             $chat->save();
+            $this->broadcastMessage(Session::get('cust_id'), $request->input('pesan'),$chatRoom->room_id);
             if ($chat) {
                 DB::commit();
                 return Redirect::back()->with('success', 'Pesan Berhasil Di Kirim!');
@@ -260,6 +262,7 @@ class chatController extends Controller
         $insertChat->message = $request->input('message');
         $insertChat->message_time = $jam;
         $insertChat->status_read = "S";
+        $this->broadcastMessage(Session::get('cust_id'), $request->input('pesan'),$roomId);
         $insertChat->save();
 
         if ($insertChat) {
