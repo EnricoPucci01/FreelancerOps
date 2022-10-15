@@ -20,48 +20,41 @@
 
         <div class="card mt-3 mb-3" style="padding: 10px">
             <h3 class="card-title">Laporan Pendapatan</h3>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                  <a class="{{$bulan=='Tahun'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/Tahun")}}>Tahun Ini</a>
-                </li>
-                <li class="nav-item">
-                  <a class="{{$bulan=='January'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/January")}}>Januari</a>
-                </li>
-                <li class="nav-item">
-                  <a class="{{$bulan=='February'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/February")}}>Februari</a>
-                </li>
-                <li class="nav-item">
-                  <a class="{{$bulan=='March'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/March")}}>Maret</a>
-                </li>
-                <li class="nav-item">
-                    <a class="{{$bulan=='April'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/April")}} tabindex="-1" aria-disabled="true">April</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='May'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/May")}}>Mei</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='June'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/June")}}>Juni</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='July'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/July")}}>Juli</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='August'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/August")}}>Agustus</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='September'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/September")}}>September</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='October'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/October")}}>Oktober</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='November'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/November")}}>November</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="{{$bulan=='December'?"nav-link active": "nav-link"}}" href={{url("/loadLaporanProyekTidakBayar/December")}}>Desember</a>
-                  </li>
-              </ul>
-            <div class="card-body" >
+            <form action={{url("/loadLaporanProyekTidakBayar")}} method="GET">
+                @csrf
+                @method('GET')
+                <table>
+                    <tr>
+                        <td>
+                            <select class="custom-select"  name='ddPeriode' >
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Pilih Kategori
+                                  </button>
+                                  <div class="dropdown-menu"aria-labelledby="dropdownMenuButton">
+                                    <option value="Tahun" {{$bulan=='Tahun'?"Selected": ""}} >Tahun Ini</option>
+                                    <option value="January" {{$bulan=='January'?"Selected": ""}} >Januari</option>
+                                    <option value="February" {{$bulan=='February'?"Selected": ""}} >Februari</option>
+                                    <option value="March" {{$bulan=='March'?"Selected": ""}}>Maret</option>
+                                    <option value="April" {{$bulan=='April'?"Selected": ""}}>Mei</option>
+                                    <option value="June" {{$bulan=='June'?"Selected": ""}} >Juni</option>
+                                    <option value="July" {{$bulan=='July'?"Selected": ""}} >Juli</option>
+                                    <option value="August" {{$bulan=='August'?"Selected": ""}} >Agustus</option>
+                                    <option value="September" {{$bulan=='September'?"Selected": ""}}>September</option>
+                                    <option value="October" {{$bulan=='October'?"Selected": ""}} >Oktober</option>
+                                    <option value="November" {{$bulan=='November'?"Selected": ""}}>November</option>
+                                    <option value="December" {{$bulan=='December'?"Selected": ""}}>Desember</option>
+                                  </div>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning btn-lg">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+
+            </form>
                 <table class="table table-striped">
                     <thead class="fw-bold">
                         <td>

@@ -156,7 +156,7 @@ class adminController extends Controller
         $itemKategori = jobKategori::get();
         $chartBulan = new chartControl;
         $chartBulan->labels($bulan);
-        $chartBulan->dataset('Bulan Aktif', 'bar', $count)->options(
+        $chartBulan->dataset('', 'bar', $count)->options(
             [
                 'backgroundColor' => [
                     "rgb(54, 162, 235)",
@@ -428,9 +428,9 @@ class adminController extends Controller
         ]);
     }
 
-    public function proyekTidakTerbayar($bulan)
+    public function proyekTidakTerbayar(Request $request)
     {
-        if ($bulan == "Tahun") {
+        if ($request->input('ddPeriode') == "Tahun" || $request->input('ddPeriode') ==null ) {
             $payment = payment::where('status', 'Completed')->orWhere('status', 'Paid')->paginate(10);
             $total = 0;
             $paymentitem = payment::where('status', 'Completed')->orWhere('status', 'Paid')->get();
@@ -438,12 +438,12 @@ class adminController extends Controller
                 $total = $total + (int)$itemPay->service_fee;
             }
         } else {
-            $payment = payment::where(DB::raw('MONTHNAME(created_at)'), $bulan)->where(function ($q) {
+            $payment = payment::where(DB::raw('MONTHNAME(created_at)'), $request->input('ddPeriode'))->where(function ($q) {
                 $q->where('status', "Completed")
                     ->orWhere('status', "Paid");
             })->paginate(10);
             $total = 0;
-            $paymentitem = payment::where(DB::raw('MONTHNAME(created_at)'), $bulan)->where(function ($q) {
+            $paymentitem = payment::where(DB::raw('MONTHNAME(created_at)'), $request->input('ddPeriode'))->where(function ($q) {
                 $q->where('status', "Completed")
                     ->orWhere('status', "Paid");
             })->get();
@@ -456,7 +456,7 @@ class adminController extends Controller
         return view('laporanProyekTidakBayar', [
             'dataPayment' => $payment,
             'totalSaldo' => $total,
-            'bulan' => $bulan
+            'bulan' => $request->input('ddPeriode')
         ]);
     }
 
@@ -483,20 +483,21 @@ class adminController extends Controller
 
         $chartPendapatan = new chartControl;
         $chartPendapatan->labels($bulan);
-        $chartPendapatan->dataset('Pendapatan', 'line', $total)->options(
-            [
-                'backgroundColor' => [
-                    "rgb(54, 162, 235)",
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)',
-                    'rgb(55, 212, 79)',
-                    'rgb(60, 66, 61)',
-                    'rgb(245, 118, 7)',
-                    'rgb(8, 69, 115)',
-                    'rgb(88, 8, 115)'
-                ]
-            ]
-        );
+        $chartPendapatan->dataset('','line', $total);
+        // ->options(
+        //     [
+        //         'backgroundColor' => [
+        //             "rgb(54, 162, 235)",
+        //             'rgb(255, 99, 132)',
+        //             'rgb(255, 205, 86)',
+        //             'rgb(55, 212, 79)',
+        //             'rgb(60, 66, 61)',
+        //             'rgb(245, 118, 7)',
+        //             'rgb(8, 69, 115)',
+        //             'rgb(88, 8, 115)'
+        //         ]
+        //     ]
+        // );
 
         //Grafik Belum di proyek bayar
         $chart_options = [
@@ -555,9 +556,9 @@ class adminController extends Controller
     {
         $query = "SELECT customer.nama as namaClient, payment.email as email, customer.nomorhp as hp,
          modul.title as judul, payment.amount as hargamodul, payment.service_fee as servicefee,
-         payment.grand_total as grand, payment.created_at as penagihan
+         payment.grand_total as grand, payment.created_at as penagihan, payment.status as stat, payment.payment_id as idPay
         FROM payment, customer, modul
-        WHERE payment.modul_id=modul.modul_id AND payment.email = customer.email AND payment.status = 'unpaid'";
+        WHERE payment.modul_id=modul.modul_id AND payment.email = customer.email AND payment.status != 'Completed'";
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
         //dd($db);

@@ -80,21 +80,20 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark"
                                     aria-labelledby="navbarDarkDropdownMenuLink">
-                                    <li><a class="dropdown-item" href={{ url('/loadLaporanBulanAktif') }}>Laporan Bulan
-                                            Aktif</a></li>
+                                    <li><a class="dropdown-item" href={{ url('/loadLaporanBulanAktif') }}>Laporan Proyek Perbulan</a></li>
                                     <li><a class="dropdown-item" href={{ url('/laporanFreelancer') }}>Laporan
                                             Freelancer</a></li>
                                     {{-- <li><a class="dropdown-item" href={{ url('/laporanClient') }}>Laporan Client</a> --}}
                             </li>
                             {{-- <li><a class="dropdown-item" href={{ url('/ketepatanPembayaran') }}>Laporan
                                             Ketepatan Pembayaran</a></li> --}}
-                            <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar/Tahun') }}>Laporan
+                            <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar') }}>Laporan
                                     Pendapatan</a></li>
                             <li><a class="dropdown-item" href={{ url('/loadLaporanBelumBayar') }}>Laporan
                                     Proyek Belum Terbayar</a></li>
                             <li><a class="dropdown-item"
                                     href={{ url('/loadFreelancerClientAktif/Freelancer') }}>Laporan
-                                    Freelancer/Client Aktif</a></li>
+                                    Keaktifan Freelancer/Client</a></li>
                             {{-- <li><a class="dropdown-item" href={{ url('/loadProyekBerhasil') }}>Laporan Proyek
                                             Gagal/Berhasil</a></li> --}}
                         </ul>
