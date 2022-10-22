@@ -45,6 +45,8 @@ class xenditController extends Controller
         DB::beginTransaction();
         $generateExternalId = 'va-' . date('dmYHis');
         $modulAmount = modul::where('modul_id', $modulId)->first();
+        $proyek= proyek::where('proyek_id',$modulAmount->proyek_id)->first();
+        $cust=customer::where('cust_id',$proyek->cust_id)->first();
         $modulAmount = json_decode(json_encode($modulAmount), true);
         $serviceFee = 0;
         $grandTotal = 0;
@@ -88,6 +90,7 @@ class xenditController extends Controller
         $insertPayment->amount = ($tipeProyek["tipe_proyek"] == 'magang') ? $request->input('grand_total') : $modulAmount['bayaran'];
         $insertPayment->service_fee = $serviceFee;
         $insertPayment->grand_total = $grandTotal;
+        $insertPayment->email=$cust->email;
         $insertPayment->status = 'unpaid';
         $insertPayment->save();
         $createVA = \Xendit\VirtualAccounts::create($param);

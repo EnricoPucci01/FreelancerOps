@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'FreelancerOPS'),
 
     /*
     |--------------------------------------------------------------------------
@@ -180,6 +180,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         FruitCake\Cors\CorsServiceProvider::class,
+        Gr8Shivam\SmsApi\SmsApiServiceProvider::class
     ],
 
     /*
@@ -237,6 +238,7 @@ return [
         'Calendar'=> Acaronlex\LaravelCalendar\Facades\Calendar::class,
         'FCM'      => LaravelFCM\Facades\FCM::class,
         'FCMGroup' => LaravelFCM\Facades\FCMGroup::class,
+        'SmsApi'=> Gr8Shivam\SmsApi\SmsApiFacade::class
     ],
 
 ];

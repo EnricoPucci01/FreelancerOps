@@ -16,6 +16,7 @@
         "fruitcake/laravel-cors": "^3.0",
         "google/apiclient": "2.10",
         "google/cloud-firestore": "^1.21",
+        "gr8shivam/laravel-sms-api": "^3.0",
         "grpc/grpc": "1.38",
         "guzzlehttp/guzzle": "^7.0.1",
         "kreait/firebase-php": "^6.8",

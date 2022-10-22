@@ -15,6 +15,7 @@ use App\Models\proyek;
 use Carbon\Carbon;
 use Chartisan\PHP\Chartisan;
 use Google\Service\Monitoring\Custom;
+use Gr8Shivam\SmsApi\SmsApi;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -608,8 +609,7 @@ class adminController extends Controller
                      FROM customer,modul_diambil
                      WHERE customer.cust_id=modul_diambil.cust_id
                  ) as TableAktif
-                 ORDER BY TableAktif.lastProject ASC
-        ";
+                 ORDER BY TableAktif.lastProject ASC";
         } elseif ($custType == 'Client') {
             $query = "SELECT DISTINCT TableAktif.*
             FROM (
@@ -624,8 +624,8 @@ class adminController extends Controller
                 FROM customer,proyek
                 WHERE customer.cust_id=proyek.cust_id
             ) as TableAktif
-            ORDER BY TableAktif.lastProject ASC
-   ";
+            ORDER BY TableAktif.lastProject ASC";
+
         }
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
@@ -779,5 +779,10 @@ class adminController extends Controller
             'dataPenarikan' => $dataPenarikan,
             'totalPenarikan' => $totalPenarikan
         ]);
+    }
+
+    public function sendSMS(){
+        $sms=new SmsApi();
+        $sms->gateway('gateway_name_basic')->sendMessage("8986605599","test");
     }
 }

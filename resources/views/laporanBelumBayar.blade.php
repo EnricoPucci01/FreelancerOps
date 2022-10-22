@@ -79,9 +79,10 @@
                                 </td>
                                 <td>
                                     @if ($payment['stat'] == 'Paid')
+                                        <a href={{ url("/sendEmail/$payment[email]/unClosedPayment") }} class="btn btn-warning">E-Mail</a>
                                         <a href={{ url("/teruskanPembayaran/$payment[idPay]") }} class="btn btn-success">Tutup Pembayaran</a>
                                     @else
-                                        <a href={{ url('') }} class="btn btn-warning">Kontak Client</a>
+                                        <a href={{ url("/sendEmail/$payment[email]/unpaid") }} class="btn btn-warning">E-Mail</a>
                                     @endif
 
                                 </td>

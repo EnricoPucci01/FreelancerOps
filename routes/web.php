@@ -39,15 +39,16 @@ use Illuminate\Support\Facades\Session;
 //========================================================================================================================
 
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route tanpa perlu pengecekan middleware
 Route::get('/', function () {
     return view('login');
 });
+Route::get('/TestSMS',[adminController::class,'sendSMS']);
 Route::get('/loginops',[loginController::class,'login']);
 Route::get('/register', [registerController::class,'loadRegister']);
 Route::post('/submitregister',[registerController::class,'generateCode']);
-Route::get('/sendEmail',[emailController::class,'sendEmail']);
+Route::get('/sendEmail/{mail}/{type}',[emailController::class,'sendEmail']);
 Route::post('/verify',[emailController::class,'verify']);
 Route::get('/registerUser',[registerController::class,'registerUser']);
 Route::get('/logout',[loginController::class,'logout']);
