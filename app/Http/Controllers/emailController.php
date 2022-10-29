@@ -6,6 +6,7 @@ use App\Mail\Subscribe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 class emailController extends Controller
@@ -20,12 +21,17 @@ class emailController extends Controller
 
         // return view('verificationPage');
         Mail::to($mail)->send(new Subscribe($mail,$type));
-        return new JsonResponse(
-            [
-                'success' => true,
-                'message' => "Thank you for subscribing to our email, please check your inbox"
-            ], 200
-        );
+        // print( new JsonResponse(
+        //     [
+        //         'success' => true,
+        //         'message' => "Thank you for subscribing to our email, please check your inbox"
+        //     ], 200
+        // ));
+        if($type=='verify'){
+            return view('verificationPage');
+        }else{
+            return Redirect::back();
+        }
     }
 
     public function verify(Request $request){

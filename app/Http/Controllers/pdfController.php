@@ -35,7 +35,7 @@ class pdfController extends Controller
         $firebase_storage_path = 'kontrak/';
         app('firebase.storage')->getBucket()->upload($pdf->output(), ['name' => $firebase_storage_path . $namaKontrak]);
 
-        return Redirect::to("/loadDetailProyekClient/$idProyek/c/$idCust");
+        return Redirect::to("/loadDetailProyekClient/$idProyek/c");
         //return Response::download("storage/kontrak/".$namaKontrak,$namaKontrak,['Cache-Control' => 'no-cache, must-revalidate']);
     }
 

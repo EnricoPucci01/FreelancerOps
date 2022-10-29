@@ -44,7 +44,6 @@ use Illuminate\Support\Facades\Session;
 Route::get('/', function () {
     return view('login');
 });
-Route::get('/TestSMS',[adminController::class,'sendSMS']);
 Route::get('/loginops',[loginController::class,'login']);
 Route::get('/register', [registerController::class,'loadRegister']);
 Route::post('/submitregister',[registerController::class,'generateCode']);

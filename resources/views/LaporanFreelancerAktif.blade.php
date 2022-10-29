@@ -41,7 +41,9 @@
                         @else
                             Proyek Terakhir Di Ambil
                         @endif
-
+                    </td>
+                    <td style="text-align: center">
+                        Kontak
                     </td>
                 </tr>
             </thead>
@@ -67,6 +69,15 @@
                                 @endif
                             @else
                                 {{ $itemFreelancer['lastProject'] }} Hari Lalu
+                            @endif
+                        </td>
+                        <td>
+                            @if ($custType == 'Client')
+                                <a href={{ url("/sendEmail/$itemFreelancer[email]/inactiveClient") }}
+                                    class="btn btn-warning">E-Mail</a>
+                            @else
+                                <a href={{ url("/sendEmail/$itemFreelancer[email]/inactive") }}
+                                    class="btn btn-warning">E-Mail</a>
                             @endif
 
                         </td>

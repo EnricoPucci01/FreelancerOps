@@ -59,8 +59,9 @@ class registerController extends Controller
             Session::put('skill_register',$request->input('skill_register'));
             Session::put('pendidikan',$request->input('pendidikan_register'));
         }
-
-        return redirect("/registerUser");
+        $email=$request->input("email_register");
+        //return redirect("/registerUser");
+        return redirect("sendEmail/$email/verify");
     }
 
     public function registerUser(Request $request){
@@ -97,13 +98,6 @@ class registerController extends Controller
                         $insertSpesialisasi->save();
                     }
                 }
-                $user = User::create([
-                    'name' => Session::get('name_register'),
-                    'email' => Session::get('email_register'),
-                    'password' => Session::get('pass_register'),
-                ]);
-
-                event(new Registered($user));
 
                 DB::commit();
                 return \redirect("/")->with("success", "Account registration success");

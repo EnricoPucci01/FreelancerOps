@@ -30,15 +30,23 @@ class Subscribe extends Mailable
         $subject="";
         $markdown="";
         if($this->type == "unpaid"){
-            $subject="Hey, your project is done!";
+            $subject="Hai, Proyek anda sudah selesai nih!";
             $markdown = "emails.unpaid";
         }
         else if($this->type == "unClosedPayment"){
-            $subject="Hey, Your payment is not completed yet!";
+            $subject="Hai, Anda memiliki pembayaran yang belum selesai!";
             $markdown = "emails.unclosed";
         }else if($this->type == "verify"){
-            $subject="Here is your Verification Code!";
+            $subject="Berikut adalah kode Verifikasi anda!";
             $markdown = "emails.verify";
+        }
+        else if($this->type == "inactive"){
+            $subject="Halo, Sudah lama nih tidak aktif!";
+            $markdown = "emails.inactive";
+        }
+        else if($this->type == "inactiveClient"){
+            $subject="Halo, Sudah lama nih tidak aktif!";
+            $markdown = "emails.inactiveClient";
         }
 
         return $this->subject($subject)

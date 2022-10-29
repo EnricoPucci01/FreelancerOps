@@ -239,7 +239,13 @@ class adminController extends Controller
         //     array_push($umur, $Valnama['umur']);
         //     array_push($jumlah, $Valnama['Jumlah']);
         // }
-
+        $queryKebutuhan = "SELECT kategori.nama_kategori AS nama,Count(tag.kategori_id) AS jumlah
+        FROM tag, kategori
+        WHERE kategori.kategori_id = tag.kategori_id
+        Group By nama";
+        $dbKebutuhan = DB::select($queryKebutuhan);
+        $dbKebutuhan = json_decode(json_encode($dbKebutuhan), true);
+        //dd($dbKebutuhan);
 
         $querySpesialisasi = "SELECT skill.nama_skill AS nama, count(spesialisasi.spesialisasi_id) AS jumlah
             FROM skill, spesialisasi
@@ -306,7 +312,8 @@ class adminController extends Controller
         return view("laporanFreelancer", [
             'chart2' => $chartspesialisasi,
             'judul2' => 'Grafik Spesialisasi Freelancer',
-            'dataFreelancer' => $dbspesialisasi
+            'dataFreelancer' => $dbspesialisasi,
+            'dataKebutuhan' =>$dbKebutuhan
         ]);
     }
 
@@ -431,7 +438,7 @@ class adminController extends Controller
 
     public function proyekTidakTerbayar(Request $request)
     {
-        if ($request->input('ddPeriode') == "Tahun" || $request->input('ddPeriode') ==null ) {
+        if ($request->input('ddPeriode') == "Tahun" || $request->input('ddPeriode') == null) {
             $payment = payment::where('status', 'Completed')->orWhere('status', 'Paid')->paginate(10);
             $total = 0;
             $paymentitem = payment::where('status', 'Completed')->orWhere('status', 'Paid')->get();
@@ -484,7 +491,7 @@ class adminController extends Controller
 
         $chartPendapatan = new chartControl;
         $chartPendapatan->labels($bulan);
-        $chartPendapatan->dataset('','line', $total);
+        $chartPendapatan->dataset('', 'line', $total);
         // ->options(
         //     [
         //         'backgroundColor' => [
@@ -625,7 +632,6 @@ class adminController extends Controller
                 WHERE customer.cust_id=proyek.cust_id
             ) as TableAktif
             ORDER BY TableAktif.lastProject ASC";
-
         }
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
@@ -781,8 +787,9 @@ class adminController extends Controller
         ]);
     }
 
-    public function sendSMS(){
-        $sms=new SmsApi();
-        $sms->gateway('gateway_name_basic')->sendMessage("8986605599","test");
+    public function sendSMS()
+    {
+        $sms = new SmsApi();
+        $sms->gateway('gateway_name_basic')->sendMessage("8986605599", "test");
     }
 }
