@@ -100,7 +100,7 @@
                                                 Progress</a>
                                         @endif
                                     @endforeach
-                                    <a class='btn btn-success btn-sm '
+                                    <a class='btn btn-success btn-sm'
                                         href={{ url("/loadPembayaranMagang/$modul[modul_id]") }}>Bayar</a>
                                 @else
                                     {{-- <a class='btn btn-success' href={{url("/createInvoice/$modul[modul_id]")}}>Bayar</a> --}}

@@ -117,7 +117,7 @@ class adminController extends Controller
         $paymentData->save();
 
         $updateSaldoCust = customer::where('cust_id', $paymentData->cust_id)->first();
-        $updateSaldoCust->saldo = $updateSaldoCust->saldo + $paymentData->amount;
+        $updateSaldoCust->saldo = (int)$updateSaldoCust->saldo + (int)$paymentData->amount;
         $updateSaldoCust->save();
 
         $updateSaldoAdmin = customer::where('cust_id', Session::get('adminCustId'))->first();
@@ -763,7 +763,7 @@ class adminController extends Controller
 
     public function historiSaldoAdmin()
     {
-        $dataPayment = payment::where('status', 'Completed')->get();
+        $dataPayment = payment::where('status', 'Completed')->orWhere('status','Paid')->orWhere('status','close')->get();
         $dataPayment = json_decode(json_encode($dataPayment), true);
 
         $dataPenarikan = penarikan::withTrashed()->where('cust_id', session()->get('cust_id'))->get();
@@ -779,11 +779,14 @@ class adminController extends Controller
             $totalPenarikan = $totalPenarikan + (int) $penarikan['jumlah'];
         }
 
+        $sisaSaldo = (int)$total - (int)$totalPenarikan;
+
         return view('detailSaldoAdmin', [
             'dataPayment' => $dataPayment,
             'total' => $total,
             'dataPenarikan' => $dataPenarikan,
-            'totalPenarikan' => $totalPenarikan
+            'totalPenarikan' => $totalPenarikan,
+            'sisaSaldo'=>$sisaSaldo
         ]);
     }
 

@@ -25,6 +25,16 @@
                             </h3>
                         </div>
                     </td>
+                    <td>
+                        <div class="ml-3">
+                            <h3 class="card-subtitle text-muted mt-2">
+                                <p class="fw-bold">Sisa Saldo</p>
+                            </h3>
+                            <h3 class="card-title">
+                                <p class="fw-bold">@money($sisaSaldo, 'IDR', true)</p>
+                            </h3>
+                        </div>
+                    </td>
                 </tr>
             </table>
         </div>

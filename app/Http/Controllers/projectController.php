@@ -127,6 +127,7 @@ class projectController extends Controller
             $postProject->total_pembayaran = "0";
             $postProject->range_bayaran1 = $request->input('rentang_pembayaran1');
             $postProject->range_bayaran2 = $request->input('rentang_pembayaran2');
+            $postProject->project_active = 'false';
         } else {
             $postProject->total_pembayaran = $request->input('total_pembayaran');
         }
@@ -179,17 +180,20 @@ class projectController extends Controller
                 }
             }
 
-
             if ($modul && $tag && $postProject) {
                 DB::commit();
-                return \redirect("/postproject")->with('success', 'proyek anda telah berhasil di publikasikan');
+                if(Session::get('tipe_proyek') == "magang"){
+                    return \redirect("/generatevaPostMagang/$id");
+                }else{
+                    return \redirect("/postproject")->with('success', 'proyek anda telah berhasil di publikasikan');
+                }
             }
         }
     }
 
     public function loadBrowseProject()
     {
-        $listProject = proyek::where('start_proyek', ">=", Carbon::now())->paginate(5);
+        $listProject = proyek::where('start_proyek', ">=", Carbon::now())->where('project_active','true')->paginate(5);
         //$listProject=json_decode(json_encode($listProject),true);
 
         $listKategori = kategori::get();

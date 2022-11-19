@@ -297,10 +297,13 @@ Route::post('/updateCalendarId',[gCalendarController::class,'changeENV']);
 //Route Xendit Cek Balance, generate VA, callback VA, simulate payment, load payment
 Route::get('/loadPembayaran/{modulId}',[xenditController::class,'loadPembayaran']);
 Route::get('/loadPembayaranMagang/{modulId}',[xenditController::class,'loadPembayaranMagang']);
+Route::get('/loadPembayaranPostMagang/{proyekId}',[xenditController::class,'loadPembayaranPostMagang']);
 Route::get('/balance',[xenditController::class,'getBalance']);
 Route::get('/generateva/{modulId}',[xenditController::class,'createVA']);
+Route::get('/generatevaPostMagang/{proyekId}',[xenditController::class,'createVAMagang']);
 Route::get('/callbackva/{externalId}',[xenditController::class,'callbackVA']);
 Route::get('/simulatepayment/{externalId}',[xenditController::class,'simulatePayment']);
+Route::get('/simulatepaymentPostMagang/{externalId}',[xenditController::class,'simulatePaymentPostMagang']);
 //Route::get('/createInvoice/{modulId}',[xenditController::class,'createInvoice']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //========================================================================================================================

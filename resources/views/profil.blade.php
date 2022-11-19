@@ -55,7 +55,7 @@
                       </ul>
                 </td>
 
-                    @if (session()->get('role')=='freelancer')
+                    @if (session()->get('role')=='freelancer' || $role=='c')
                         <td style="margin: auto;
                             width: 100%;
                             display: flex;

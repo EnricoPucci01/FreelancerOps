@@ -45,8 +45,8 @@ class xenditController extends Controller
         DB::beginTransaction();
         $generateExternalId = 'va-' . date('dmYHis');
         $modulAmount = modul::where('modul_id', $modulId)->first();
-        $proyek= proyek::where('proyek_id',$modulAmount->proyek_id)->first();
-        $cust=customer::where('cust_id',$proyek->cust_id)->first();
+        $proyek = proyek::where('proyek_id', $modulAmount->proyek_id)->first();
+        $cust = customer::where('cust_id', $proyek->cust_id)->first();
         $modulAmount = json_decode(json_encode($modulAmount), true);
         $serviceFee = 0;
         $grandTotal = 0;
@@ -56,8 +56,7 @@ class xenditController extends Controller
 
         if ($tipeProyek['tipe_proyek'] == 'magang') {
 
-            $serviceFee = ((int)$request->input('grand_total') * 5) / 100;
-            $grandTotal = (int)$request->input('grand_total') + $serviceFee;
+            $grandTotal = (int)$request->input('grand_total');
 
             $param = [
                 'external_id' => $generateExternalId,
@@ -90,7 +89,7 @@ class xenditController extends Controller
         $insertPayment->amount = ($tipeProyek["tipe_proyek"] == 'magang') ? $request->input('grand_total') : $modulAmount['bayaran'];
         $insertPayment->service_fee = $serviceFee;
         $insertPayment->grand_total = $grandTotal;
-        $insertPayment->email=$cust->email;
+        $insertPayment->email = $cust->email;
         $insertPayment->status = 'unpaid';
         $insertPayment->save();
         $createVA = \Xendit\VirtualAccounts::create($param);
@@ -104,6 +103,42 @@ class xenditController extends Controller
         }
     }
 
+    public function createVAMagang($proyekId)
+    {
+        Xendit::setApiKey($this->privateKey);
+        DB::beginTransaction();
+        $generateExternalId = 'vapm-' . date('dmYHis');
+        $proyek = proyek::where('proyek_id', $proyekId)->first();
+        $cust = customer::where('cust_id', $proyek->cust_id)->first();
+
+        $param = [
+            'external_id' => $generateExternalId,
+            'bank_code' => 'BCA',
+            'name' => Session::get('name'),
+            'expected_amount' => '100000',
+            'is_closed' => true,
+            'expiration_date' => Carbon::now()->addDays(7)->toISOString(),
+            'is_single_use' => true
+        ];
+
+        $insertPayment = new payment();
+        $insertPayment->external_id = $generateExternalId;
+        $insertPayment->modul_id = $proyekId;
+        $insertPayment->cust_id = Session::get('cust_id');
+        $insertPayment->payment_channel = 'Virtual Account';
+        $insertPayment->amount = '0';
+        $insertPayment->service_fee = '100000';
+        $insertPayment->grand_total = '100000';
+        $insertPayment->email = $cust->email;
+        $insertPayment->status = 'unpaid';
+        $insertPayment->save();
+        $createVA = \Xendit\VirtualAccounts::create($param);
+        if ($insertPayment) {
+            DB::commit();
+            return redirect("/loadPembayaranPostMagang/$proyekId");
+        }
+    }
+
     public function callbackVA($externalId)
     {
         $dateTime = date('Y-m-d H:i:s');
@@ -113,7 +148,11 @@ class xenditController extends Controller
 
         if (!is_null($dataPayment)) {
             $dataPayment = payment::where('external_id', $externalId)->first();
-            $dataPayment->status = 'Paid';
+            if (Session::get('paymentType') == 'normal') {
+                $dataPayment->status = 'Paid';
+            } else {
+                $dataPayment->status = 'Completed';
+            }
             $dataPayment->payment_time = $dateTime;
             $dataPayment->email = Session::get('active');
             $dataPayment->save();
@@ -122,7 +161,22 @@ class xenditController extends Controller
                 DB::commit();
                 $proyekId = Session::get('pembayaranProyek');
                 $custId = Session::get('cust_id');
-                return redirect("/loadDetailProyekClient/$proyekId/c/$custId")->with('success', 'Pembayaran Berhasil!');
+                if (Session::get('paymentType') == 'normal') {
+                    return redirect("/loadDetailProyekClient/$proyekId/c/$custId")->with('success', 'Pembayaran Berhasil!');
+                } else {
+                    $updateProyek = proyek::where('proyek_id', Session::get('pembayaranProyek'))->first();
+                    $updateProyek->project_active = 'true';
+                    $updateProyek->save();
+                    if ($updateProyek) {
+                        $updateSaldoAdmin = customer::where('cust_id', "14")->first();
+                        $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + 100000;
+                        $updateSaldoAdmin->save();
+                        return Redirect::back()->with('success', 'Pembayaran Berhasil!');
+                    } else {
+                        DB::rollback();
+                        return redirect()->back()->with('error', 'Pembayaran Gagal!');
+                    }
+                }
             } else {
                 DB::rollback();
                 return redirect()->back()->with('error', 'Pembayaran Gagal!');
@@ -146,12 +200,36 @@ class xenditController extends Controller
 
         if (key_exists('status', $response)) {
             if ($response['status'] == 'COMPLETED') {
+                Session::put('paymentType', 'normal');
                 return redirect("/callbackva/$externalId");
             }
         } else {
             return 'Fail ' . $response["error_code"];
         }
     }
+
+    public function simulatePaymentPostMagang(Request $request, $externalId)
+    {
+        $username = $this->privateKey . ':';
+        $username = base64_encode($username);
+
+        $response = Http::withHeaders([
+            'Authorization' => ' Basic ' . $username
+        ])->post("https://api.xendit.co/callback_virtual_accounts/external_id=$externalId/simulate_payment", [
+            'amount' => $request->input('grand_total')
+        ]);
+        $response = json_decode($response, true);
+
+        if (key_exists('status', $response)) {
+            if ($response['status'] == 'COMPLETED') {
+                Session::put('paymentType', 'postMagang');
+                return redirect("/callbackva/$externalId");
+            }
+        } else {
+            return 'Fail ' . $response["error_code"];
+        }
+    }
+
 
     public function loadPembayaran($modulId)
     {
@@ -189,6 +267,22 @@ class xenditController extends Controller
         return view('pembayaranMagang', [
             'dataModul' => $modul,
             'dataProyek' => $detailProyek,
+        ]);
+    }
+
+    public function loadPembayaranPostMagang($proyekId)
+    {
+        $detailProyek = proyek::where('proyek_id', $proyekId)->first();
+        $detailProyek = json_decode(json_encode($detailProyek), true);
+        $paymentDetail = payment::where('modul_id', $proyekId)->first();
+        $paymentDetail = json_decode(json_encode($paymentDetail), true);
+
+        Session::put('pembayaranProyek', $detailProyek['proyek_id']);
+        Session::put('idCustFreelancer', $detailProyek['cust_id']);
+
+        return view('pembayaranPostMagang', [
+            'dataProyek' => $detailProyek,
+            'dataPayment' => $paymentDetail
         ]);
     }
 
@@ -373,11 +467,11 @@ class xenditController extends Controller
         $getList = \Xendit\VirtualAccounts::getVABanks();
         $getList = json_decode(json_encode($getList), true);
 
-        $rekeningpenarikan=tambahRekening::where('cust_id',Session::get('cust_id'))->get();
-        $rekeningpenarikan=json_decode(json_encode($rekeningpenarikan),true);
+        $rekeningpenarikan = tambahRekening::where('cust_id', Session::get('cust_id'))->get();
+        $rekeningpenarikan = json_decode(json_encode($rekeningpenarikan), true);
         return view('requestTarik', [
             'dataBank' => $getList,
-            'dataRekening'=>$rekeningpenarikan
+            'dataRekening' => $rekeningpenarikan
         ]);
     }
 
@@ -387,18 +481,18 @@ class xenditController extends Controller
         $getList = \Xendit\VirtualAccounts::getVABanks();
         $getList = json_decode(json_encode($getList), true);
 
-        $norek=tambahRekening::where('cust_id',session()->get('cust_id'))->get();
-        $norek=json_decode(json_encode($norek),true);
+        $norek = tambahRekening::where('cust_id', session()->get('cust_id'))->get();
+        $norek = json_decode(json_encode($norek), true);
         return view('penarikanDanaAdmin', [
             'dataBank' => $getList,
-            'dataRekening'=>$norek
+            'dataRekening' => $norek
         ]);
     }
 
     public function penarikanDanaAdmin(Request $request)
     {
         Xendit::setApiKey($this->privateKey);
-        $externalId = 'disb-' . date('dmYHis');
+        $externalId = 'disbadm-' . date('dmYHis');
 
         $tanggalAdmit = date('Y-m-d H:i:s');
 
@@ -423,18 +517,29 @@ class xenditController extends Controller
             ];
 
             $createDisb = \Xendit\Disbursements::create($disbParam);
-            DB::commit();
-            return Redirect::back()->with('success', 'Penarikan Berhasil Di Admit!');
+
+            $upSaldoAdmin = customer::where('cust_id', '14')->first();
+            $upSaldoAdmin->saldo = (int)$upSaldoAdmin->saldo - (int)$request['total_penarikan'];
+            $upSaldoAdmin->save();
+
+            if ($upSaldoAdmin) {
+                DB::commit();
+                return Redirect::back()->with('success', 'Penarikan Saldo Berhasil!');
+            } else {
+                DB::rollBack();
+                return Redirect::back()->with('error', 'Penarikan Saldo Gagal Dilakukan!');
+            }
         } else {
             DB::rollBack();
-            return Redirect::back()->with('error', 'Penarikan Dana Gagal Dilakukan!');
+            return Redirect::back()->with('error', 'Penarikan Saldo Gagal Dilakukan!');
         }
     }
 
-    public function loadTambahRekening(){
+    public function loadTambahRekening()
+    {
         Xendit::setApiKey($this->privateKey);
         $getList = \Xendit\VirtualAccounts::getVABanks();
-        return view('tambahRekening',[
+        return view('tambahRekening', [
             'dataBank' => $getList
         ]);
     }

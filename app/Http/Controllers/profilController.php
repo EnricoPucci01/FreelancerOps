@@ -196,7 +196,7 @@ class profilController extends Controller
     }
 
     public function loadHistori(){
-        $dataPayment=payment::where('cust_id',session()->get('cust_id'))->get();
+        $dataPayment=payment::where('cust_id',session()->get('cust_id'))->where('status','Completed')->get();
         $dataPayment=json_decode(json_encode($dataPayment),true);
 
         $dataPenarikan=penarikan::withTrashed()->where('cust_id',session()->get('cust_id'))->get();
@@ -212,11 +212,14 @@ class profilController extends Controller
             $totalPenarikan=$totalPenarikan+(int) $penarikan['jumlah'];
         }
 
+        $sisaSaldo = (int)$total - (int)$totalPenarikan;
+
         return view('histori',[
             'dataPayment'=>$dataPayment,
             'total'=>$total,
             'dataPenarikan'=>$dataPenarikan,
-            'totalPenarikan'=>$totalPenarikan
+            'totalPenarikan'=>$totalPenarikan,
+            'sisaSaldo'=>$sisaSaldo
         ]);
     }
 

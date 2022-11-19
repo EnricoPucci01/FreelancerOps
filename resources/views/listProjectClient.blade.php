@@ -35,7 +35,7 @@
                                     @if ($proyek->proyek_id==$tag['proyek_id'])
                                         @foreach ($listkategori as $kategori)
                                             @if ($tag['kategori_id']==$kategori['kategori_id'])
-                                                <p class="badge rounded-pill bg-warning" style="margin-bottom: 0px">
+                                                <p class="badge rounded-pill bg-primary" style="margin-bottom: 0px">
                                                     {{$kategori['nama_kategori']}}
                                                 </p>
                                             @endif
@@ -44,7 +44,7 @@
                             @endforeach
                         </div>
                         <hr>
-                        <a href="{{url("/loadDetailProyekClient/$proyek->proyek_id/c")}}" class="btn btn-warning fw-bold text-light">Lihat Lebih Detail</a>
+                        <a href="{{url("/loadDetailProyekClient/$proyek->proyek_id/c")}}" class="btn btn-primary fw-bold text-light">Lihat Lebih Detail</a>
                     </div>
                 </div>
             </tr>

@@ -71,7 +71,7 @@
                                 {{ $itemFreelancer['lastProject'] }} Hari Lalu
                             @endif
                         </td>
-                        <td>
+                        <td style="text-align: center">
                             @if ($custType == 'Client')
                                 <a href={{ url("/sendEmail/$itemFreelancer[email]/inactiveClient") }}
                                     class="btn btn-warning">E-Mail</a>
