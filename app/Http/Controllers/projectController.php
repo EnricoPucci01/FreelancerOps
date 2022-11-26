@@ -74,7 +74,8 @@ class projectController extends Controller
             ]);
         }
 
-        Session::put('name_project', $request->input("name_project"));
+        if (Carbon::parse($request->input("deadline"))->gt(Carbon::parse($request->input("tanggal_mulai")))) {
+            Session::put('name_project', $request->input("name_project"));
         Session::put('desc_project', $request->input("desc_project"));
         Session::put('tipe_proyek', $request->input("tipe_proyek"));
         Session::put('kategorijob_project', $request->input("kategorijob_project"));
@@ -88,10 +89,13 @@ class projectController extends Controller
             'tag' => $tag,
             'kategoriJob' => $kategoriJob
         ]);
+        }else{
+            return Redirect::back()->with("error","Tanggal deadline tidak dapat sebelum tanggal mulai!");
+        }
     }
     public function submitPostProject(Request $request)
     {
-
+        $deadlineModulIsGreater=false;
         $modulArr = [];
         $modulMagangArr = [];
         if (Session::get('tipe_proyek') == 'magang') {
@@ -104,6 +108,10 @@ class projectController extends Controller
                     "deadline_modul" => $request->input("deadline_modul" . $i . ""),
                 );
                 array_push($modulMagangArr, $modulTemp);
+
+                if(Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))){
+                    $deadlineModulIsGreater=true;
+                }
             }
         } else {
             for ($i = 0; $i < (int)$request->input('hid_val'); $i++) {
@@ -114,86 +122,94 @@ class projectController extends Controller
                     "deadline_modul" => $request->input("deadline_modul" . $i . ""),
                 );
                 array_push($modulArr, $modulTemp);
-            }
+                if(Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))){
+                    $deadlineModulIsGreater=true;
+                }
+           }
         }
-        //dd($modulArr);
-        DB::beginTransaction();
-        $postProject = new proyek();
-        $postProject->cust_id = Session::get('cust_id');
-        $postProject->nama_proyek = Session::get('name_project');
-        $postProject->desc_proyek = Session::get('desc_project');
-
-        if (Session::get('tipe_proyek') == "magang") {
-            $postProject->total_pembayaran = "0";
-            $postProject->range_bayaran1 = $request->input('rentang_pembayaran1');
-            $postProject->range_bayaran2 = $request->input('rentang_pembayaran2');
-            $postProject->project_active = 'false';
-        } else {
-            $postProject->total_pembayaran = $request->input('total_pembayaran');
-        }
-
-        $postProject->tipe_proyek = Session::get('tipe_proyek');
-        $postProject->start_proyek = Session::get('tanggal_mulai');
-        $postProject->deadline = Session::get('deadline');
-        $postProject->kategorijob_id = Session::get('kategorijob_project');
-        $postProject->save();
-
-        if ($postProject) {
-            $query = "SELECT proyek_id FROM proyek order by proyek_id desc limit 1";
-            $id = DB::select($query)[0]->proyek_id;
-
-            foreach (Session::get('kategori_project') as $kategoriId) {
-                $tag = new tag();
-                $tag->kategori_id = $kategoriId;
-                $tag->proyek_id = $id;
-                $tag->save();
-            }
+        if($deadlineModulIsGreater){
+            return \redirect("/postproject")->with('error', 'Deadline modul tidak dapat melebihi deadline proyek');
+            //return Redirect::back()->with('error','Deadline modul tidak dapat melebihi deadline proyek');
+        }else{
+            DB::beginTransaction();
+            $postProject = new proyek();
+            $postProject->cust_id = Session::get('cust_id');
+            $postProject->nama_proyek = Session::get('name_project');
+            $postProject->desc_proyek = Session::get('desc_project');
 
             if (Session::get('tipe_proyek') == "magang") {
-                //dd($modulMagangArr);
-                foreach ($modulMagangArr as $itemArr) {
-                    $modul = new modul();
-                    $modul->proyek_id = $id;
-                    $modul->title = $itemArr['nama_modul'];
-                    $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
-                    $modul->bayaran = 0;
-                    $modul->bayaran_min = $itemArr['bayaran1'];
-                    $modul->bayaran_max = $itemArr['bayaran2'];
-                    $modul->status = 'not taken';
-                    $modul->end = $itemArr['deadline_modul'];
-                    $modul->save();
-                }
-            }
-            if (Session::get('tipe_proyek') == "normal") {
-
-                foreach ($modulArr as $itemArr) {
-                    $modul = new modul();
-                    $modul->proyek_id = $id;
-                    $modul->title = $itemArr['nama_modul'];
-                    $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
-                    $modul->bayaran = $itemArr['bayaran'];
-                    $modul->bayaran_min = 0;
-                    $modul->bayaran_max = 0;
-                    $modul->status = 'not taken';
-                    $modul->end = $itemArr['deadline_modul'];
-                    $modul->save();
-                }
+                $postProject->total_pembayaran = "0";
+                $postProject->range_bayaran1 = $request->input('rentang_pembayaran1');
+                $postProject->range_bayaran2 = $request->input('rentang_pembayaran2');
+                $postProject->project_active = 'false';
+            } else {
+                $postProject->total_pembayaran = $request->input('total_pembayaran');
             }
 
-            if ($modul && $tag && $postProject) {
-                DB::commit();
-                if(Session::get('tipe_proyek') == "magang"){
-                    return \redirect("/generatevaPostMagang/$id");
-                }else{
-                    return \redirect("/postproject")->with('success', 'proyek anda telah berhasil di publikasikan');
+            $postProject->tipe_proyek = Session::get('tipe_proyek');
+            $postProject->start_proyek = Session::get('tanggal_mulai');
+            $postProject->deadline = Session::get('deadline');
+            $postProject->kategorijob_id = Session::get('kategorijob_project');
+            $postProject->save();
+
+            if ($postProject) {
+                $query = "SELECT proyek_id FROM proyek order by proyek_id desc limit 1";
+                $id = DB::select($query)[0]->proyek_id;
+
+                foreach (Session::get('kategori_project') as $kategoriId) {
+                    $tag = new tag();
+                    $tag->kategori_id = $kategoriId;
+                    $tag->proyek_id = $id;
+                    $tag->save();
+                }
+
+                if (Session::get('tipe_proyek') == "magang") {
+                    //dd($modulMagangArr);
+                    foreach ($modulMagangArr as $itemArr) {
+                        $modul = new modul();
+                        $modul->proyek_id = $id;
+                        $modul->title = $itemArr['nama_modul'];
+                        $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
+                        $modul->bayaran = 0;
+                        $modul->bayaran_min = $itemArr['bayaran1'];
+                        $modul->bayaran_max = $itemArr['bayaran2'];
+                        $modul->status = 'not taken';
+                        $modul->end = $itemArr['deadline_modul'];
+                        $modul->save();
+                    }
+                }
+                if (Session::get('tipe_proyek') == "normal") {
+
+                    foreach ($modulArr as $itemArr) {
+                        $modul = new modul();
+                        $modul->proyek_id = $id;
+                        $modul->title = $itemArr['nama_modul'];
+                        $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
+                        $modul->bayaran = $itemArr['bayaran'];
+                        $modul->bayaran_min = 0;
+                        $modul->bayaran_max = 0;
+                        $modul->status = 'not taken';
+                        $modul->end = $itemArr['deadline_modul'];
+                        $modul->save();
+                    }
+                }
+
+                if ($modul && $tag && $postProject) {
+                    DB::commit();
+                    if (Session::get('tipe_proyek') == "magang") {
+                        return \redirect("/generatevaPostMagang/$id");
+                    } else {
+                        return \redirect("/postproject")->with('success', 'proyek anda telah berhasil di publikasikan');
+                    }
                 }
             }
         }
+
     }
 
     public function loadBrowseProject()
     {
-        $listProject = proyek::where('start_proyek', ">=", Carbon::now())->where('project_active','true')->paginate(5);
+        $listProject = proyek::where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->paginate(5);
         //$listProject=json_decode(json_encode($listProject),true);
 
         $listKategori = kategori::get();
@@ -322,7 +338,7 @@ class projectController extends Controller
             'datapayment' => $payment,
             'accessor' => $accessor,
             'id' => Session::get("cust_id"),
-            'dataApplicant'=>$db
+            'dataApplicant' => $db
         ]);
     }
 
@@ -402,7 +418,7 @@ class projectController extends Controller
         $dateTime = date('Y-m-d');
         $nama = customer::where('cust_id', $custId)->first();
         $modul = modul::where('modul_id', $modulId)->first();
-        $nama_kontrak = 'Modul ' . $modul->title.'.pdf';
+        $nama_kontrak = 'Modul ' . $modul->title . '.pdf';
         DB::beginTransaction();
         $insertTakenModul = new modulDiambil();
         $insertTakenModul->cust_id = $custId;
@@ -657,14 +673,14 @@ class projectController extends Controller
         }
     }
 
-    public function reportError(Request $request, $modulId, $freelancerId,$progressId)
+    public function reportError(Request $request, $modulId, $freelancerId, $progressId)
     {
         DB::beginTransaction();
 
         $date = date('Y-m-d H:i:s');
         $filename = date('YmdHis') . '_' . $modulId . "." . $request->file("fileError")->getClientOriginalExtension();
         $path = $request->file('fileError')->storeAs("error", $filename, 'public');
-        $progressDate=progress::find($progressId);
+        $progressDate = progress::find($progressId);
 
         if ($path != "" && $path != null) {
             $image = $request->file('fileError'); //image file from frontend
@@ -681,7 +697,7 @@ class projectController extends Controller
         $insertError = new error_report();
         $insertError->modul_id = $modulId;
         $insertError->freelancer_id = $freelancerId;
-        $insertError->tanggal_progress= $progressDate->upload_time;
+        $insertError->tanggal_progress = $progressDate->upload_time;
         $insertError->halaman_error = $request->input('errPage');
         $insertError->aksi = $request->input('errAct');
         $insertError->report_desc = $request->input('errDesc');
@@ -698,16 +714,16 @@ class projectController extends Controller
         }
     }
 
-    public function loadErrorReport($modulId,$progressId)
+    public function loadErrorReport($modulId, $progressId)
     {
         $freelancerId = modulDiambil::where('modul_id', $modulId)->where('status', '!=', 'dibatalkan')->first();
-        $progressData = progress::where('progress_id',$progressId)->first();
-        $namaModul= modul::find($modulId);
+        $progressData = progress::where('progress_id', $progressId)->first();
+        $namaModul = modul::find($modulId);
         return view('errorReportPage', [
             'modulId' => $modulId,
             'freelancerId' => $freelancerId->cust_id,
-            'progressData'=>$progressData,
-            'modulTitle'=>$namaModul->title
+            'progressData' => $progressData,
+            'modulTitle' => $namaModul->title
         ]);
     }
 
@@ -780,7 +796,7 @@ class projectController extends Controller
             $proyekList = json_decode(json_encode($proyekList), true);
 
             //dd($proyekList);
-            $recommendedProyek = proyek::where('start_proyek','>=',Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
+            $recommendedProyek = proyek::where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
             $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
             $listTag = tag::get();
             $listTag = json_decode(json_encode($listTag), true);
@@ -809,7 +825,7 @@ class projectController extends Controller
             $tag = json_decode(json_encode($tag), true);
 
             //dd($proyekCount);
-            $recommendedProyek = proyek::where('start_proyek','>=',Carbon::now())->whereIn('proyek_id', $tag)->get();
+            $recommendedProyek = proyek::where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
             $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
 
             $listTag = tag::get();

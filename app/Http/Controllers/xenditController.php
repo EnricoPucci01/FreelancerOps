@@ -491,24 +491,26 @@ class xenditController extends Controller
 
     public function penarikanDanaAdmin(Request $request)
     {
-        Xendit::setApiKey($this->privateKey);
-        $externalId = 'disbadm-' . date('dmYHis');
+        $SaldoAdmin = customer::where('cust_id', '14')->first();
 
-        $tanggalAdmit = date('Y-m-d H:i:s');
+        if((int)$SaldoAdmin->saldo >= (int)str_replace(".","",$request['total_penarikan'])){
+            Xendit::setApiKey($this->privateKey);
+            $externalId = 'disbadm-' . date('dmYHis');
 
-        DB::beginTransaction();
+            $tanggalAdmit = date('Y-m-d H:i:s');
+            DB::beginTransaction();
         $inPenarikan = new penarikan();
         $inPenarikan->cust_id = session()->get('cust_id');
         $inPenarikan->no_rek = $request['no_rek'];
         $inPenarikan->bank = $request['bank'];
-        $inPenarikan->jumlah = $request['total_penarikan'];
+        $inPenarikan->jumlah = str_replace(".","",$request['total_penarikan']);
         $inPenarikan->tanggal_request = $tanggalAdmit;
         $inPenarikan->save();
 
         if ($inPenarikan) {
             $disbParam = [
                 'external_id' => $externalId,
-                'amount' => $request['total_penarikan'],
+                'amount' => str_replace(".","",$request['total_penarikan']),
                 'bank_code' => $request['bank'],
                 'account_holder_name' => 'Admin',
                 'account_number' => $request['no_rek'],
@@ -519,7 +521,7 @@ class xenditController extends Controller
             $createDisb = \Xendit\Disbursements::create($disbParam);
 
             $upSaldoAdmin = customer::where('cust_id', '14')->first();
-            $upSaldoAdmin->saldo = (int)$upSaldoAdmin->saldo - (int)$request['total_penarikan'];
+            $upSaldoAdmin->saldo = (int)$upSaldoAdmin->saldo - (int)str_replace(".","",$request['total_penarikan']);
             $upSaldoAdmin->save();
 
             if ($upSaldoAdmin) {
@@ -533,6 +535,10 @@ class xenditController extends Controller
             DB::rollBack();
             return Redirect::back()->with('error', 'Penarikan Saldo Gagal Dilakukan!');
         }
+        }else{
+            return Redirect::back()->with('error', 'Jumlah penarikan melebihi total saldo!');
+        }
+
     }
 
     public function loadTambahRekening()

@@ -17,6 +17,7 @@
                             <td>
                                 Tipe Proyek: <p class="fw-bold"> {{ session()->get('tipe_proyek') }}</p>
                             </td>
+
                         </tr>
                         <tr>
                             <td>
@@ -41,6 +42,15 @@
                                     @endforeach
                                 </p>
                             </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                Deadline: <p class="fw-bold"> {{Carbon\Carbon::parse(session()->get('deadline'))->format('d-m-Y') }}</p>
+                            </td>
+                            <td>
+                                Mulai: <p class="fw-bold"> {{ Carbon\Carbon::parse(session()->get('tanggal_mulai'))->format('d-m-Y') }}</p>
+                            </td>
                         </tr>
                         @if (session()->get('tipe_proyek') == 'normal')
                             <!-- total pembayaran -->
@@ -53,7 +63,7 @@
 
                             <tr>
                                 <td>
-                                    <input type="number" name="total_pembayaran" id='totalPembayaran' value="0"
+                                    <input type="text" name="total_pembayaran" id='totalPembayaran' value="0"
                                         class="form-control" readonly>
                                 </td>
                             </tr>
@@ -69,7 +79,7 @@
 
                             <tr class="row g-3" id="rentang_pembayaran_input">
                                 <td class="col-auto">
-                                    <input type="number" name="rentang_pembayaran1" id='rentangPembayaran1' value="0"
+                                    <input type="text" name="rentang_pembayaran1" id='rentangPembayaran1' value="0"
                                         class="form-control" readonly>
                                 </td>
                                 <td class="col-auto">
@@ -77,7 +87,7 @@
                                 </td>
 
                                 <td class="col-auto">
-                                    <input type="number" name="rentang_pembayaran2" id='rentangPembayaran2' value="0"
+                                    <input type="text" name="rentang_pembayaran2" id='rentangPembayaran2' value="0"
                                         class="form-control" readonly>
                                 </td>
                             </tr>

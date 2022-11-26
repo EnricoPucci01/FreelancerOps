@@ -52,7 +52,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="number" name="total_penarikan" id='totalPenarikan' class="form-control">
+                                <input type="text" name="total_penarikan" id='totalPenarikan' class="form-control">
                             </td>
                         </tr>
 
@@ -88,7 +88,7 @@
                     let norek= document.getElementById('norek');
                     let bank= document.getElementById('bank');
                     var arr=@json($dataRekening);
-
+                    let penarikan = document.getElementById("totalPenarikan");
                     norek.addEventListener('change',function() {
                         arr.forEach(element => {
                             if(element['nomor_rek']==norek.value){
@@ -96,22 +96,47 @@
                         }
                         });
                     });
+
+
+                    penarikan.addEventListener('keyup', function() {
+                                var arr=[];
+                                var revArr=[];
+                                var newArr=[];
+                                var cleanSTR = penarikan.value.replace(".","");
+                                cleanSTR=cleanSTR.replace(".","");
+                                cleanSTR=cleanSTR.replace(".","");
+                                cleanSTR=cleanSTR.replace(".","");
+                                cleanSTR=cleanSTR.replace(".","");
+                                cleanSTR=cleanSTR.replace(".","");
+                                var arr=cleanSTR.split("");
+                                console.log(cleanSTR);
+                                revArr = arr.reverse();
+                                console.log(revArr);
+                                var count = 0;
+                                for(var i = 0; i<revArr.length;i++){
+                                   if(count == 3){
+                                    count=0;
+                                    newArr.push(".");
+                                   }
+                                    newArr.push(revArr[i]);
+                                   count++;
+                                }
+
+                                var formatArr=[];
+                                formatArr = newArr.reverse();
+                                var formatedStr="";
+                                for(var i = 0; i<formatArr.length;i++){
+                                    formatedStr = formatedStr+formatArr[i];
+                                }
+                                console.log("format: "+formatedStr)
+                                penarikan.value=formatedStr;
+                            });
+
                     function createModal(){
                         const modal = document.getElementById('modalTarik');
                         var norek=document.getElementById('norek').value;
                         var bank=document.getElementById('bank').value;
                         var jumlah=document.getElementById('totalPenarikan').value;
-
-                        var formatter = new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-
-                                        // These options are needed to round to whole numbers if that's what you want.
-                                        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-                                        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-                                        });
-
-                        var idr=formatter.format(jumlah);
 
                         modal.innerHTML = `
                             <div class="modal-dialog modal-dialog-centered">
@@ -121,7 +146,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Anda akan melakukan penarikan dana sejumlah <b>`+idr+`</b>, Melalui bank <b>`+bank+`</b> dengan nomor rekening <b>`+norek+`</b>. <br>
+                                        Anda akan melakukan penarikan dana sejumlah <b>`+jumlah+`</b>, Melalui bank <b>`+bank+`</b> dengan nomor rekening <b>`+norek+`</b>. <br>
 
                                         Tekan <b>Ya</b> untuk melanjutkan proses penarikan.
                                     </div>

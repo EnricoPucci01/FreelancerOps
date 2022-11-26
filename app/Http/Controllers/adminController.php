@@ -48,7 +48,7 @@ class adminController extends Controller
 
         $formValidate = $request->validate([
             'no_rek' => 'required|numeric',
-            'total_penarikan' => 'required|numeric'
+            'total_penarikan' => 'required|'
         ], [
             'no_rek.required' => 'Nomor Rekening tidak dapat kosong!',
             'total_penarikan.required' => 'Total Penarikan tidak dapat kosong!',
@@ -56,25 +56,34 @@ class adminController extends Controller
             'total_penarikan.numeric' => 'Total Penarikan hanya boleh berisi angka!',
         ]);
 
+
         $tanggalReq = date('Y-m-d H:i:s');
 
-        DB::beginTransaction();
+        $saldoPenarik = customer::where('cust_id',Session::get('cust_id'))->first();
 
-        $insertPenarikan = new penarikan();
-        $insertPenarikan->cust_id = Session::get('cust_id');
-        $insertPenarikan->no_rek = $request->input('no_rek');
-        $insertPenarikan->bank = $request->input('bank');
-        $insertPenarikan->jumlah = $request->input('total_penarikan');
-        $insertPenarikan->tanggal_request = $tanggalReq;
-        $insertPenarikan->save();
+        if((int)$saldoPenarik->saldo >= (int)str_replace(".","",$request->input('total_penarikan'))){
+            DB::beginTransaction();
 
-        if ($insertPenarikan) {
-            DB::commit();
-            return Redirect::back()->with('success', 'Permohonan penarikan telah di buat!');
-        } else {
+            $insertPenarikan = new penarikan();
+            $insertPenarikan->cust_id = Session::get('cust_id');
+            $insertPenarikan->no_rek = $request->input('no_rek');
+            $insertPenarikan->bank = $request->input('bank');
+            $insertPenarikan->jumlah = str_replace(".","",$request->input('total_penarikan'));
+            $insertPenarikan->tanggal_request = $tanggalReq;
+            $insertPenarikan->save();
+
+            if ($insertPenarikan) {
+                DB::commit();
+                return Redirect::back()->with('success', 'Permohonan penarikan telah di buat!');
+            } else {
+                DB::rollback();
+                return Redirect::back()->with('error', 'Permohonan penarikan gagal di buat!');
+            }
+        }else{
             DB::rollback();
-            return Redirect::back()->with('success', 'Permohonan penarikan gagal di buat!');
+            return Redirect::back()->with('error', 'Jumlah penarikan anda lebih besar dari saldo anda!');
         }
+
     }
 
     public function loadPenarikanDana()
