@@ -121,7 +121,25 @@ class gCalendarController extends Controller
         // }
     }
 
+    public function loadEditCalendar(){
+        // Ganti Environment Variabel Google_calendar_id
 
+        DB::beginTransaction();
+
+        $upProfile=profil::where('cust_id',Session::get('cust_id'))->first();
+
+        return view("editCalendar", [
+            "calendarId"=>($upProfile->calendar_id == null)?false:true
+        ]);
+        // $path = base_path('.env');
+
+        // if (file_exists($path)) {
+        //     file_put_contents($path, str_replace(
+        //         'GOOGLE_CALENDAR_ID='.env('GOOGLE_CALENDAR_ID',''), 'GOOGLE_CALENDAR_ID='.$request->input('cal_id'), file_get_contents($path)
+        //     ));
+        //
+        // }
+    }
 
 
 

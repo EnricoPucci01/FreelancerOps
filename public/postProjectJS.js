@@ -63,72 +63,8 @@ function editTotal(idx) {
         for (let index = 0; index < hidVal.value; index++) {
             var bayar1 = document.getElementById('rentang1_bayaran' + index);
             var bayar2 = document.getElementById('rentang2_bayaran' + index);
-            totalBayar1 = totalBayar1 + parseInt(bayar1.value.replace(".",""));
-            totalBayar2 = totalBayar2 + parseInt(bayar2.value.replace(".",""));
-
-
-            var arr = [];
-            var revArr = [];
-            var newArr = [];
-            var formatArr=[];
-
-            var arr2 = [];
-            var revArr2 = [];
-            var newArr2 = [];
-            var formatArr2 = [];
-
-            var cleanSTR = bayar1.value.replace(".", "");
-            var cleanSTR2 = bayar2.value.replace(".", "");
-            cleanSTR = cleanSTR.replace(".", "");
-            cleanSTR = cleanSTR.replace(".", "");
-            cleanSTR = cleanSTR.replace(".", "");
-            cleanSTR = cleanSTR.replace(".", "");
-            cleanSTR = cleanSTR.replace(".", "");
-
-            cleanSTR2 = cleanSTR2.replace(".", "");
-            cleanSTR2 = cleanSTR2.replace(".", "");
-            cleanSTR2 = cleanSTR2.replace(".", "");
-            cleanSTR2 = cleanSTR2.replace(".", "");
-            cleanSTR2 = cleanSTR2.replace(".", "");
-
-            var arr = cleanSTR.split("");
-            var arr2 = cleanSTR2.split("");
-            console.log(cleanSTR);
-            revArr = arr.reverse();
-            revArr2 = arr2.reverse();
-            console.log(revArr);
-            var count = 0;
-            var count2 = 0;
-            for (var i = 0; i < revArr.length; i++) {
-                if (count == 3) {
-                    count = 0;
-                    newArr.push(".");
-                }
-                newArr.push(revArr[i]);
-                count++;
-            }
-            for (var i = 0; i < revArr2.length; i++) {
-                if (count2 == 3) {
-                    count2 = 0;
-                    newArr2.push(".");
-                }
-                newArr2.push(revArr2[i]);
-                count2++;
-            }
-
-            formatArr = newArr.reverse();
-            formatArr2 = newArr2.reverse();
-            var formatedStr = "";
-            var formatedStr2 = "";
-            for (var i = 0; i < formatArr.length; i++) {
-                formatedStr = formatedStr + formatArr[i];
-            }
-            for (var i = 0; i < formatArr2.length; i++) {
-                formatedStr2 = formatedStr2 + formatArr2[i];
-            }
-            console.log("format: " + formatedStr)
-            bayar1.value = formatedStr;
-            bayar2.value = formatedStr2;
+            totalBayar1 = totalBayar1 + parseInt(bayar1.value.replace(".", ""));
+            totalBayar2 = totalBayar2 + parseInt(bayar2.value.replace(".", ""));
         }
         rentangpembayaran1.value = totalBayar1;
         rentangpembayaran2.value = totalBayar2;
@@ -139,39 +75,7 @@ function editTotal(idx) {
 
         for (let index = 0; index < hidVal.value; index++) {
             var bayar = document.getElementById('bayaran' + index);
-            totalBayar = totalBayar + parseInt(bayar.value.replace(".",""));
-
-            var arr=[];
-            var revArr=[];
-            var newArr=[];
-            var cleanSTR = bayar.value.replace(".","");
-            cleanSTR=cleanSTR.replace(".","");
-            cleanSTR=cleanSTR.replace(".","");
-            cleanSTR=cleanSTR.replace(".","");
-            cleanSTR=cleanSTR.replace(".","");
-            cleanSTR=cleanSTR.replace(".","");
-            var arr=cleanSTR.split("");
-            console.log(cleanSTR);
-            revArr = arr.reverse();
-            console.log(revArr);
-            var count = 0;
-            for(var i = 0; i<revArr.length;i++){
-               if(count == 3){
-                count=0;
-                newArr.push(".");
-               }
-                newArr.push(revArr[i]);
-               count++;
-            }
-
-            var formatArr=[];
-            formatArr = newArr.reverse();
-            var formatedStr="";
-            for(var i = 0; i<formatArr.length;i++){
-                formatedStr = formatedStr+formatArr[i];
-            }
-            console.log("format: "+formatedStr)
-            bayar.value=formatedStr;
+            totalBayar = totalBayar + parseInt(bayar.value.replace(".", ""));
         }
         pembayaran.value = totalBayar;
     }
@@ -179,6 +83,106 @@ function editTotal(idx) {
     console.log("totalBayar: " + totalBayar);
 }
 
+function editTotalMagang(idx){
+    var bayar1 = document.getElementById('rentang1_bayaran' + idx);
+    var bayar2 = document.getElementById('rentang2_bayaran' + idx);
+    var arr = [];
+    var revArr = [];
+    var newArr = [];
+    var formatArr = [];
+
+    var arr2 = [];
+    var revArr2 = [];
+    var newArr2 = [];
+    var formatArr2 = [];
+
+    var cleanSTR = bayar1.value.replace(".", "");
+    var cleanSTR2 = bayar2.value.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+
+    cleanSTR2 = cleanSTR2.replace(".", "");
+    cleanSTR2 = cleanSTR2.replace(".", "");
+    cleanSTR2 = cleanSTR2.replace(".", "");
+    cleanSTR2 = cleanSTR2.replace(".", "");
+    cleanSTR2 = cleanSTR2.replace(".", "");
+
+    var arr = cleanSTR.split("");
+    var arr2 = cleanSTR2.split("");
+    console.log(cleanSTR);
+    revArr = arr.reverse();
+    revArr2 = arr2.reverse();
+    console.log(revArr);
+    var count = 0;
+    var count2 = 0;
+    for (var i = 0; i < revArr.length; i++) {
+        if (count == 3) {
+            count = 0;
+            newArr.push(".");
+        }
+        newArr.push(revArr[i]);
+        count++;
+    }
+    for (var i = 0; i < revArr2.length; i++) {
+        if (count2 == 3) {
+            count2 = 0;
+            newArr2.push(".");
+        }
+        newArr2.push(revArr2[i]);
+        count2++;
+    }
+
+    formatArr = newArr.reverse();
+    formatArr2 = newArr2.reverse();
+    var formatedStr = "";
+    var formatedStr2 = "";
+    for (var i = 0; i < formatArr.length; i++) {
+        formatedStr = formatedStr + formatArr[i];
+    }
+    for (var i = 0; i < formatArr2.length; i++) {
+        formatedStr2 = formatedStr2 + formatArr2[i];
+    }
+    console.log("format: " + formatedStr)
+    bayar1.value = formatedStr;
+    bayar2.value = formatedStr2;
+}
+function editTotalNormal(idx) {
+    var bayar = document.getElementById('bayaran' + idx);
+    var arr = [];
+    var revArr = [];
+    var newArr = [];
+    var cleanSTR = bayar.value.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    cleanSTR = cleanSTR.replace(".", "");
+    var arr = cleanSTR.split("");
+    console.log(cleanSTR);
+    revArr = arr.reverse();
+    console.log(revArr);
+    var count = 0;
+    for (var i = 0; i < revArr.length; i++) {
+        if (count == 3) {
+            count = 0;
+            newArr.push(".");
+        }
+        newArr.push(revArr[i]);
+        count++;
+    }
+
+    var formatArr = [];
+    formatArr = newArr.reverse();
+    var formatedStr = "";
+    for (var i = 0; i < formatArr.length; i++) {
+        formatedStr = formatedStr + formatArr[i];
+    }
+    console.log("format: " + formatedStr)
+    bayar.value = formatedStr;
+}
 
     // var select=document.getElementById('tambah');
     // var table = document.getElementById("modul_table");

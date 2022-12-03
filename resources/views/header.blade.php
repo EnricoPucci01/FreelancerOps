@@ -122,7 +122,6 @@
                                             href={{ url('/loadProfil/f/' . session()->get('cust_id')) }}>Profile</a>
                                     </li>
                                     {{-- <li><a class="dropdown-item" href={{url("/esign")}}>Upload Tanda Tangan</a></li> --}}
-                                    <li><a class="dropdown-item" href={{ url('/calendarId') }}>Upload Calendar Id</a>
                                     </li>
                                     @if (session()->get('role') == 'freelancer')
                                         <li><a class="dropdown-item" href={{ url('/loadTambahRekening') }}>Tambah Nomor

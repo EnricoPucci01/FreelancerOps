@@ -167,12 +167,12 @@
                                                             Progress</a>
                                                     @endif
                                                 @endforeach
-                                                <a class='btn btn-success btn-sm '
-                                                    href={{ url("/review/$modul[modul_id]/$pay[cust_id]/$dataproyek[cust_id]") }}>Review</a>
                                             @endif
                                         @endif
                                     @endforeach
                                 @endif
+                                <a class='btn btn-success btn-sm '
+                                                    href={{ url("/review/$modul[modul_id]/$pay[cust_id]/$dataproyek[cust_id]") }}>Review</a>
                             @endif
                         @endif
                 </tr>

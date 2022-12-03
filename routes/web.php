@@ -282,7 +282,8 @@ Route::post('/submiteditprofil/{custId}',[profilController::class,'editProfil'])
 //Route Calendar load calendar
 Route::get('/cekEvent',[gCalendarController::class,'testGetEventCalendar']);
 Route::post('/insertEvent',[gCalendarController::class,'insertEvent']);
-Route::view('/loadEditCalendar','editCalendar');
+Route::get('/loadEditCalendar',[gCalendarController::class,'loadEditCalendar']);
+Route::view('/tutorialCalendar','tutorialCalendar');
 Route::view('/calendarId','calendarId');
 Route::post('/updateCalendarId',[gCalendarController::class,'changeENV']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
