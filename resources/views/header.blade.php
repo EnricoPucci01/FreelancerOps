@@ -89,7 +89,7 @@
                                             Ketepatan Pembayaran</a></li> --}}
                             <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar') }}>Laporan
                                     Pendapatan</a></li>
-                            <li><a class="dropdown-item" href={{ url('/loadLaporanBelumBayar') }}>Laporan
+                            <li><a class="dropdown-item" href={{ url('/loadLaporanBelumBayar/unpaid') }}>Laporan
                                     Proyek Belum Terbayar</a></li>
                             <li><a class="dropdown-item"
                                     href={{ url('/loadFreelancerClientAktif/Freelancer') }}>Laporan

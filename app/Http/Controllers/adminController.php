@@ -569,18 +569,19 @@ class adminController extends Controller
         ]);
     }
 
-    public function loadLaporanBelumBayar()
+    public function loadLaporanBelumBayar($status)
     {
         $query = "SELECT customer.nama as namaClient, payment.email as email, customer.nomorhp as hp,
          modul.title as judul, payment.amount as hargamodul, payment.service_fee as servicefee,
          payment.grand_total as grand, payment.created_at as penagihan, payment.status as stat, payment.payment_id as idPay
         FROM payment, customer, modul
-        WHERE payment.modul_id=modul.modul_id AND payment.email = customer.email AND payment.status != 'Completed'";
+        WHERE payment.modul_id=modul.modul_id AND payment.email = customer.email AND payment.status = '$status'";
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
         //dd($db);
         return view("laporanBelumBayar", [
             'laporanBelumBayar' => $db,
+            'status' => $status
         ]);
     }
 

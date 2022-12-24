@@ -64,7 +64,7 @@ class xenditController extends Controller
                 'name' => Session::get('name'),
                 'expected_amount' => $grandTotal,
                 'is_closed' => true,
-                'expiration_date' => Carbon::now()->addDays(7)->toISOString(),
+                'expiration_date' => Carbon::now()->addDays(30)->toISOString(),
                 'is_single_use' => true
             ];
         } else {
@@ -76,7 +76,7 @@ class xenditController extends Controller
                 'name' => Session::get('name'),
                 'expected_amount' => $grandTotal,
                 'is_closed' => true,
-                'expiration_date' => Carbon::now()->addDays(7)->toISOString(),
+                'expiration_date' => Carbon::now()->addDays(30)->toISOString(),
                 'is_single_use' => true
             ];
         }
@@ -162,7 +162,7 @@ class xenditController extends Controller
                 $proyekId = Session::get('pembayaranProyek');
                 $custId = Session::get('cust_id');
                 if (Session::get('paymentType') == 'normal') {
-                    return redirect("/loadDetailProyekClient/$proyekId/c/$custId")->with('success', 'Pembayaran Berhasil!');
+                    return redirect("/loadDetailProyekClient/$proyekId/c")->with('success', 'Pembayaran Berhasil!');
                 } else {
                     $updateProyek = proyek::where('proyek_id', Session::get('pembayaranProyek'))->first();
                     $updateProyek->project_active = 'true';
@@ -233,22 +233,84 @@ class xenditController extends Controller
 
     public function loadPembayaran($modulId)
     {
-        $modul = modul::where('modul_id', $modulId)->first();
-        $modul = json_decode(json_encode($modul), true);
+        $paymentCheck = payment::where('modul_id', $modulId)->first();
+        $paymentCheck = json_decode(json_encode($paymentCheck), true);
+        if(Carbon::parse($paymentCheck['created_at'])->addDays(30) <= Carbon::now()){
+            DB::beginTransaction();
+            $paymentExp= payment::find($paymentCheck['payment_id']);
+            $paymentExp->delete();
+            if($paymentExp){
+                Xendit::setApiKey($this->privateKey);
+                $generateExternalId = 'va-' . date('dmYHis');
+                $serviceFee = $paymentCheck['service_fee'];
+                $grandTotal = (int)$paymentCheck['grand_total'];
+                $param = [
+                    'external_id' => $generateExternalId,
+                    'bank_code' => 'BCA',
+                    'name' => Session::get('name'),
+                    'expected_amount' => $grandTotal,
+                    'is_closed' => true,
+                    'expiration_date' => Carbon::now()->addDays(30)->toISOString(),
+                    'is_single_use' => true
+                ];
 
-        $paymentDetail = payment::where('modul_id', $modulId)->first();
-        $paymentDetail = json_decode(json_encode($paymentDetail), true);
+                $insertPayment = new payment();
+                $insertPayment->external_id = $generateExternalId;
+                $insertPayment->modul_id = $modulId;
+                $insertPayment->cust_id = Session::get('cust_id');
+                $insertPayment->payment_channel = 'Virtual Account';
+                $insertPayment->amount = $paymentCheck['amount'];
+                $insertPayment->service_fee = $serviceFee;
+                $insertPayment->grand_total = $grandTotal;
+                $insertPayment->email = $paymentCheck["email"];
+                $insertPayment->status = 'unpaid';
+                $insertPayment->save();
 
-        $detailProyek = proyek::where('proyek_id', $modul['proyek_id'])->first();
-        $detailProyek = json_decode(json_encode($detailProyek), true);
+                if($insertPayment){
+                    $createVA = \Xendit\VirtualAccounts::create($param);
 
-        Session::put('pembayaranProyek', $modul['proyek_id']);
+                    $modul = modul::where('modul_id', $modulId)->first();
+                    $modul = json_decode(json_encode($modul), true);
 
-        return view('pembayaran', [
-            'dataModul' => $modul,
-            'dataPayment' => $paymentDetail,
-            'dataProyek' => $detailProyek,
-        ]);
+                    $paymentDetail = payment::where('modul_id', $modulId)->first();
+                    $paymentDetail = json_decode(json_encode($paymentDetail), true);
+
+                    $detailProyek = proyek::where('proyek_id', $modul['proyek_id'])->first();
+                    $detailProyek = json_decode(json_encode($detailProyek), true);
+
+                    Session::put('pembayaranProyek', $modul['proyek_id']);
+                    DB::commit();
+                    return view('pembayaran', [
+                        'dataModul' => $modul,
+                        'dataPayment' => $paymentDetail,
+                        'dataProyek' => $detailProyek,
+                    ]);
+                }else{
+                    DB::rollBack();
+                    return Redirect::back()->with('error','Gagal membuat ulang tagihan, silahkan coba lagi');
+                }
+            }else{
+                DB::rollBack();
+                return Redirect::back()->with('error','Gagal membuat ulang tagihan, silahkan coba lagi');
+            }
+
+        }else{
+            $modul = modul::where('modul_id', $modulId)->first();
+            $modul = json_decode(json_encode($modul), true);
+
+            $paymentDetail = payment::where('modul_id', $modulId)->first();
+            $paymentDetail = json_decode(json_encode($paymentDetail), true);
+
+            $detailProyek = proyek::where('proyek_id', $modul['proyek_id'])->first();
+            $detailProyek = json_decode(json_encode($detailProyek), true);
+
+            Session::put('pembayaranProyek', $modul['proyek_id']);
+            return view('pembayaran', [
+                'dataModul' => $modul,
+                'dataPayment' => $paymentDetail,
+                'dataProyek' => $detailProyek,
+            ]);
+        }
     }
 
     public function loadPembayaranMagang($modulId)

@@ -364,7 +364,7 @@ Route::get('/laporanFreelancer',[adminController::class,'laporanFreelancer']);
 Route::get('/laporanClient',[adminController::class,'laporanClient']);
 Route::get('/ketepatanPembayaran',[adminController::class,'ketepatanPembayaran']);
 Route::get('/listProyekBulan/{months}',[adminController::class,'listProyekBulan']);
-Route::get('/loadLaporanBelumBayar',[adminController::class,'loadLaporanBelumBayar']);
+Route::get('/loadLaporanBelumBayar/{status}',[adminController::class,'loadLaporanBelumBayar']);
 Route::get('/detailLaporanFreelancerAktif/{custId}',[adminController::class,'detailLaporanFreelancerAktif']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

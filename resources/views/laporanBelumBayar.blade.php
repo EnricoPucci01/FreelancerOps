@@ -4,7 +4,16 @@
 
         <div class="card mt-3 mb-3">
             <h5 class="card-header">Laporan Proyek Belum Terbayar</h5>
-
+            <ul class="nav nav-tabs mt-2">
+                <li class="nav-item">
+                    <a class="{{ $status == 'unpaid' ? 'nav-link active' : 'nav-link' }}"
+                        href={{ url('/loadLaporanBelumBayar/unpaid') }}>Unpaid</a>
+                </li>
+                <li class="nav-item">
+                    <a class="{{ $status == 'Paid' ? 'nav-link active' : 'nav-link' }}"
+                        href={{ url('/loadLaporanBelumBayar/Paid') }}>Paid</a>
+                </li>
+            </ul>
 
             <div class="card-body" style="text-align: center">
                 <table class="table table-striped">
@@ -36,11 +45,14 @@
                         <td>
                             Terlambat
                         </td>
-                        <td>
+                        {{-- <td>
                             Status
-                        </td>
+                        </td> --}}
                         <td>
                             Action
+                        </td>
+                        <td>
+
                         </td>
                     </thead>
                     <tbody>
@@ -74,15 +86,22 @@
                                     {{ Carbon\Carbon::parse(Carbon\Carbon::now())->diffInDays(Carbon\Carbon::parse($payment['penagihan'])) }}
                                     Hari
                                 </td>
-                                <td>
+                                {{-- <td>
                                     {{ $payment['stat'] }}
+                                </td> --}}
+                                <td>
+                                    @if ($payment['stat'] == 'Paid')
+                                        <a href={{ url("/sendEmail/$payment[email]/unClosedPayment") }}
+                                            class="btn btn-warning">E-Mail</a>
+                                    @else
+                                        <a href={{ url("/sendEmail/$payment[email]/unpaid") }}
+                                            class="btn btn-warning">E-Mail</a>
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($payment['stat'] == 'Paid')
-                                        <a href={{ url("/sendEmail/$payment[email]/unClosedPayment") }} class="btn btn-warning">E-Mail</a>
-                                        <a href={{ url("/teruskanPembayaran/$payment[idPay]") }} class="btn btn-success">Tutup Pembayaran</a>
-                                    @else
-                                        <a href={{ url("/sendEmail/$payment[email]/unpaid") }} class="btn btn-warning">E-Mail</a>
+                                        <a href={{ url("/teruskanPembayaran/$payment[idPay]") }}
+                                            class="btn btn-success">Tutup</a>
                                     @endif
 
                                 </td>
