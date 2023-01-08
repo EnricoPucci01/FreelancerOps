@@ -5,8 +5,8 @@
 
         <table style="height: 100%">
             <tr>
-                <td>
-                    <div class="card recentProjectContainer">
+                <td class="tdPersonalInfo">
+                    <div class="card recentProjectContainerAdminFreelancer">
                         <div class="card-body">
                             <h5 class="card-title">Proyek Terakhir</h5>
                             <div class="listRecentProject">
@@ -37,8 +37,8 @@
                         </div>
                     </div>
                 </td>
-                <td class='tdPersonalInfo'>
-                    <div class="card personalInfo">
+                <td class='tdPersonalInfoAdminFreelancer'>
+                    <div class="card personalInfoAdminFreelancer">
                         <div class="card-body">
                             <div class="border border-dark rounded" style="height:6.6rem; padding:5px; margin-bottom:10px">
                                 <h6 class="card-subtitle mb-2 text-dark fs-4">Selamat Datang,</h6>
@@ -62,7 +62,7 @@
                                     <tr>
                                         <td>
                                             <a href={{ url('/loadEditCalendar') }} class="btn btn-outline-dark mb-2 fw-bold"
-                                                style="width: 100%">Kalender</a>
+                                                style="width: 100%">Tambah Acara</a>
                                         </td>
                                     </tr>
                                     <tr>

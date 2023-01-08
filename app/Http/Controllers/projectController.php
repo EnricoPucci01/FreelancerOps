@@ -76,26 +76,27 @@ class projectController extends Controller
 
         if (Carbon::parse($request->input("deadline"))->gt(Carbon::parse($request->input("tanggal_mulai")))) {
             Session::put('name_project', $request->input("name_project"));
-        Session::put('desc_project', $request->input("desc_project"));
-        Session::put('tipe_proyek', $request->input("tipe_proyek"));
-        Session::put('kategorijob_project', $request->input("kategorijob_project"));
-        Session::put('kategori_project', $request->input("kategori_project"));
-        Session::put('deadline', $request->input("deadline"));
-        Session::put('tanggal_mulai', $request->input("tanggal_mulai"));
+            Session::put('desc_project', $request->input("desc_project"));
+            Session::put('tipe_proyek', $request->input("tipe_proyek"));
+            Session::put('kategorijob_project', $request->input("kategorijob_project"));
+            Session::put('kategori_project', $request->input("kategori_project"));
+            Session::put('deadline', $request->input("deadline"));
+            Session::put('tanggal_mulai', $request->input("tanggal_mulai"));
 
-        $tag = kategori::get();
-        $kategoriJob = jobKategori::get();
-        return view('postModulProyek', [
-            'tag' => $tag,
-            'kategoriJob' => $kategoriJob
-        ]);
-        }else{
-            return Redirect::back()->with("error","Tanggal deadline tidak dapat sebelum tanggal mulai!");
+            $tag = kategori::get();
+            $kategoriJob = jobKategori::get();
+            return view('postModulProyek', [
+                'tag' => $tag,
+                'kategoriJob' => $kategoriJob
+            ]);
+        } else {
+            return Redirect::back()->with("error", "Tanggal mulai tidak dapat melebihi tanggal deadline!");
         }
     }
+
     public function submitPostProject(Request $request)
     {
-        $deadlineModulIsGreater=false;
+        $deadlineModulIsGreater = false;
         $modulArr = [];
         $modulMagangArr = [];
         if (Session::get('tipe_proyek') == 'magang') {
@@ -109,11 +110,12 @@ class projectController extends Controller
                 );
                 array_push($modulMagangArr, $modulTemp);
 
-                if(Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))){
-                    $deadlineModulIsGreater=true;
+                if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
+                    $deadlineModulIsGreater = true;
                 }
             }
-        } else {
+        }
+        else {
             for ($i = 0; $i < (int)$request->input('hid_val'); $i++) {
                 $modulTemp = array(
                     "nama_modul" => $request->input("nama_modul" . $i . ""),
@@ -122,15 +124,15 @@ class projectController extends Controller
                     "deadline_modul" => $request->input("deadline_modul" . $i . ""),
                 );
                 array_push($modulArr, $modulTemp);
-                if(Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))){
-                    $deadlineModulIsGreater=true;
+                if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
+                    $deadlineModulIsGreater = true;
                 }
-           }
+            }
         }
-        if($deadlineModulIsGreater){
+        if ($deadlineModulIsGreater) {
             return \redirect("/postproject")->with('error', 'Deadline modul tidak dapat melebihi deadline proyek');
             //return Redirect::back()->with('error','Deadline modul tidak dapat melebihi deadline proyek');
-        }else{
+        } else {
             DB::beginTransaction();
             $postProject = new proyek();
             $postProject->cust_id = Session::get('cust_id');
@@ -144,6 +146,7 @@ class projectController extends Controller
                 $postProject->project_active = 'false';
             } else {
                 $postProject->total_pembayaran = $request->input('total_pembayaran');
+                $postProject->project_active = 'true';
             }
 
             $postProject->tipe_proyek = Session::get('tipe_proyek');
@@ -204,7 +207,6 @@ class projectController extends Controller
                 }
             }
         }
-
     }
 
     public function loadBrowseProject()

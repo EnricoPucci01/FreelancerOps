@@ -1,9 +1,9 @@
 @extends('header')
 @section('content')
 <center>
-    <table>
+    <table style="height: auto">
         <tr>
-            <td>
+            <td class='tdPersonalInfo'>
                 <div class="card recentProjectContainer">
                     <div class="card-body">
                       <h5 class="card-title">Proyek Saya</h5>
@@ -17,7 +17,7 @@
                                         if($i<4){
                                             echo"
                                             <a href='/loadDetailProyekClient/$itemProyek[proyek_id]/c' class='text-light'>
-                                            <div class='card text-center  mt-2 bg-light'>
+                                            <div class='card text-center mt-2 bg-light'>
                                                 <div class='card-body'>
                                                 <h5 class='card-title text-dark'><u>$itemProyek[nama_proyek]</u></h5>
                                                 <h6 class='card-subtitle text-secondary'>Deadline: ".Carbon\Carbon::parse($itemProyek["deadline"])->format('d-m-Y')."</h6>
@@ -52,7 +52,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a href={{url("/loadEditCalendar")}} class="btn btn-outline-dark mb-2 fw-bold" style="width: 100%">Kalender</a>
+                                        <a href={{url("/loadEditCalendar")}} class="btn btn-outline-dark mb-2 fw-bold" style="width: 100%">Tambah Acara</a>
                                     </td>
                                 </tr>
                                 <tr>

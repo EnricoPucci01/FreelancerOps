@@ -3,18 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Charts\chartControl;
-use App\Charts\chartGen;
 use App\Models\customer;
 use App\Models\jobKategori;
-use App\Models\kategori;
 use App\Models\modul;
 use App\Models\modulDiambil;
 use App\Models\payment;
 use App\Models\penarikan;
 use App\Models\proyek;
 use Carbon\Carbon;
-use Chartisan\PHP\Chartisan;
-use Google\Service\Monitoring\Custom;
 use Gr8Shivam\SmsApi\SmsApi;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -22,7 +18,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
-use Xendit\Xendit;
 
 class adminController extends Controller
 {
@@ -516,6 +511,14 @@ class adminController extends Controller
         //     ]
         // );
 
+        $queryChart1 = "SELECT payment.status as statusPay,Count(payment_id) as jumlah
+        FROM payment
+        WHERE payment.deleted_at IS NULL
+        GROUP BY statusPay
+        ORDER BY jumlah DESC";
+        $dbChart1 = DB::select($queryChart1);
+        $dbChart1 = json_decode(json_encode($dbChart1), true);
+        //dd($dbChart1);
         //Grafik Belum di proyek bayar
         $chart_options = [
             'chart_title' => 'Laporan Proyek Belum Di Bayar',
@@ -525,7 +528,7 @@ class adminController extends Controller
             'aggregate_function' => 'count',
             'aggregate_field' => 'status',
             'chart_type' => 'pie',
-            'chart_color' => '255, 0, 30, 1'
+            'chart_color' => '255, 0, 30, 1',
         ];
 
         $chart1 = new LaravelChart($chart_options);
@@ -534,7 +537,8 @@ class adminController extends Controller
             'chart1' => $chart1,
             'chart2' => $chartPendapatan,
             'judul2' => 'Grafik Laporan Pendapatan',
-            'chart' => '0'
+            'chart' => '0',
+            'statusChart1'=>$dbChart1
         ]);
     }
 

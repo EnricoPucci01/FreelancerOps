@@ -4,8 +4,8 @@
 
         <table style="height: 100%">
             <tr>
-                <td>
-                    <div class="card recentProjectContainer">
+                <td class="tdPersonalInfo">
+                    <div class="card recentProjectContainerAdminFreelancer">
                         <div class="card-body">
                           <h5 class="card-title">Permohonan Penarikan Dana Freelancer</h5>
                           <div class="listRecentProject">
@@ -32,8 +32,8 @@
                         </div>
                       </div>
                 </td>
-                <td class='tdPersonalInfo'>
-                    <div class="card personalInfo">
+                <td class='tdPersonalInfoAdminFreelancer'>
+                    <div class="card personalInfoAdminFreelancer">
                         <div class="card-body">
                             <div class="border border-dark rounded" style="height:8rem; padding:5px;">
                                 <h6 class="card-subtitle mb-2 text-dark fs-4">Selamat Datang,</h6>

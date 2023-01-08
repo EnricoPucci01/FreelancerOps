@@ -97,28 +97,56 @@
                             let bank = document.getElementById('bank');
                             let penarikan = document.getElementById('totalPenarikan');
                             let btn = document.getElementById('myBtn');
-                            var arr = @json($dataRekening);
+                            var arrBank = @json($dataRekening);
 
                             norek.addEventListener('change', function() {
-                                arr.forEach(element => {
+                                arrBank.forEach(element => {
                                     if (element['nomor_rek'] == norek.value) {
                                         bank.value = element['bank'];
                                     }
                                 });
                             });
 
-                            penarikan.addEventListener('keyup', function() {
+                            // penarikan.addEventListener('keyup', function() {
+                            //     var arr=[];
+                            //     var revArr=[];
+                            //     var newArr=[];
+                            //     var cleanSTR = penarikan.value.replace(".","");
+                            //     cleanSTR=cleanSTR.replace(".","");
+                            //     cleanSTR=cleanSTR.replace(".","");
+                            //     cleanSTR=cleanSTR.replace(".","");
+                            //     cleanSTR=cleanSTR.replace(".","");
+                            //     cleanSTR=cleanSTR.replace(".","");
+                            //     var arr=cleanSTR.split("");
+                            //     console.log(cleanSTR);
+                            //     revArr = arr.reverse();
+                            //     console.log(revArr);
+                            //     var count = 0;
+                            //     for(var i = 0; i<revArr.length;i++){
+                            //        if(count == 3){
+                            //         count=0;
+                            //         newArr.push(".");
+                            //        }
+                            //         newArr.push(revArr[i]);
+                            //        count++;
+                            //     }
+
+                            //     var formatArr=[];
+                            //     formatArr = newArr.reverse();
+                            //     var formatedStr="";
+                            //     for(var i = 0; i<formatArr.length;i++){
+                            //         formatedStr = formatedStr+formatArr[i];
+                            //     }
+                            //     console.log("format: "+formatedStr)
+                            //     penarikan.value=formatedStr;
+                            // })
+
+                            btn.addEventListener('click', function() {
                                 var arr=[];
                                 var revArr=[];
                                 var newArr=[];
-                                var cleanSTR = penarikan.value.replace(".","");
-                                cleanSTR=cleanSTR.replace(".","");
-                                cleanSTR=cleanSTR.replace(".","");
-                                cleanSTR=cleanSTR.replace(".","");
-                                cleanSTR=cleanSTR.replace(".","");
-                                cleanSTR=cleanSTR.replace(".","");
-                                var arr=cleanSTR.split("");
-                                console.log(cleanSTR);
+
+                                var arr=penarikan.value.split("");
                                 revArr = arr.reverse();
                                 console.log(revArr);
                                 var count = 0;
@@ -137,12 +165,7 @@
                                 for(var i = 0; i<formatArr.length;i++){
                                     formatedStr = formatedStr+formatArr[i];
                                 }
-                                console.log("format: "+formatedStr)
-                                penarikan.value=formatedStr;
-                            })
-
-                            btn.addEventListener('click', function() {
-                                document.getElementById('jmlPenarikanModal').innerHTML = penarikan.value;
+                                document.getElementById('jmlPenarikanModal').innerHTML = formatedStr;
                                 document.getElementById('bankPenarikanModal').innerHTML = bank.value;
                                 document.getElementById('noRekPenarikanModal').innerHTML = norek.value;
                             });

@@ -136,6 +136,9 @@ class xenditController extends Controller
         if ($insertPayment) {
             DB::commit();
             return redirect("/loadPembayaranPostMagang/$proyekId");
+        }else{
+            DB::rollBack();
+            return Redirect::back()->with('error',"Pembayaran gagal dibuat, silahkan coba lagi setelah beberapa saat!");
         }
     }
 
@@ -171,7 +174,8 @@ class xenditController extends Controller
                         $updateSaldoAdmin = customer::where('cust_id', "14")->first();
                         $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + 100000;
                         $updateSaldoAdmin->save();
-                        return Redirect::back()->with('success', 'Pembayaran Berhasil!');
+                        DB::commit();
+                        return redirect('/postproject')->with('success', 'Pembayaran Berhasil!');
                     } else {
                         DB::rollback();
                         return redirect()->back()->with('error', 'Pembayaran Gagal!');

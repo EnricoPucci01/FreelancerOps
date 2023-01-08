@@ -283,7 +283,14 @@ Route::post('/submiteditprofil/{custId}',[profilController::class,'editProfil'])
 Route::get('/cekEvent',[gCalendarController::class,'testGetEventCalendar']);
 Route::post('/insertEvent',[gCalendarController::class,'insertEvent']);
 Route::get('/loadEditCalendar',[gCalendarController::class,'loadEditCalendar']);
-Route::view('/tutorialCalendar','tutorialCalendar');
+Route::get('/tutorialCalendar/{tutorType}/{page}',function($tutorType,$page){
+    $Ttype=$tutorType;
+    $pg=$page;
+    return view('tutorialCalendar',[
+        'tutorType'=>(string)$Ttype,
+        'page'=>(string)$pg
+    ]);
+});
 Route::view('/calendarId','calendarId');
 Route::post('/updateCalendarId',[gCalendarController::class,'changeENV']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

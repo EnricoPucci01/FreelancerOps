@@ -10,7 +10,7 @@
                             <h3 class="card-title">Tambah Acara</h3>
                         </td>
                         <td>
-                            <a href={{ url('/tutorialCalendar') }}><i style="font-size: 1.73em;"
+                            <a href={{ url('/tutorialCalendar/GServiceAcc/1') }}><i style="font-size: 1.73em;"
                                     class="bi bi-question-circle text-dark"></i></a>
                         </td>
                     </tr>

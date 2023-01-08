@@ -1,12 +1,12 @@
 @extends('header')
 @section('content')
     <center>
-        <form action={{ url('/submitpostproject') }} method="POST">
+        <form action={{ url('/submitpostproject') }} method="POST" style="padding: 10px">
             @csrf
             @method('POST')
             <input type='hidden' name="tipeProyek" id="tipeProyek" value={{ session()->get('tipe_proyek') }}>
             <input type='hidden' name="hid_val" id="hid_val" value='0'>
-            <div class="card" style="width: 80%; margin-top: 20px;">
+            <div class="card" style="width: 100%; margin-top: 20px; padding:10px">
                 <div class="card-body">
                     <h3 class="card-title">Tambah Modul</h3>
                     <table>

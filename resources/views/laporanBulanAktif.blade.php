@@ -9,8 +9,8 @@
         </div>
     <table>
         <tr>
-            <td style="width: 50%">
-                <div class="border-right border-left border-bottom">
+            <td style="width: 50%;vertical-align: top">
+                <div class="border-right border-left">
                     <table class="table table-striped" >
                         <thead  class="fw-bold">
                             <tr>
@@ -37,8 +37,8 @@
                     </table>
                 </div>
             </td>
-            <td style="width: 50%">
-                <div class="border-right border-left border-bottom " >
+            <td style="width: 50%; vertical-align: top">
+                <div class="border-right border-left">
                     <table class="table table-striped" >
                         <thead  class="fw-bold">
                             <tr>
