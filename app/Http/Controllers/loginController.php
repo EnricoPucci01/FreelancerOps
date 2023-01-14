@@ -34,43 +34,45 @@ class loginController extends Controller
             ]
         );
 
-        $loginResult= customer::where("email",$request->input('email_login'))->get();
+        $loginResult= customer::where("email",$request->input('email_login'))->withTrashed()->get();
         $dataLogin=json_decode(json_encode($loginResult),true);
-        if(count($loginResult)<=0){
-            return \redirect("/")->with('error','Email anda tidak terdaftar');
-        }else{
-            $dataLogin=json_decode(json_encode($loginResult),true);
-            if(Hash::check($request->input('pass_login'),$dataLogin[0]['password'])){
-                FacadesSession::put('active',$dataLogin[0]['email']);
-                FacadesSession::put('name',$dataLogin[0]['nama']);
-                FacadesSession::put('role',$dataLogin[0]['role']);
-
-
-
-                if($dataLogin[0]['role']=="freelancer"){
-                    FacadesSession::put('cust_id',$dataLogin[0]['cust_id']);
-                    DB::commit();
-                    return \redirect("/autoRejectApplicant");
-                }else if($dataLogin[0]['role']=="client"){
-                    //Auth::login($dataLogin[0]['email']);
-                    FacadesSession::put('cust_id',$dataLogin[0]['cust_id']);
-                    DB::commit();
-
-                    return \redirect('/dashboardClient');
-                }else if($dataLogin[0]['role']=="admin"){
-                    FacadesSession::put('cust_id','0');
-                    FacadesSession::put('adminCustId',$dataLogin[0]['cust_id']);
-                    DB::commit();
-                    return \redirect('/adminDashboard');
-                }
-
-
+        if($dataLogin[0]['deleted_at']==null){
+            if(count($loginResult)<=0){
+                return \redirect("/")->with('error','Email anda tidak terdaftar');
             }else{
-                return \redirect("/")->with('error','Password anda tidak terdaftar');
+                $dataLogin=json_decode(json_encode($loginResult),true);
+                if(Hash::check($request->input('pass_login'),$dataLogin[0]['password'])){
+                    FacadesSession::put('active',$dataLogin[0]['email']);
+                    FacadesSession::put('name',$dataLogin[0]['nama']);
+                    FacadesSession::put('role',$dataLogin[0]['role']);
+
+
+
+                    if($dataLogin[0]['role']=="freelancer"){
+                        FacadesSession::put('cust_id',$dataLogin[0]['cust_id']);
+                        DB::commit();
+                        return \redirect("/autoRejectApplicant");
+                    }else if($dataLogin[0]['role']=="client"){
+                        //Auth::login($dataLogin[0]['email']);
+                        FacadesSession::put('cust_id',$dataLogin[0]['cust_id']);
+                        DB::commit();
+
+                        return \redirect('/dashboardClient');
+                    }else if($dataLogin[0]['role']=="admin"){
+                        FacadesSession::put('cust_id','0');
+                        FacadesSession::put('adminCustId',$dataLogin[0]['cust_id']);
+                        DB::commit();
+                        return \redirect('/adminDashboard');
+                    }
+
+
+                }else{
+                    return \redirect("/")->with('error','Password anda tidak terdaftar');
+                }
             }
+        }else{
+            return \redirect("/")->with('error','Akun Anda Tidak Aktif Harap Hubungi Admin Untuk Mengaktifkan Akun Kembali');
         }
-
-
     }
 
     public function loadDashboardFreelancer(){

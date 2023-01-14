@@ -614,39 +614,22 @@ class adminController extends Controller
         ]);
     }
 
-    public function freelancerAktif($custType)
+    public function freelancerAktif()
     {
-        if ($custType == 'Freelancer') {
-            $query = "SELECT DISTINCT TableAktif.*
-                 FROM (
-                     SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, -1 as lastProject
-                     FROM customer,modul_diambil
-                     WHERE customer.role = 'freelancer' AND customer.cust_id NOT IN(Select(modul_diambil.cust_id)FROM modul_diambil)
+        $query = "SELECT DISTINCT TableAktif.*
+        FROM (
+            SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, -1 as lastProject, customer.deleted_at as deleteStat
+            FROM customer,modul_diambil
+            WHERE customer.role = 'freelancer' AND customer.cust_id NOT IN(Select(modul_diambil.cust_id)FROM modul_diambil)
 
 
-                     UNION ALL
+            UNION ALL
 
-                     SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, DATEDIFF(NOW(),modul_diambil.created_at) as lastProject
-                     FROM customer,modul_diambil
-                     WHERE customer.cust_id=modul_diambil.cust_id
-                 ) as TableAktif
-                 ORDER BY TableAktif.lastProject ASC";
-        } elseif ($custType == 'Client') {
-            $query = "SELECT DISTINCT TableAktif.*
-            FROM (
-                SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, -1 as lastProject
-                FROM customer,proyek
-                WHERE customer.role = 'client' AND customer.cust_id NOT IN(Select(proyek.cust_id)FROM proyek)
-
-
-                UNION ALL
-
-                SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, DATEDIFF(NOW(),proyek.created_at) as lastProject
-                FROM customer,proyek
-                WHERE customer.cust_id=proyek.cust_id
-            ) as TableAktif
-            ORDER BY TableAktif.lastProject ASC";
-        }
+            SELECT customer.cust_id as id,customer.nama as nama,customer.email as email, customer.nomorhp as hp, DATEDIFF(NOW(),modul_diambil.created_at) as lastProject, customer.deleted_at as deleteStat
+            FROM customer,modul_diambil
+            WHERE customer.cust_id=modul_diambil.cust_id
+        ) as TableAktif
+        ORDER BY TableAktif.lastProject ASC";
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
         //$dbPro = proyek::get();
@@ -662,8 +645,7 @@ class adminController extends Controller
         $sortedArr =  array_reverse($sortedArr);
         //dd($sortedArr);
         return view('LaporanFreelancerAktif', [
-            "dataFreelancerClient" => $sortedArr,
-            'custType' => $custType
+            "dataFreelancerClient" => $sortedArr
         ]);
     }
 
@@ -802,6 +784,32 @@ class adminController extends Controller
             'totalPenarikan' => $totalPenarikan,
             'sisaSaldo'=>$sisaSaldo
         ]);
+    }
+
+    public function nonAktifkanAkun($emailFreelancer){
+        DB::beginTransaction();
+        $custFreelancer= customer::where('email',$emailFreelancer)->first();
+        $custFreelancer->delete();
+        if($custFreelancer){
+            DB::commit();
+            return Redirect::back()->with('success','Akun Berhasil Di Non-Aktifkan!');
+        }else{
+            DB::rollBack();
+            return Redirect::back()->with('error','Akun Gagal Di Non-Aktifkan!');
+        }
+    }
+
+    public function aktifkanAkun($emailFreelancer){
+        DB::beginTransaction();
+        $custFreelancer= customer::where('email',$emailFreelancer)->withTrashed()->first();
+        $custFreelancer->restore();
+        if($custFreelancer){
+            DB::commit();
+            return Redirect::back()->with('success','Akun Berhasil Di Aktifkan!');
+        }else{
+            DB::rollBack();
+            return Redirect::back()->with('error','Akun Gagal Di Aktifkan!');
+        }
     }
 
     public function sendSMS()

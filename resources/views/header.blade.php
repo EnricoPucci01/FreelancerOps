@@ -92,8 +92,8 @@
                             <li><a class="dropdown-item" href={{ url('/loadLaporanBelumBayar/unpaid') }}>Laporan
                                     Proyek Belum Terbayar</a></li>
                             <li><a class="dropdown-item"
-                                    href={{ url('/loadFreelancerClientAktif/Freelancer') }}>Laporan
-                                    Keaktifan Freelancer/Client</a></li>
+                                    href={{ url('/loadFreelancerClientAktif') }}>Laporan
+                                     Freelancer Tidak Aktif</a></li>
                             {{-- <li><a class="dropdown-item" href={{ url('/loadProyekBerhasil') }}>Laporan Proyek
                                             Gagal/Berhasil</a></li> --}}
                         </ul>
