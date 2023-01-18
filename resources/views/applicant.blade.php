@@ -22,6 +22,8 @@
                                         <hr>
                                         <a href="{{url("/previewcv/$itemCV[cv]")}}" class="btn btn-primary">Lihat CV</a>
                                         <a href="{{url("/loadProfilApplicant/c/$itemCV[cust_id]/$itemCV[applicant_id]/$modulId/$proyekId")}}" class="btn btn-primary">Lihat Profil</a>
+                                        {{-- <a href="{{url("/previewcv/$itemCV[cv]")}}" class="btn btn-success">Terima</a>
+                                        <a href="{{url("/loadProfilApplicant/c/$itemCV[cust_id]/$itemCV[applicant_id]/$modulId/$proyekId")}}" class="btn btn-danger">Tolak</a> --}}
                                     @endif
                                 @endforeach
                             </div>
