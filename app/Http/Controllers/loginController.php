@@ -47,7 +47,6 @@ class loginController extends Controller
                     FacadesSession::put('role',$dataLogin[0]['role']);
 
 
-
                     if($dataLogin[0]['role']=="freelancer"){
                         FacadesSession::put('cust_id',$dataLogin[0]['cust_id']);
                         DB::commit();
@@ -62,7 +61,7 @@ class loginController extends Controller
                         FacadesSession::put('cust_id','0');
                         FacadesSession::put('adminCustId',$dataLogin[0]['cust_id']);
                         DB::commit();
-                        return \redirect('/adminDashboard');
+                        return \redirect('/autoClosePayment');
                     }
 
 

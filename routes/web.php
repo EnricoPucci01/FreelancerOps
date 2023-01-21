@@ -313,6 +313,7 @@ Route::get('/callbackva/{externalId}',[xenditController::class,'callbackVA']);
 Route::get('/simulatepayment/{externalId}',[xenditController::class,'simulatePayment']);
 Route::get('/simulatepaymentPostMagang/{externalId}',[xenditController::class,'simulatePaymentPostMagang']);
 //Route::get('/createInvoice/{modulId}',[xenditController::class,'createInvoice']);
+Route::get('/autoClosePayment',[xenditController::class,'autoClosePayment']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //========================================================================================================================
 //========================================================================================================================

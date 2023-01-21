@@ -15,6 +15,7 @@ use Xendit\Xendit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Svg\Tag\Rect;
@@ -64,7 +65,7 @@ class xenditController extends Controller
                 'name' => Session::get('name'),
                 'expected_amount' => $grandTotal,
                 'is_closed' => true,
-                'expiration_date' => Carbon::now()->addDays(30)->toISOString(),
+                'expiration_date' => Carbon::now()->addDays(7)->toISOString(),
                 'is_single_use' => true
             ];
         } else {
@@ -188,6 +189,47 @@ class xenditController extends Controller
         } else {
             return redirect()->back()->with('error', 'Data Tidak Ditemukan!');
         }
+    }
+
+    public function autoClosePayment(){
+        $getExternalId=Payment::where("status","Paid")->get();
+        $getExternalId=json_decode(json_encode($getExternalId),true);
+        foreach($getExternalId as $item){
+            if(Carbon::now()->gt(Carbon::parse($item['created_at'])->addDay(7))){
+                $dateTime = date('Y-m-d H:i:s');
+                DB::beginTransaction();
+                $dataPayment = payment::where('external_id', $item['external_id'])->first();
+                $dataPayment = json_decode(json_encode($dataPayment), true);
+
+                if (!is_null($dataPayment)) {
+                    $dataPayment = payment::where('external_id', $item['external_id'])->first();
+                    if (Session::get('paymentType') == 'normal') {
+                        $dataPayment->status = 'Paid';
+                    } else {
+                        $dataPayment->status = 'Completed';
+                    }
+                    $dataPayment->payment_time = $dateTime;
+                    $dataPayment->email = Session::get('active');
+                    $dataPayment->save();
+
+                    $updateSaldoAdmin = customer::where('cust_id', "14")->first();
+                    $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + (int)$item['service_fee'];
+                    $updateSaldoAdmin->save();
+
+                    $updateSaldoFreelancer=customer::where('cust_id',$item['cust_id'])->first();
+                    $updateSaldoFreelancer->saldo=$updateSaldoFreelancer->saldo + (int)$item['amount'];
+                    $updateSaldoFreelancer->save();
+
+                    if($dataPayment && $updateSaldoAdmin && $updateSaldoFreelancer){
+                        DB::commit();
+                    }else{
+                        DB::rollBack();
+                    }
+                }
+            }
+        }
+        var_dump('true');
+        return \redirect('/adminDashboard');
     }
 
     public function simulatePayment(Request $request, $externalId)
