@@ -319,14 +319,14 @@ class projectController extends Controller
 
         $query = "SELECT modul_id AS idModul, COUNT(applicant_id) AS pendaftar
         FROM applicant
-        WHERE applicant.proyek_id = $id
+        WHERE applicant.proyek_id = $id AND applicant.deleted_at IS NULL
         GROUP BY idModul
 
         UNION ALL
 
         SELECT modul.modul_id AS idModul, '0' AS pendaftar
         FROM modul
-        WHERE modul.proyek_id = $id AND modul.modul_id NOT IN(SELECT applicant.modul_id FROM applicant)
+        WHERE modul.proyek_id = $id AND modul.modul_id NOT IN(SELECT applicant.modul_id FROM applicant WHERE applicant.deleted_at IS NULL)
         ";
 
         $db = DB::select($query);
@@ -798,7 +798,7 @@ class projectController extends Controller
             $proyekList = json_decode(json_encode($proyekList), true);
 
             //dd($proyekList);
-            $recommendedProyek = proyek::where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
+            $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
             $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
             $listTag = tag::get();
             $listTag = json_decode(json_encode($listTag), true);
@@ -827,7 +827,7 @@ class projectController extends Controller
             $tag = json_decode(json_encode($tag), true);
 
             //dd($proyekCount);
-            $recommendedProyek = proyek::where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
+            $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
             $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
 
             $listTag = tag::get();

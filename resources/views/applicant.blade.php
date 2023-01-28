@@ -33,7 +33,7 @@
             @endif
 
         </table>
-        <a href={{url("/loadDetailProyekClient/$proyekId/c/$idCust")}} class="btn btn-secondary mt-3 mb-3">Kembali</a>
+        <a href={{url("/loadDetailProyekClient/$proyekId/c")}} class="btn btn-secondary mt-3 mb-3">Kembali</a>
     </center>
 
 

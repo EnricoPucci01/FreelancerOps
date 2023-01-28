@@ -200,30 +200,33 @@ class xenditController extends Controller
                 DB::beginTransaction();
                 $dataPayment = payment::where('external_id', $item['external_id'])->first();
                 $dataPayment = json_decode(json_encode($dataPayment), true);
-
+                $updateSaldoFreelancer=customer::where('cust_id',$item['cust_id'])->first();
+                $updateSaldoFreelancer = json_decode(json_encode($updateSaldoFreelancer), true);
                 if (!is_null($dataPayment)) {
-                    $dataPayment = payment::where('external_id', $item['external_id'])->first();
-                    if (Session::get('paymentType') == 'normal') {
-                        $dataPayment->status = 'Paid';
-                    } else {
-                        $dataPayment->status = 'Completed';
-                    }
-                    $dataPayment->payment_time = $dateTime;
-                    $dataPayment->email = Session::get('active');
-                    $dataPayment->save();
+                    if(!is_null($updateSaldoFreelancer)){
+                        $dataPayment = payment::where('external_id', $item['external_id'])->first();
+                        if (Session::get('paymentType') == 'normal') {
+                            $dataPayment->status = 'Paid';
+                        } else {
+                            $dataPayment->status = 'Completed';
+                        }
+                        $dataPayment->payment_time = $dateTime;
+                        $dataPayment->email = Session::get('active');
+                        $dataPayment->save();
 
-                    $updateSaldoAdmin = customer::where('cust_id', "14")->first();
-                    $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + (int)$item['service_fee'];
-                    $updateSaldoAdmin->save();
+                        $updateSaldoAdmin = customer::where('cust_id', "14")->first();
+                        $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + (int)$item['service_fee'];
+                        $updateSaldoAdmin->save();
 
-                    $updateSaldoFreelancer=customer::where('cust_id',$item['cust_id'])->first();
-                    $updateSaldoFreelancer->saldo=$updateSaldoFreelancer->saldo + (int)$item['amount'];
-                    $updateSaldoFreelancer->save();
+                        $updateSaldoFreelancer=customer::where('cust_id',$item['cust_id'])->first();
+                        $updateSaldoFreelancer->saldo=$updateSaldoFreelancer->saldo + (int)$item['amount'];
+                        $updateSaldoFreelancer->save();
 
-                    if($dataPayment && $updateSaldoAdmin && $updateSaldoFreelancer){
-                        DB::commit();
-                    }else{
-                        DB::rollBack();
+                        if($dataPayment && $updateSaldoAdmin && $updateSaldoFreelancer){
+                            DB::commit();
+                        }else{
+                            DB::rollBack();
+                        }
                     }
                 }
             }

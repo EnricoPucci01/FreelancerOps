@@ -17,7 +17,7 @@
               <input type="number" class="form-control mb-3" name='grand_total' id="grand_total">
 
               <button type="button" class="btn btn-success" data-bs-target="#modalBayar" id="myBtn" data-bs-toggle="modal">Bayar</button>
-              <a href={{url("/loadDetailProyekClient/$dataProyek[proyek_id]/c/".session()->get('cust_id'))}} class="btn btn-secondary">Kembali</a>
+              <a href={{url("/loadDetailProyekClient/$dataProyek[proyek_id]/c")}} class="btn btn-secondary">Kembali</a>
             </div>
           </div>
           {{---------------------------------------------------MODAL-------------------------------------------------}}

@@ -811,10 +811,4 @@ class adminController extends Controller
             return Redirect::back()->with('error','Akun Gagal Di Aktifkan!');
         }
     }
-
-    public function sendSMS()
-    {
-        $sms = new SmsApi();
-        $sms->gateway('gateway_name_basic')->sendMessage("8986605599", "test");
-    }
 }

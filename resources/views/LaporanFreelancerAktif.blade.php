@@ -5,7 +5,6 @@
             <div class="card-title">
                 <h1>
                     Laporan Freelancer Tidak Aktif
-
                 </h1>
             </div>
             <table class="table table-striped">
@@ -25,6 +24,9 @@
                         </td>
                         <td style="text-align: center">
                             Kontak
+                        </td>
+                        <td style="text-align: center">
+                            Quisioner
                         </td>
                         <td style="text-align: center">
                             Aktifkan/Non-Aktifkan
@@ -56,11 +58,15 @@
                                     class="btn btn-warning">E-Mail</a>
                             </td>
                             <td style="text-align: center">
+                                <button type="button" class="btn btn-primary" id={{"myBtnQuisioner".$itemFreelancer['hp']}}
+                                        data-bs-target={{"#modalSendQuisioner".$itemFreelancer['hp']}} data-bs-toggle="modal">Quisioner</button>
+                            </td>
+                            <td style="text-align: center">
                                 @if ($itemFreelancer['deleteStat'] != null)
-                                    <button type="button" class="btn btn-success" style="margin-top: 10px" id={{"myBtnAktif".$itemFreelancer['hp']}}
+                                    <button type="button" class="btn btn-success" id={{"myBtnAktif".$itemFreelancer['hp']}}
                                         data-bs-target={{"#modalTarikAktif".$itemFreelancer['hp']}} data-bs-toggle="modal">Aktifkan</button>
                                 @else
-                                    <button type="button" class="btn btn-danger" style="margin-top: 10px" id={{"myBtn".$itemFreelancer['hp']}}
+                                    <button type="button" class="btn btn-danger" id={{"myBtn".$itemFreelancer['hp']}}
                                         data-bs-target={{"#modalTarik".$itemFreelancer['hp']}} data-bs-toggle="modal">Non-Aktifkan</button>
                                 @endif
 
@@ -100,6 +106,25 @@
                                     </div>
                                     <div class="modal-footer">
                                         <a href={{ url("/aktifkanAkun/$itemFreelancer[email]") }} class="btn btn-success">Ya</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" tabindex="-1"aria-hidden="true" id={{"modalSendQuisioner".$itemFreelancer['hp']}}>
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalToggleLabel2">Kirim Quisioner?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Anda akan mengirimkan quisioner kepada freelancer.
+
+                                        Tekan <b>Ya</b> untuk melanjutkan.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href={{ url("/sendEmail/$itemFreelancer[email]/quisioner") }} class="btn btn-success">Ya</a>
                                     </div>
                                 </div>
                             </div>

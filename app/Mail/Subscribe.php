@@ -48,6 +48,10 @@ class Subscribe extends Mailable
             $subject="Halo, Sudah lama nih tidak aktif!";
             $markdown = "emails.inactiveClient";
         }
+        else if($this->type == "quisioner"){
+            $subject="Halo, Apakah anda memiliki kendala atau masukan untuk FreelancerOps?";
+            $markdown = "emails.quisioner";
+        }
 
         return $this->subject($subject)
         ->markdown($markdown);
