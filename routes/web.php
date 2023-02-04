@@ -358,8 +358,10 @@ Route::get('/teruskanPembayaran/{paymentId}',[adminController::class,'teruskanPe
 Route::get('/loadTambahRekening',[xenditController::class,'loadTambahRekening']);
 Route::post('/tambahRekening',[profilController::class,'tambahRekening']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
+Route::post('/tambahTag',[adminController::class,'tambahTag']);
+Route::post('/tambahKategori',[adminController::class,'tambahKategori']);
+Route::view('/openTag','tambahTag');
+Route::view('/openKategori','tambahKategori');
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route Laporan Admin
 Route::get('/loadLaporanPendapatan',[adminController::class,'loadLaporanPendapatan']);

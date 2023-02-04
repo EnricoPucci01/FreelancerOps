@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Charts\chartControl;
 use App\Models\customer;
 use App\Models\jobKategori;
+use App\Models\kategori;
 use App\Models\modul;
 use App\Models\modulDiambil;
 use App\Models\payment;
@@ -809,6 +810,38 @@ class adminController extends Controller
         }else{
             DB::rollBack();
             return Redirect::back()->with('error','Akun Gagal Di Aktifkan!');
+        }
+    }
+
+    public function tambahTag(Request $request){
+        DB::beginTransaction();
+
+        $newTag = new kategori();
+        $newTag->nama_kategori = $request->input('tag');
+        $newTag->save();
+
+        if($newTag){
+            DB::commit();
+            return Redirect::back()->with('success','Tag baru berhasil di buat!');
+        }else{
+            DB::rollBack();
+            return Redirect::back()->with('error','Tag gagal ditambahkan!');
+        }
+    }
+
+    public function tambahKategori(Request $request){
+        DB::beginTransaction();
+
+        $newKategori = new jobKategori();
+        $newKategori->judul_kategori = $request->input('judul');
+        $newKategori->save();
+
+        if($newKategori){
+            DB::commit();
+            return Redirect::back()->with('success','Kategori baru berhasil di buat!');
+        }else{
+            DB::rollBack();
+            return Redirect::back()->with('error','Kategori gagal ditambahkan!');
         }
     }
 }

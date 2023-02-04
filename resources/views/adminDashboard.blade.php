@@ -27,6 +27,7 @@
                                         }
                                     }
                                 @endphp
+                                <a href="{{ url('/penarikanDanaCustomer') }}">Lihat Semua</a>
                             </table>
                             </div>
                         </div>
@@ -39,7 +40,7 @@
                                 <h6 class="card-subtitle mb-2 text-dark fs-4">Selamat Datang,</h6>
                                 <h5 class="card-title text-dark text-uppercase fw-bold fs-2">{{session()->get('name')}}</h5>
                             </div>
-                            <table style="width: 100%;" class="mt-3">
+                            <table style="width: 100%;" class="mt-2">
                                 <tr>
                                     <td>
                                         <a href="/laporanProyekAdmin/pengerjaan"><button type="button" class="btn btn-outline-dark fw-bold" style="width: 100%">Laporan Proyek</button></a>
@@ -48,6 +49,16 @@
                                 <tr>
                                     <td>
                                         <a href={{("/loadClosePayment")}} class="btn btn-outline-dark fw-bold" style="width: 100%">Penutupan Pembayaran</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href={{url("/openTag")}} class="btn btn-outline-dark fw-bold" style="width: 100%">Tambah Tag</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href={{url("/openKategori")}} class="btn btn-outline-dark fw-bold" style="width: 100%">Tambah Kategori</a>
                                     </td>
                                 </tr>
                             </table>

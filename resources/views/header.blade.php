@@ -63,7 +63,7 @@
                 @endif
                 @if (session()->get('role') == 'admin')
                     <a href="{{ url('/adminDashboard') }}">Dashboard</a>
-                    <a href="{{ url('/penarikanDanaCustomer') }}">Request Penarikan Dana</a>
+                    {{-- <a href="{{ url('/penarikanDanaCustomer') }}">Request Penarikan Dana</a> --}}
                     <a href={{ url('/loadTambahRekening') }}>Tambah Nomor Rekening</a>
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
