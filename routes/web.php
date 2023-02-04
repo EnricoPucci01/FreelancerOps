@@ -44,6 +44,10 @@ use Illuminate\Support\Facades\Session;
 Route::get('/', function () {
     return view('login');
 });
+Route::get('/create-symlink', function () {
+    symlink(storage_path('/app/public'), public_path('storage'));
+    echo "Symlink Created. Thanks";
+});
 Route::get('/loginops',[loginController::class,'login']);
 Route::get('/register', [registerController::class,'loadRegister']);
 Route::post('/submitregister',[registerController::class,'generateCode']);
