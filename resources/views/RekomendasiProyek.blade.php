@@ -20,6 +20,11 @@
                         <div class="card mb-3" style="width: 30rem; margin-top: 20px">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $proyek['nama_proyek'] }}</h5>
+                                @foreach ($listkategoriJob as $katJob)
+                                    @if ($katJob['kategorijob_id'] == $proyek['kategorijob_id'])
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ $katJob['judul_kategori'] }}</h5>
+                                    @endif
+                                @endforeach
                                 <p class="card-text">{{ $proyek['desc_proyek'] }}</p>
                                 <hr>
                                 <div class="card-text">
@@ -28,7 +33,7 @@
                                             @foreach ($listkategori as $kategori)
                                                 @if ($tag['kategori_id'] == $kategori['kategori_id'])
                                                     <p class="badge rounded-pill bg-primary" style="margin-bottom: 0px">
-                                                        {{ $kategori['nama_kategori'] }}
+                                                        #{{ $kategori['nama_kategori'] }}
                                                     </p>
                                                 @endif
                                             @endforeach

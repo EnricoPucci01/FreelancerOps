@@ -25,9 +25,9 @@
                         <td style="text-align: center">
                             Kontak
                         </td>
-                        <td style="text-align: center">
+                        {{-- <td style="text-align: center">
                             Quisioner
-                        </td>
+                        </td> --}}
                         <td style="text-align: center">
                             Aktifkan/Non-Aktifkan
                         </td>
@@ -57,10 +57,10 @@
                                 <a href={{ url("/sendEmail/$itemFreelancer[email]/inactive") }}
                                     class="btn btn-warning">E-Mail</a>
                             </td>
-                            <td style="text-align: center">
+                            {{-- <td style="text-align: center">
                                 <button type="button" class="btn btn-primary" id={{"myBtnQuisioner".$itemFreelancer['hp']}}
                                         data-bs-target={{"#modalSendQuisioner".$itemFreelancer['hp']}} data-bs-toggle="modal">Quisioner</button>
-                            </td>
+                            </td> --}}
                             <td style="text-align: center">
                                 @if ($itemFreelancer['deleteStat'] != null)
                                     <button type="button" class="btn btn-success" id={{"myBtnAktif".$itemFreelancer['hp']}}
@@ -111,7 +111,7 @@
                             </div>
                         </div>
 
-                        <div class="modal fade" tabindex="-1"aria-hidden="true" id={{"modalSendQuisioner".$itemFreelancer['hp']}}>
+                        {{-- <div class="modal fade" tabindex="-1"aria-hidden="true" id={{"modalSendQuisioner".$itemFreelancer['hp']}}>
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -128,7 +128,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     @endforeach
                 </tbody>
             </table>

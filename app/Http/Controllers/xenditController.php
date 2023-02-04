@@ -176,7 +176,7 @@ class xenditController extends Controller
                         $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + 100000;
                         $updateSaldoAdmin->save();
                         DB::commit();
-                        return redirect('/postproject')->with('success', 'Pembayaran Berhasil!');
+                        return redirect("/loadDetailProyekClient/$proyekId/c")->with('success', 'Pembayaran Berhasil!');
                     } else {
                         DB::rollback();
                         return redirect()->back()->with('error', 'Pembayaran Gagal!');

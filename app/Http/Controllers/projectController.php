@@ -796,6 +796,8 @@ class projectController extends Controller
 
             $proyekList = proyek::whereIn('proyek_id', $proyekCount)->get('kategorijob_id');
             $proyekList = json_decode(json_encode($proyekList), true);
+            $listKategoriJob = jobKategori::get();
+            $listKategoriJob = json_decode(json_encode($listKategoriJob), true);
 
             //dd($proyekList);
             $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
@@ -808,6 +810,7 @@ class projectController extends Controller
             return view('RekomendasiProyek', [
                 'recomendProyek' => $recommendedProyek,
                 'listkategori' => $listKategori,
+                'listkategoriJob' => $listKategoriJob,
                 'listtag' => $listTag,
                 'tipeRekomen' => 'Kategori'
             ]);
@@ -832,13 +835,15 @@ class projectController extends Controller
 
             $listTag = tag::get();
             $listTag = json_decode(json_encode($listTag), true);
-
+            $listKategoriJob = jobKategori::get();
+            $listKategoriJob = json_decode(json_encode($listKategoriJob), true);
             $listKategori = kategori::get();
             $listKategori = json_decode(json_encode($listKategori), true);
 
             return view('RekomendasiProyek', [
                 'recomendProyek' => $recommendedProyek,
                 'listkategori' => $listKategori,
+                'listkategoriJob' => $listKategoriJob,
                 'listtag' => $listTag,
                 'tipeRekomen' => 'Tag'
             ]);

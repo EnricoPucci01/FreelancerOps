@@ -6,7 +6,23 @@
 @endif --}}
 
     <div style="margin: 20px 20px 20px 20px">
-        <h1>{{ $dataproyek['nama_proyek'] }}</h1>
+        <table style="width: 100%">
+            <tr>
+                <td >
+                    <h1>{{ $dataproyek['nama_proyek'] }}
+                    </h1>
+                    @if ($dataproyek['project_active']=='false')
+                    <h4>(<mark class="text-danger" style="background: none;">Tidak Aktif</mark>)</h4>
+                    @endif
+                </td>
+
+                <td style=" text-align: right;">
+                    @if ($dataproyek['project_active']=='false')
+                        <a href={{url("/generatevaPostMagang/$dataproyek[proyek_id]")}} class="btn btn-success">Aktifkan Proyek Sekarang</a>
+                    @endif
+                </td>
+            </tr>
+        </table>
         <hr>
         <div>
             <h6 class="text-start">{{ $dataproyek['desc_proyek'] }}</h6>
