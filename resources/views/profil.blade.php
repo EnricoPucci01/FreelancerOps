@@ -115,11 +115,11 @@
                 <tr>
                     <td>
                         <div class="card" style="width: 18rem;">
-                            <img src={{asset("storage/sertifikat/$sertifikat->direktori")}} class="card-img-top" alt="...">
+                            {{-- <img src={{asset("storage/sertifikat/$sertifikat->direktori")}} class="card-img-top" alt="..."> --}}
                             <div class="card-body">
                             <h5 class="card-title">{{$sertifikat->nama_sertifikat}}</h5>
                             <p class="card-text">{{$sertifikat->deskripsi_sertifikat}}</p>
-                            <a href={{url("/downloadSertifikat/$sertifikat->direktori")}} class="btn btn-primary">Download</a>
+                            <a href={{asset("storage/sertifikat/$sertifikat->direktori")}} download class="btn btn-primary">Download</a>
                             </div>
                         </div>
                     </td>

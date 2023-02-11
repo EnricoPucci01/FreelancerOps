@@ -128,8 +128,21 @@ class gCalendarController extends Controller
 
         $upProfile=profil::where('cust_id',Session::get('cust_id'))->first();
 
+        if(is_null($upProfile)){
+            $newProf=new profil();
+            $newProf->cust_id = Session::get("cust_id");
+            $newProf->save();
+
+            if($newProf){
+                DB::commit();
+                $calIdExist=false;
+            }
+        }else{
+            $calIdExist=($upProfile->calendar_id == null)?false:true;
+        }
+
         return view("editCalendar", [
-            "calendarId"=>($upProfile->calendar_id == null)?false:true
+            "calendarId"=>$calIdExist
         ]);
         // $path = base_path('.env');
 

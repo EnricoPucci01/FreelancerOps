@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class sertifikatController extends Controller
 {
@@ -47,6 +48,7 @@ class sertifikatController extends Controller
     }
 
     public function downloadSertifikat($direktori){
+        Storage::download();
         return Response::download("storage/sertifikat/".$direktori,$direktori);
     }
 }

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Session as FacadesSession;
 use Xendit\Xendit;
 use App\Models\tambahRekening;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 class profilController extends Controller
 {
@@ -209,7 +210,9 @@ class profilController extends Controller
 
         $totalPenarikan=0;
         foreach ($dataPenarikan as $penarikan) {
-            $totalPenarikan=$totalPenarikan+(int) $penarikan['jumlah'];
+            if(!is_null($penarikan['tanggal_admit'])){
+                $totalPenarikan=$totalPenarikan+(int) $penarikan['jumlah'];
+            }
         }
 
         $sisaSaldo = (int)$total - (int)$totalPenarikan;

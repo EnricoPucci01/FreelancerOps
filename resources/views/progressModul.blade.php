@@ -35,9 +35,9 @@
                         </td>
                         <td>
                             @if ($progress['status']=='finish')
-                                <a class='btn btn-primary' href={{url("/downloadProgress/finish/$progress[file_dir]")}}><i class="bi bi-box-arrow-down"></i></a>
+                                <a class='btn btn-primary' href={{asset("/storage/progress/$progress[file_dir]")}}><i class="bi bi-box-arrow-down"></i></a>
                             @else
-                                <a class='btn btn-primary' href={{url("/downloadProgress/progress/$progress[file_dir]")}}><i class="bi bi-box-arrow-down"></i></a>
+                                <a class='btn btn-primary' href={{asset("/storage/progress/$progress[file_dir]")}}><i class="bi bi-box-arrow-down"></i></a>
                             @endif
 
                         </td>

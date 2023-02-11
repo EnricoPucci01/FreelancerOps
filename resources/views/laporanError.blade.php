@@ -54,7 +54,7 @@
                             {{$error['report_desc']}}
                         </td>
                         <td>
-                            <a href={{url("/downloadFileError/$error[report_data]")}} class="btn btn-primary"><i class="bi bi-box-arrow-down"></i></a>
+                            <a href={{asset("/storage/error/$error[report_data]")}} download class="btn btn-primary"><i class="bi bi-box-arrow-down"></i></a>
                         </td>
                         <td>
                             @if (is_null($error['status']) )

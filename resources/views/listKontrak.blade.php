@@ -64,7 +64,7 @@
 
                         </td>
                         <td>
-                            <a href={{url("/downloadKontrak/$kontrak[urlkontrak]")}} class="btn btn-success"><i class="bi bi-box-arrow-down"></i></i></a>
+                            <a href={{asset("/storage/kontrak/$kontrak[urlkontrak]")}} class="btn btn-success"><i class="bi bi-box-arrow-down"></i></i></a>
                         </td>
                     </tr>
                 @endforeach
