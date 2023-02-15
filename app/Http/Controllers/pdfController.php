@@ -6,7 +6,6 @@ use App\Models\customer;
 use App\Models\modulDiambil;
 use App\Models\proyek;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;

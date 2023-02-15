@@ -4,7 +4,7 @@
 <html lang="en">
 
 <head>
-
+    @laravelPWA
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -178,7 +178,6 @@
 </head>
 
 <body class="bg-light">
-
     @include('alert')
     @yield('content')
 

@@ -15,10 +15,7 @@ use Xendit\Xendit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
-use Svg\Tag\Rect;
 
 class xenditController extends Controller
 {

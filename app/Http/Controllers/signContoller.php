@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\modulDiambil;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Storage;

@@ -162,7 +162,6 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Acaronlex\LaravelCalendar\ServiceProvider::class,
         Akaunting\Money\Provider::class,
         Kreait\Laravel\Firebase\ServiceProvider::class,
         ConsoleTVs\Charts\ChartsServiceProvider::class,
@@ -180,7 +179,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         FruitCake\Cors\CorsServiceProvider::class,
-        Gr8Shivam\SmsApi\SmsApiServiceProvider::class
     ],
 
     /*
@@ -235,10 +233,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
-        'Calendar'=> Acaronlex\LaravelCalendar\Facades\Calendar::class,
         'FCM'      => LaravelFCM\Facades\FCM::class,
         'FCMGroup' => LaravelFCM\Facades\FCMGroup::class,
-        'SmsApi'=> Gr8Shivam\SmsApi\SmsApiFacade::class
     ],
 
 ];

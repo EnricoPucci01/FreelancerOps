@@ -2,12 +2,9 @@
 namespace App\Http\Controllers;
 //use App\Http\Controllers\DB;
 
-use Illuminate\Support\Facades\Auth;
 use App\Models\customer;
 use App\Models\skill;
 use App\Models\spesialisasi;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;

@@ -1,14 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use Google\Cloud\Firestore\FirestoreClient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Kreait\Laravel\Firebase\Facades\Firebase;
 use Kreait\Firebase\Factory;
-use Kreait\Firebase\ServiceAccount;
-use Kreait\Firebase\Firestore;
-use Kreait\Firebase\Database;
 
 //require 'vendor/autoload.php';
 class firebaseController extends Controller

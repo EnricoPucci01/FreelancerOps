@@ -12,14 +12,11 @@ use App\Models\profil;
 use App\Models\review;
 use App\Models\sertifikat;
 use App\Models\tag;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
-use Xendit\Xendit;
 use App\Models\tambahRekening;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 
 class profilController extends Controller
 {

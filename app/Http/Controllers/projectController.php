@@ -14,17 +14,12 @@ use App\Models\progress;
 use App\Models\proyek;
 use App\Models\review;
 use App\Models\tag;
-use Barryvdh\DomPDF\Pdf as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
-use SebastianBergmann\Environment\Console;
-use Xendit\Customers;
 
 class projectController extends Controller
 {

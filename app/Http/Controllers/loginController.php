@@ -6,18 +6,13 @@ use App\Models\applicant;
 use App\Models\customer;
 use App\Models\modul;
 use App\Models\modulDiambil;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Models\payment;
 use App\Models\proyek;
 use DateTime;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session as FacadesSession;
-use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
 
 class loginController extends Controller
 {
