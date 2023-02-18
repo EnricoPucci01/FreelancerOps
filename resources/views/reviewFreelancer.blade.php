@@ -1,7 +1,6 @@
-<link rel="stylesheet" href="<?php echo asset('reviewCss.css')?>" type="text/css">
 @extends('header')
 @section('content')
-
+<link rel="stylesheet" href="<?php echo asset('reviewCss.css')?>" type="text/css">
 <center>
     <div class="mt-3 mb-3 ml-2 mr-2">
         <div class="col-sm-6">

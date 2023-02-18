@@ -1,21 +1,24 @@
-<link rel="stylesheet" href="<?php echo asset('cssStyle.css'); ?>" type="text/css">
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
+    <link rel="stylesheet" href="<?php echo asset('cssStyle.css'); ?>" type="text/css">
 <head>
     @laravelPWA
     <!-- Required meta tags -->
     <meta charset="utf-8">
+    <meta name="description" content="Freelancing Web">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel=“icon” href=”favicon.ico” type=“image/x-icon”>
+
+<link rel=“shortcut icon” href=“favicon.ico” type=“image/x-icon”>
+    <title>FreelancerOPS</title>
 
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.css">
     <!--DomPDF E-Sign-->
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css"
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css"
         rel="stylesheet">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
     <link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
     <!----------------->
@@ -30,18 +33,18 @@
         <p class="mainLogo">
             @if (session()->get('role')=='freelancer')
             <a href="{{ url('/dashboardfreelancer') }}">
-                <img src="{{ URL::to('images/LogoTA.png') }}" width="350" height="80">
+                <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350" height="80">
             </a>
 
             @endif
             @if (session()->get('role')=='client')
             <a href="{{ url('/dashboardClient') }}">
-                <img src="{{ URL::to('images/LogoTA.png') }}" width="350" height="80">
+                <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350" height="80">
             </a>
             @endif
             @if (session()->get('role')=='admin')
             <a href="{{ url('/adminDashboard') }}">
-                <img src="{{ URL::to('images/LogoTA.png') }}" width="350" height="80">
+                <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350" height="80">
             </a>
             @endif
 

@@ -1,6 +1,6 @@
-<link rel="stylesheet" href="<?php echo asset('cssStyle.css')?>" type="text/css">
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+    <link rel="stylesheet" href="<?php echo asset('cssStyle.css')?>" type="text/css">
     <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">

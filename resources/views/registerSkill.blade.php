@@ -1,7 +1,7 @@
-<link rel="stylesheet" href="<?php echo asset('cssStyle.css')?>" type="text/css">
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+    <link rel="stylesheet" href="<?php echo asset('cssStyle.css')?>" type="text/css">
+
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,7 @@
 <center>
     <p class="mainLogo">
         <a href="home">
-            <img src="{{ URL::to('images/LogoTA.png') }}" width="350" height="80">
+            <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350" height="80">
          </a>
      </p>
     </center>
