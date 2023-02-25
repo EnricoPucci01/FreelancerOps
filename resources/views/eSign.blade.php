@@ -1,41 +1,65 @@
 @extends('header')
 @section('content')
 <style>
-    .kbw-signature { width: 100%; height: 200px;}
-    #sig canvas{
-        width: 100% !important;
-        height: auto;
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+    canvas#canvas{
+        margin-top: 5%;
+        background: #fff;
+        cursor: crosshair;
+        border: 1px solid orange;
     }
+
+    button#clear {
+        height: 100%;
+        border: 1px solid transparent;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    button#save {
+        height: 100%;
+        border: 1px solid transparent;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
 </style>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
 <center>
-    <div class="card mt-3" style="width: 30%">
-        <div class="card-header">
-            Tanda Tangan Kontrak
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">Masukan Tanda Tangan Di Sini</h5>
-            <form method="POST" action={{ url("/uploadsign/$idModultaken") }}>
-                @csrf
-                <div class="col-md-12">
-                    <div id="sig" ></div>
-                    <br/>
-                    <textarea id="signature64" name="signed" style="display: none"></textarea>
-                </div>
-                <br/>
-                <button type='submit' class="btn btn-success">Simpan</button>
-                <button id="clear" type='button' class="btn btn-danger">Hapus</button>
-            </form>
-        </div>
-    </div>
+    <canvas id="canvas" name="canvas"></canvas>
+    <div class="clear-btn">
+        <form method="POST" action={{ url("/uploadsign/$idModultaken") }}>
+            @csrf
+            <button id="save" class="btn btn-success" type="submit"> <span>Save</span> </button>
+            <button id="clear" type="button" class="btn btn-danger"><span> Clear </span></button>
+
+            <input type="hidden" name="hid" id="hidURL" value="">
+        </form>
     </div>
 </center>
-<script type="text/javascript">
-var sig = $('#sig').signature({syncField: '#signature64', syncFormat: 'PNG'});
-$('#clear').click(function(e) {
-    e.preventDefault();
-    sig.signature('clear');
-    $("#signature64").val('');
-});
+
+
+<script>
+    (function() {
+        const canvas = document.getElementById("canvas");
+        const signaturePad = new SignaturePad(canvas);
+        signaturePad.minWidth = 1;
+        signaturePad.maxWidth = 1;
+        signaturePad.penColor = "rgb(0, 0, 0)";
+
+        const saveBTN = document.getElementById("save");
+        saveBTN.addEventListener("click", function() {
+            const hidVal = document.getElementById("hidURL");
+            hidVal.value = signaturePad.toDataURL();
+        });
+        const clearBTN = document.getElementById("clear");
+        clearBTN.addEventListener("click", function() {
+            signaturePad.clear();
+        });
+    })();
 </script>
-<script src="{{ asset('js/app.js') }}" type="text/js"></script>
 @endsection

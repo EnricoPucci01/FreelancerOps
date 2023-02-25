@@ -94,7 +94,7 @@ class pdfController extends Controller
             File::delete(public_path('storage/sign/'.$modulTaken->client_sign.'.png'));
         }
 
-        return Redirect::to('/listKontrak')->with('success','Kontrak Berhasil Di Tanda Tangani !');
+        return Redirect::to('/listKontrak/pengerjaan')->with('success','Kontrak Berhasil Di Tanda Tangani !');
     }
     // public function testDownload(){
     //     $date=date('d-m-Y');

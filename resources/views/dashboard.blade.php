@@ -95,4 +95,57 @@
             </tr>
         </table>
     </center>
+
+    <script >
+       (function () {
+    console.log("I am here");
+
+   if ('setExperimentalAppBadge' in navigator) {
+  isSupported('v2')
+}
+
+// Check if the previous API surface is supported.
+if ('ExperimentalBadge' in window) {
+  isSupported('v1');
+}
+
+// Check if the previous API surface is supported.
+if ('setAppBadge' in navigator) {
+  isSupported('v3');
+}
+
+// Update the UI to indicate whether the API is supported.
+function isSupported(kind) {
+  console.log('supported', kind);
+  setBadge();
+}
+
+// Wrapper to support first and second origin trial
+// See https://web.dev/badging-api/ for details.
+function setBadge() {
+    console.log('set');
+    navigator.setAppBadge(21);
+  if (navigator.setAppBadge) {
+    console.log('setBadge');
+    navigator.setAppBadge(21);
+  } else if (navigator.setExperimentalAppBadge) {
+    navigator.setExperimentalAppBadge(21);
+  } else if (window.ExperimentalBadge) {
+    window.ExperimentalBadge.set(21);
+  }
+}
+
+// Wrapper to support first and second origin trial
+// See https://web.dev/badging-api/ for details.
+function clearBadge() {
+  if (navigator.clearAppBadge) {
+    navigator.clearAppBadge();
+  } else if (navigator.clearExperimentalAppBadge) {
+    navigator.clearExperimentalAppBadge();
+  } else if (window.ExperimentalBadge) {
+    window.ExperimentalBadge.clear();
+  }
+}
+})();
+    </script>
 @endsection

@@ -22,7 +22,7 @@ class signContoller extends Controller
         $modulTaken=modulDiambil::where('modultaken_id',$idModultaken)->first();
 
         $session= $request->session()->get('name');
-        $image_part=explode(";base64,",$request->signed);
+        $image_part=explode(";base64,",$request->input('hid'));
         $image_typeaux=explode("image/",$image_part[0]);
         $image_type=$image_typeaux[1];
         $image_base64=base64_decode($image_part[1]);

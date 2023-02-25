@@ -7,10 +7,6 @@
 .mainLogo:hover{
     background-color: whitesmoke;
 }
-.topnav {
-    background-color: #333;
-    margin-top: 5px;
-}
 
   .topnav a {
     float: left;
@@ -19,10 +15,6 @@
     padding: 14px 16px;
     font-size: 17px;
     text-decoration: none;
-  }
-
-  .topnav ul{
-    background-color: #333;
   }
   .topnav a:hover {
     background-color: orange;

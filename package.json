@@ -27,6 +27,7 @@
     "dependencies": {
         "firebase": "^9.9.4",
         "laravel-echo": "^1.13.1",
-        "pusher-js": "^7.4.0"
+        "pusher-js": "^7.4.0",
+        "pwa-badge": "^1.1.1"
     }
 }
