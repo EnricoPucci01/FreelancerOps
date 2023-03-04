@@ -8,6 +8,7 @@ use App\Models\jobKategori;
 use App\Models\kategori;
 use App\Models\modul;
 use App\Models\modulDiambil;
+use App\Models\notificationModel;
 use App\Models\payment;
 use App\Models\penarikan;
 use App\Models\proyek;
@@ -128,6 +129,13 @@ class adminController extends Controller
         $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + $paymentData->service_fee;
         $updateSaldoAdmin->save();
 
+        $modul= modul::where("modul_id", $paymentData->modul_id)->first();
+
+        $newNotif = new notificationModel();
+        $newNotif->customer_id=$paymentData->cust_id;
+        $newNotif->message=$updateSaldoCust->nama." pembayaran untuk modul ".$modul->title." sudah di setujui, silahkan cek saldo anda.";
+        $newNotif->status="S";
+        $newNotif->save();
         if ($paymentData && $updateSaldoCust && $updateSaldoAdmin) {
             DB::commit();
             return Redirect::back()->with('success', 'Pembayaran Berhasil Di Teruskan Ke Freelancer!');

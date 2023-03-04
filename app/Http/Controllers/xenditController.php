@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\customer;
 use App\Models\modul;
 use App\Models\modulDiambil;
+use App\Models\notificationModel;
 use App\Models\payment;
 use App\Models\penarikan;
 use App\Models\proyek;
@@ -434,7 +435,11 @@ class xenditController extends Controller
                 $penarikan->save();
 
                 if ($penarikan) {
-
+                    $newNotif= new notificationModel();
+                    $newNotif->customer_id=$dataPenarikan['cust_id'];
+                    $newNotif->message=$UpdateSaldoCust['nama']." permohonan penarikan anda sudah di setujui";
+                    $newNotif->status="S";
+                    $newNotif->save();
                     $penarikan->delete();
                     if ($penarikan) {
                         DB::commit();

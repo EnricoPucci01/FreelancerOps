@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="<?php echo asset('cssStyle.css'); ?>" type="text/css">
+
 <head>
     @laravelPWA
     <!-- Required meta tags -->
     <meta charset="utf-8">
-  <link rel="manifest" href="manifest.json" />
-  <meta name="description" content="Freelancing Web">
+    <link rel="manifest" href="manifest.json" />
+    <meta name="description" content="Freelancing Web">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel=“icon” href=”favicon.ico” type=“image/x-icon”>
+    <link rel=“icon” href=”favicon.ico” type=“image/x-icon”>
 
-<link rel=“shortcut icon” href=“favicon.ico” type=“image/x-icon”>
+    <link rel=“shortcut icon” href=“favicon.ico” type=“image/x-icon”>
     <title>FreelancerOPS</title>
 
     <link rel="stylesheet" type="text/css"
@@ -25,23 +26,50 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-        <center>
-        <p class="mainLogo">
-            @if (session()->get('role')=='freelancer')
-            <a href="{{ url('/dashboardfreelancer') }}">
-                <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350" height="80">
-            </a>
+    <style>
+        .notification {
+            color: white;
+            text-decoration: none;
+            padding: 15px 26px;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+        }
 
+        .notification:hover {
+            background: red;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            padding: 7px 10px;
+            border-radius: 100%;
+            background: red;
+            color: white;
+            font-size: 11px;
+        }
+    </style>
+    <center>
+        <p class="mainLogo">
+            @if (session()->get('role') == 'freelancer')
+                <a href="{{ url('/dashboardfreelancer') }}">
+                    <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350"
+                        height="80">
+                </a>
             @endif
-            @if (session()->get('role')=='client')
-            <a href="{{ url('/dashboardClient') }}">
-                <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350" height="80">
-            </a>
+            @if (session()->get('role') == 'client')
+                <a href="{{ url('/dashboardClient') }}">
+                    <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350"
+                        height="80">
+                </a>
             @endif
-            @if (session()->get('role')=='admin')
-            <a href="{{ url('/adminDashboard') }}">
-                <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350" height="80">
-            </a>
+            @if (session()->get('role') == 'admin')
+                <a href="{{ url('/adminDashboard') }}">
+                    <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350"
+                        height="80">
+                </a>
             @endif
 
         </p>
@@ -49,78 +77,73 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark topnav">
         @if (session()->has('active'))
-                @if (session()->get('role') == 'freelancer')
-                    <a href="{{ url('/dashboardfreelancer') }}">Dashboard</a>
-                    <a href={{ url('/browse') }}>Browse</a>
-                    <a href={{ url('/listProyekFreelancer/' . session()->get('cust_id')) }}>My Projects</a>
-                @endif
-                @if (session()->get('role') == 'client')
-                    <a href="{{ url('/dashboardClient') }}">Dashboard</a>
-                    {{-- <a href="{{url("/browse")}}">Browse</a> --}}
-                    <a href="{{ url('/postproject') }}">Post Project</a>
-                @endif
-                @if (session()->get('role') == 'admin')
-                    <a href="{{ url('/adminDashboard') }}">Dashboard</a>
-                    {{-- <a href="{{ url('/penarikanDanaCustomer') }}">Request Penarikan Dana</a> --}}
-                    <a href={{ url('/loadTambahRekening') }}>Tambah Nomor Rekening</a>
-
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDarkDropdown"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                                    role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Laporan
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark"
-                                    aria-labelledby="navbarDarkDropdownMenuLink">
-                                    <li><a class="dropdown-item" href={{ url('/loadLaporanBulanAktif') }}>Laporan Proyek Perbulan</a></li>
-                                    <li><a class="dropdown-item" href={{ url('/laporanFreelancer') }}>Laporan
-                                            Freelancer</a></li>
-                                    {{-- <li><a class="dropdown-item" href={{ url('/laporanClient') }}>Laporan Client</a> --}}
-                            </li>
-                            {{-- <li><a class="dropdown-item" href={{ url('/ketepatanPembayaran') }}>Laporan
-                                            Ketepatan Pembayaran</a></li> --}}
-                            <li><a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar') }}>Laporan
-                                    Pendapatan</a></li>
-                            <li><a class="dropdown-item" href={{ url('/loadLaporanBelumBayar/unpaid') }}>Laporan
-                                    Proyek Belum Terbayar</a></li>
-                            <li><a class="dropdown-item"
-                                    href={{ url('/loadFreelancerClientAktif') }}>Laporan
-                                     Freelancer Tidak Aktif</a></li>
-                            {{-- <li><a class="dropdown-item" href={{ url('/loadProyekBerhasil') }}>Laporan Proyek
-                                            Gagal/Berhasil</a></li> --}}
-                        </ul>
-                        </li>
-                        </ul>
-                        <a href="{{ url('/logout') }}">Keluar</a>
-                    </div>
-                @endif
-
-                @if (session()->get('role') != 'admin')
-
-                     <div class="dropdown">
-                      <button class="btn btn-dark dropdown-toggle"
-                              type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Account
-                      </button>
-                      <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
-                         <a class="dropdown-item"
-                                            href={{ url('/loadProfil/f/' . session()->get('cust_id')) }}>Profile</a>
-                                    {{-- <li><a class="dropdown-item" href={{url("/esign")}}>Upload Tanda Tangan</a></li> --}}
-                                    @if (session()->get('role') == 'freelancer')
-                                        <a class="dropdown-item" href={{ url('/loadTambahRekening') }}>Tambah Nomor
-                                                Rekening</a>
-                                    @endif
-                                    <a class="dropdown-item" href={{ url('/logout') }}>Keluar</a>
-                      </div>
-                    </div>
-                @endif
+            @if (session()->get('role') == 'freelancer')
+                <a href="{{ url('/dashboardfreelancer') }}">Dashboard</a>
+                <a href={{ url('/browse') }}>Browse</a>
+                <a href={{ url('/listProyekFreelancer/' . session()->get('cust_id')) }}>My Projects</a>
+                <a href={{url('/loadNotif/'.session()->get('cust_id'))}} class="notification">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="badge">{{ session()->get('notif') }}</span>
+                </a>
             @endif
+            @if (session()->get('role') == 'client')
+                <a href="{{ url('/dashboardClient') }}">Dashboard</a>
+                {{-- <a href="{{url("/browse")}}">Browse</a> --}}
+                <a href="{{ url('/postproject') }}">Post Project</a>
+                <a href={{url('/loadNotif/'.session()->get('cust_id'))}} class="notification">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="badge">{{ session()->get('notif') }}</span>
+                </a>
+            @endif
+            @if (session()->get('role') == 'admin')
+                <a href="{{ url('/adminDashboard') }}">Dashboard</a>
+                {{-- <a href="{{ url('/penarikanDanaCustomer') }}">Request Penarikan Dana</a> --}}
+                <a href={{ url('/loadTambahRekening') }}>Tambah Nomor Rekening</a>
+
+
+                <div class="dropdown" style="margin-left: 10px">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Laporan
+                    </button>
+                    <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href={{ url('/loadLaporanBulanAktif') }}>Laporan Proyek
+                            Perbulan</a>
+                        <a class="dropdown-item" href={{ url('/laporanFreelancer') }}>Laporan
+                            Freelancer</a>
+                        <a class="dropdown-item" href={{ url('/loadLaporanProyekTidakBayar') }}>Laporan
+                            Pendapatan</a>
+                        <a class="dropdown-item" href={{ url('/loadLaporanBelumBayar/unpaid') }}>Laporan
+                            Proyek Belum Terbayar</a>
+                        <a class="dropdown-item" href={{ url('/loadFreelancerClientAktif') }}>Laporan
+                            Freelancer Tidak Aktif</a>
+                    </div>
+                </div>
+
+                <a href="{{ url('/logout') }}">Keluar</a>
+                </div>
+            @endif
+
+            @if (session()->get('role') != 'admin')
+
+                <div class="dropdown" style="margin-left: 10px">
+                    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Account
+                    </button>
+                    <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item"
+                            href={{ url('/loadProfil/f/' . session()->get('cust_id')) }}>Profile</a>
+                        {{-- <li><a class="dropdown-item" href={{url("/esign")}}>Upload Tanda Tangan</a></li> --}}
+                        @if (session()->get('role') == 'freelancer')
+                            <a class="dropdown-item" href={{ url('/loadTambahRekening') }}>Tambah Nomor
+                                Rekening</a>
+                        @endif
+                        <a class="dropdown-item" href={{ url('/logout') }}>Keluar</a>
+                    </div>
+                </div>
+            @endif
+        @endif
 
     </nav>
 
@@ -180,4 +203,5 @@
 
     @yield('script')
 </body>
+
 </html>

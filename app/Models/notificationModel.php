@@ -11,7 +11,7 @@ class notificationModel extends Model
     use HasFactory;
     use SoftDeletes;
     protected $table='notification';
-    protected $primaryKey='notification_id';
+    protected $primaryKey='notif_id';
     protected $keyType='integer';
     public $timestamps=true;
     const CREATED_AT='created_at';

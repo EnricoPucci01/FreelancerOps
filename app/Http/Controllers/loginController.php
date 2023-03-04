@@ -6,6 +6,7 @@ use App\Models\applicant;
 use App\Models\customer;
 use App\Models\modul;
 use App\Models\modulDiambil;
+use App\Models\notificationModel;
 use App\Models\proyek;
 use DateTime;
 use Illuminate\Http\Request;
@@ -78,19 +79,23 @@ class loginController extends Controller
         $uang= json_decode(json_encode($uang),true);
 
         //dd($modulFreelancer);
+
+        $getNotif= notificationModel::where('customer_id', FacadesSession::get('cust_id'))->where("status","S")->count();
+        FacadesSession::put("notif",$getNotif);
         return view('dashboard',[
             'modul'=>$modulFreelancer,
-            'total'=>$uang['saldo']
+            'total'=>$uang['saldo'],
         ]);
     }
 
     public function loadDashboardClient(){
         $proyek=proyek::where('cust_id',FacadesSession::get('cust_id'))->get();
         $proyek=json_decode(json_encode($proyek),true);
-
+        $getNotif= notificationModel::where('customer_id', FacadesSession::get('cust_id'))->where('status',"S")->count();
         //dd($modulFreelancer);
+        FacadesSession::put("notif",$getNotif);
         return view('dashboardClient',[
-            'proyek'=>$proyek
+            'proyek'=>$proyek,
         ]);
     }
 

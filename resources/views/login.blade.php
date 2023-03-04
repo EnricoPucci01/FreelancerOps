@@ -2,6 +2,7 @@
 <html lang="en">
     <link rel="stylesheet" href="<?php echo asset('cssStyle.css')?>" type="text/css">
   <head>
+    @laravelPWA
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Freelancing Web">

@@ -9,6 +9,7 @@ use App\Models\jobKategori;
 use App\Models\kategori;
 use App\Models\modul;
 use App\Models\modulDiambil;
+use App\Models\notificationModel;
 use App\Models\payment;
 use App\Models\progress;
 use App\Models\proyek;
@@ -368,6 +369,16 @@ class projectController extends Controller
                     $newApplicant->applicant_desc = $request->input("custDesc");
                     $newApplicant->status = 'pending';
                     $newApplicant->save();
+
+                    $modul=modul::where("modul_id",$diambil)->first();
+                    $proyek=proyek::where("proyek_id",$modul->proyek_id)->first();
+
+
+                    $newNotif = new notificationModel();
+                    $newNotif->customer_id=$proyek->cust_id;
+                    $newNotif->message=session::get("name")." telah mendaftar untuk modul ".$modul->title;
+                    $newNotif->status="S";
+                    $newNotif->save();
                 }
                 if ($newApplicant) {
                     DB::commit();
@@ -431,12 +442,26 @@ class projectController extends Controller
             $delApplicant->status = 'diterima';
             $delApplicant->save();
             if ($delApplicant) {
+                $newNotif =new notificationModel();
+                $newNotif->customer_id=$custId;
+                $newNotif->message = "CV anda untuk modul ".$modul->title." telah di terima, Silahkan melakukan tanda tangan pada kontrak untuk menjamin keamanan.";
+                $newNotif->status="S";
+                $newNotif->save();
+
+                $newNotifClient= new notificationModel();
+                $newNotifClient->customer_id=Session::get("cust_id");
+                $newNotifClient->message="Anda berhasil menerima ".$nama->nama." sebagai freelancer, Silahkan melakukan tanda tangan pada konreak untuk menjamin keamanan.";
+                $newNotifClient->status="S";
+                $newNotifClient->save();
+
                 $delApplicant->delete();
                 $upModul = modul::where('modul_id', $modulId)->first();
                 $upModul->start = $dateTime;
                 $upModul->status = 'taken';
                 $upModul->save();
-                if ($upModul) {
+
+
+                if ($upModul && $newNotif) {
                     DB::commit();
                     Session::put('idProyek', $proyekId);
                     return Redirect::to("/generatePDF/$custId/$nama_kontrak");
@@ -497,10 +522,13 @@ class projectController extends Controller
         DB::beginTransaction();
         $filename = "";
         $status = '';
+        $message="";
         if ($request->has('cb')) {
             $status = 'finish';
+            $message = " telah menyelesaikan proyek untuk modul ";
         } else {
             $status = 'progress';
+            $message = " telah menyerahkan progress untuk modul ";
         }
         $UploadDate = date('d/m/Y H:i:s');
         if (!empty($request->file("fileModul"))) {
@@ -520,6 +548,9 @@ class projectController extends Controller
                 }
             }
         }
+        $modul = modul::where('modul_id', $modulId)->first();
+        $proyek= proyek::where("proyek_id", $modul->proyek_id)->first();
+        $custname= customer::where("cust_id", $proyek->cust_id)->first();
         $updateProgress = new progress();
         $updateProgress->modul_id = $modulId;
         $updateProgress->upload_time = $UploadDate;
@@ -528,9 +559,14 @@ class projectController extends Controller
         $updateProgress->status = $status;
         $updateProgress->save();
 
+        $newNotif= new notificationModel();
+        $newNotif->customer_id= $custname->cust_id;
+        $newNotif->message=Session::get("name").$message.$modul->title;
+        $newNotif->status="S";
+        $newNotif->save();
         if ($updateProgress) {
             if ($status == "finish") {
-                $modul = modul::where('modul_id', $modulId)->first();
+
                 $modul->status = $status;
                 $modul->save();
                 if ($modul) {
@@ -660,8 +696,15 @@ class projectController extends Controller
         $insertReview->review_desc = $review;
         $insertReview->review_time = $reviewTime;
         $insertReview->save();
+        $cust= customer::where("cust_id",$clientId)->first();
+        $modul= modul::where("modul_id",$modulId)->first();
+        $newNotif= new notificationModel();
+        $newNotif->customer_id=$freelancerId;
+        $newNotif->message="Review telah di berikan kepada anda oleh ".$cust->nama." untuk modul ".$modul->title;
+        $newNotif->status="S";
+        $newNotif->save();
 
-        if ($insertReview) {
+        if ($insertReview && $newNotif) {
             DB::commit();
             return Redirect::back()->with('success', 'Review Berhasil Diberikan!');
         } else {
@@ -702,7 +745,14 @@ class projectController extends Controller
         $insertError->report_time = $date;
         $insertError->save();
 
-        if ($insertError) {
+        $modul= modul::where("modul_id",$modulId)->first();
+
+        $newNotif= new notificationModel();
+        $newNotif->customer_id= $freelancerId;
+        $newNotif->message="Error telah di laporkan untuk modul ".$modul->title;
+        $newNotif->status="S";
+        $newNotif->save();
+        if ($insertError && $newNotif) {
             DB::commit();
             return Redirect::back()->with('success', 'Error Telah Berhasil Di Laporkan!');
         } else {
@@ -763,7 +813,16 @@ class projectController extends Controller
             $progress->status = 'Error Fix';
             $progress->save();
 
-            if ($progress) {
+            $modul= modul::where("modul_id",$modulId)->first();
+            $proyek= proyek::where("proyek_id",$modul->proyek_id)->first();
+
+            $newNotif= new notificationModel();
+            $newNotif->customer_id=$proyek->cust_id;
+            $newNotif->message="Perbaikan laporan error tanggal ". $error['report_time']." untuk modul ".$modul->title." telah di berikan";
+            $newNotif->status="S";
+            $newNotif->save();
+
+            if ($progress && $newNotif) {
                 $error->status = 'selesai';
                 $error->progress_id = $progress->progress_id;
                 $error->save();

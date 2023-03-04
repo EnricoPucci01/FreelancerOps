@@ -2,7 +2,7 @@
 
 @section('content')
     <center>
-
+        <input type="hidden" id="hidNotif" value={{session()->get('notif')}}>
         <table style="height: 100%">
             <tr>
                 <td class="tdPersonalInfo">
@@ -13,23 +13,27 @@
                                 <table>
 
                                     <?php
-                                        $i=0;
-                                        foreach ($modul as $itemModul) {
-                                            $i++;
-                                            if($i<=4){
-
-                                              echo " <a href='/loadDetailModulFreelancer/$itemModul[modul_id]/".Session::get('cust_id')."'>
-                                                    <div class='card text-center mt-2 bg-light'>
-                                                        <div class='card-body'>
-                                                            <h5 class='card-title text-dark'><u>$itemModul[title]</u></h5>
-                                                            <h6 class='card-subtitle text-secondary'>".Carbon\Carbon::parse($itemModul['start'])->format('d-m-Y')." - ".Carbon\Carbon::parse($itemModul['end'])->format("d-m-Y")."</h6>
-                                                            <p class='card-text text-dark'>$itemModul[deskripsi_modul]</p>
-                                                        </div>
-                                                    </div>
-                                                </a>";
-
-                                            }
+                                    $i = 0;
+                                    foreach ($modul as $itemModul) {
+                                        $i++;
+                                        if ($i <= 4) {
+                                            echo " <a href='/loadDetailModulFreelancer/$itemModul[modul_id]/" .
+                                                Session::get('cust_id') .
+                                                "'>
+                                                                                        <div class='card text-center mt-2 bg-light'>
+                                                                                            <div class='card-body'>
+                                                                                                <h5 class='card-title text-dark'><u>$itemModul[title]</u></h5>
+                                                                                                <h6 class='card-subtitle text-secondary'>" .
+                                                Carbon\Carbon::parse($itemModul['start'])->format('d-m-Y') .
+                                                ' - ' .
+                                                Carbon\Carbon::parse($itemModul['end'])->format('d-m-Y') .
+                                                "</h6>
+                                                                                                <p class='card-text text-dark'>$itemModul[deskripsi_modul]</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>";
                                         }
+                                    }
                                     ?>
 
                                 </table>
@@ -46,7 +50,7 @@
                                 </h5>
                             </div>
                             <div class="rounded">
-                                <table style="width: 100%" >
+                                <table style="width: 100%">
                                     <tr>
                                         {{-- <td>
                                     <a href="/portofolio"><button type="button" class="btn btn-outline-primary fw-bold" style="width: 92%">Portofolio</button></a>
@@ -55,7 +59,8 @@
                                     <tr>
                                         <td>
                                             {{-- <a href={{url("/login")}} class="btn btn-outline-primary mb-2 mt-2 fw-bold" style="width: 92%">Obrolan</a> --}}
-                                            <a href={{ url('/loadChatroom') }} class="btn btn-outline-dark fw-bold mt-2 mb-2"
+                                            <a href={{ url('/loadChatroom') }}
+                                                class="btn btn-outline-dark fw-bold mt-2 mb-2"
                                                 style="width: 100%">Obrolan</a>
                                         </td>
                                     </tr>
@@ -96,56 +101,56 @@
         </table>
     </center>
 
-    <script >
-       (function () {
-    console.log("I am here");
+    <script>
+        (function() {
+            var notif = document.getElementById("hidNotif");
+            console.log("I am here");
 
-   if ('setExperimentalAppBadge' in navigator) {
-  isSupported('v2')
-}
+            if ('setExperimentalAppBadge' in navigator) {
+                isSupported('v2')
+            }
 
-// Check if the previous API surface is supported.
-if ('ExperimentalBadge' in window) {
-  isSupported('v1');
-}
+            // Check if the previous API surface is supported.
+            if ('ExperimentalBadge' in window) {
+                isSupported('v1');
+            }
 
-// Check if the previous API surface is supported.
-if ('setAppBadge' in navigator) {
-  isSupported('v3');
-}
+            // Check if the previous API surface is supported.
+            if ('setAppBadge' in navigator) {
+                isSupported('v3');
+            }
 
-// Update the UI to indicate whether the API is supported.
-function isSupported(kind) {
-  console.log('supported', kind);
-  setBadge();
-}
+            // Update the UI to indicate whether the API is supported.
+            function isSupported(kind) {
+                console.log('supported', kind);
+                setBadge();
+            }
 
-// Wrapper to support first and second origin trial
-// See https://web.dev/badging-api/ for details.
-function setBadge() {
-    console.log('set');
-    navigator.setAppBadge(21);
-  if (navigator.setAppBadge) {
-    console.log('setBadge');
-    navigator.setAppBadge(21);
-  } else if (navigator.setExperimentalAppBadge) {
-    navigator.setExperimentalAppBadge(21);
-  } else if (window.ExperimentalBadge) {
-    window.ExperimentalBadge.set(21);
-  }
-}
+            // Wrapper to support first and second origin trial
+            // See https://web.dev/badging-api/ for details.
+            function setBadge() {
+                console.log('set');
+                if (navigator.setAppBadge) {
+                    console.log('setBadge');
+                    navigator.setAppBadge(notif.value);
+                } else if (navigator.setExperimentalAppBadge) {
+                    navigator.setExperimentalAppBadge(notif.value);
+                } else if (window.ExperimentalBadge) {
+                    window.ExperimentalBadge.set(notif.value);
+                }
+            }
 
-// Wrapper to support first and second origin trial
-// See https://web.dev/badging-api/ for details.
-function clearBadge() {
-  if (navigator.clearAppBadge) {
-    navigator.clearAppBadge();
-  } else if (navigator.clearExperimentalAppBadge) {
-    navigator.clearExperimentalAppBadge();
-  } else if (window.ExperimentalBadge) {
-    window.ExperimentalBadge.clear();
-  }
-}
-})();
+            // Wrapper to support first and second origin trial
+            // See https://web.dev/badging-api/ for details.
+            function clearBadge() {
+                if (navigator.clearAppBadge) {
+                    navigator.clearAppBadge();
+                } else if (navigator.clearExperimentalAppBadge) {
+                    navigator.clearExperimentalAppBadge();
+                } else if (window.ExperimentalBadge) {
+                    window.ExperimentalBadge.clear();
+                }
+            }
+        })();
     </script>
 @endsection

@@ -7,6 +7,7 @@ use App\Models\chatroom;
 use App\Models\customer;
 use App\Models\modul;
 use App\Models\modulDiambil;
+use App\Models\notificationModel;
 use App\Models\profil;
 use App\Models\proyek;
 use Illuminate\Http\Request;
@@ -174,7 +175,11 @@ class chatController extends Controller
         $chatRoom->unread_reciever = '1';
         $chatRoom->unread_sender= '0';
         $chatRoom->save();
-
+        $newNotif= new notificationModel();
+        $newNotif->customer_id=$chatRoom->reciever_id;
+        $newNotif->message=Session::get("name")." telah membuat ruang obrolan baru untuk anda";
+        $newNotif->status="S";
+        $newNotif->save();
         if ($chatRoom) {
             $chat = new chat();
             $chat->room_id = $chatRoom->room_id;
@@ -249,9 +254,8 @@ class chatController extends Controller
     public function sendChat(Request $request, $roomId)
     {
         $jam = date('H:i');
-
         DB::beginTransaction();
-
+        $insertNotification = new notificationModel();
         $insertChat = new chat();
         $insertChat->room_id = $roomId;
         $insertChat->sender_id = Session::get('cust_id');
@@ -267,10 +271,18 @@ class chatController extends Controller
 
             if ($chatroom->sender_id == Session::get('cust_id')) {
                 $chatroom->unread_reciever = $chat_count;
+                $cust=customer::where("cust_id",$chatroom->sender_id)->first();
+                $insertNotification->customer_id=$chatroom->reciever_id;
+                $msg="Ada pesan baru untuk kamu dari $cust->nama";
             } else if ($chatroom->reciever_id == Session::get('cust_id')) {
                 $chatroom->unread_sender = $chat_count;
+                $insertNotification->customer_id=$chatroom->sender_id;
+                $cust=customer::where("cust_id",$chatroom->reciever_id)->first();
+                $msg="Ada pesan baru untuk kamu dari $cust->nama";
             }
-
+            $insertNotification->message=$msg;
+            $insertNotification->status="S";
+            $insertNotification->save();
             $chatroom->save();
             if ($chatroom) {
                 DB::commit();

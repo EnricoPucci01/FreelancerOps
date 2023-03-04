@@ -72,7 +72,8 @@ Route::middleware([cekLogin::class])->group(function(){
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route dengan pengecekan middleware
-
+Route::get('/loadNotif/{idCust}',[profilController::class,'loadNotif']);
+Route::get('/clearNotif/{idCust}',[profilController::class,'clearNotif']);
 Route::get('/cariproyek',[projectController::class,'cariProyek']);
 Route::get('/browse',[projectController::class,'loadBrowseProject']);
 Route::get('/autoRejectApplicant',[loginController::class,'autoRejectApplicant']);
