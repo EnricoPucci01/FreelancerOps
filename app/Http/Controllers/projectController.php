@@ -267,9 +267,9 @@ class projectController extends Controller
             $proyekFilterKategori = json_decode(json_encode($proyekFilterKategori), true);
 
             $listProyek = proyek::whereIn('proyek_id', $proyekFilterKategori)
-                ->where('tipe_proyek', $request->tipe_proyek)->where('nama_proyek', 'like', '%' . $request->searchProyek . '%')->paginate(5)->appends($request->all());
+                ->where('tipe_proyek', $request->tipe_proyek)->where('nama_proyek', 'like', '%' . $request->searchProyek . '%')->where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->paginate(5)->appends($request->all());
         } else {
-            $listProyek = proyek::where('tipe_proyek', $request->tipe_proyek)->where('nama_proyek', 'like', '%' . $request->searchProyek . '%')->paginate(5)->appends($request->all());
+            $listProyek = proyek::where('tipe_proyek', $request->tipe_proyek)->where('nama_proyek', 'like', '%' . $request->searchProyek . '%')->where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->paginate(5)->appends($request->all());
         }
 
         return view('browseproject', [
@@ -342,58 +342,63 @@ class projectController extends Controller
 
     public function ajukancv(Request $request)
     {
-        if (!empty($request->file("filecv"))) {
-            DB::beginTransaction();
-            //var_dump($request->input('checkambil'));
-            $date = date('Y-m-d H_i_s');
-            $filename = Session::get("name") . $date . "." . $request->file("filecv")->getClientOriginalExtension();
-            $path = $request->file('filecv')->storeAs("cv", $filename, 'public');
+        if($request->input('checkambil')==null){
+            return Redirect::back()->with("error", 'Anda belum memilih modul!');
+        } else{
+            if (!empty($request->file("filecv"))) {
+                DB::beginTransaction();
+                //var_dump($request->input('checkambil'));
+                $date = date('Y-m-d H_i_s');
+                $filename = Session::get("name") . $date . "." . $request->file("filecv")->getClientOriginalExtension();
+                $path = $request->file('filecv')->storeAs("cv", $filename, 'public');
 
-            if ($path != "" && $path != null) {
-                $fileCV = $request->file('filecv');
-                $firebase_storage_path = 'cv/';
-                $localfolder = public_path('firebase-temp-uploads') . '/';
-                if ($fileCV->move($localfolder, $filename)) {
-                    $uploadedfile = fopen($localfolder . $filename, 'r');
-                    app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
-                    //will remove from local laravel folder
-                    unlink($localfolder . $filename);
-                }
+                if ($path != "" && $path != null) {
+                    $fileCV = $request->file('filecv');
+                    $firebase_storage_path = 'cv/';
+                    $localfolder = public_path('firebase-temp-uploads') . '/';
+                    if ($fileCV->move($localfolder, $filename)) {
+                        $uploadedfile = fopen($localfolder . $filename, 'r');
+                        app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+                        //will remove from local laravel folder
+                        unlink($localfolder . $filename);
+                    }
 
-                foreach ($request->input('checkambil') as $diambil) {
-                    $newApplicant = new applicant();
-                    $newApplicant->proyek_id = $request->input('id_proyek');
-                    $newApplicant->cust_id = Session::get('cust_id');
-                    $newApplicant->modul_id = $diambil;
-                    $newApplicant->cv = $filename;
-                    $newApplicant->applicant_desc = $request->input("custDesc");
-                    $newApplicant->status = 'pending';
-                    $newApplicant->save();
+                    foreach ($request->input('checkambil') as $diambil) {
+                        $newApplicant = new applicant();
+                        $newApplicant->proyek_id = $request->input('id_proyek');
+                        $newApplicant->cust_id = Session::get('cust_id');
+                        $newApplicant->modul_id = $diambil;
+                        $newApplicant->cv = $filename;
+                        $newApplicant->applicant_desc = $request->input("custDesc");
+                        $newApplicant->status = 'pending';
+                        $newApplicant->save();
 
-                    $modul=modul::where("modul_id",$diambil)->first();
-                    $proyek=proyek::where("proyek_id",$modul->proyek_id)->first();
+                        $modul=modul::where("modul_id",$diambil)->first();
+                        $proyek=proyek::where("proyek_id",$modul->proyek_id)->first();
 
 
-                    $newNotif = new notificationModel();
-                    $newNotif->customer_id=$proyek->cust_id;
-                    $newNotif->message=session::get("name")." telah mendaftar untuk modul ".$modul->title;
-                    $newNotif->status="S";
-                    $newNotif->save();
-                }
-                if ($newApplicant) {
-                    DB::commit();
-                    return Redirect::back()->with("success", 'CV berhasil di ajukan');
+                        $newNotif = new notificationModel();
+                        $newNotif->customer_id=$proyek->cust_id;
+                        $newNotif->message=session::get("name")." telah mendaftar untuk modul ".$modul->title;
+                        $newNotif->status="S";
+                        $newNotif->save();
+                    }
+                    if ($newApplicant) {
+                        DB::commit();
+                        return Redirect::back()->with("success", 'CV berhasil di ajukan');
+                    } else {
+                        DB::rollback();
+                        return Redirect::back()->with("error", 'CV gagal di ajukan');
+                    }
                 } else {
                     DB::rollback();
                     return Redirect::back()->with("error", 'CV gagal di ajukan');
                 }
             } else {
-                DB::rollback();
-                return Redirect::back()->with("error", 'CV gagal di ajukan');
+                return Redirect::back()->with("error", 'CV anda kosong');
             }
-        } else {
-            return Redirect::back()->with("error", 'CV anda kosong');
         }
+
     }
 
     public function loadApplicant($modulId, $proyekId, $idCust)
@@ -839,68 +844,74 @@ class projectController extends Controller
 
     public function loadRecomendedProject($tipeRecommend)
     {
-        if ($tipeRecommend == 'Kategori') {
-            $proyekCount = DB::table('modul_diambil')
-                ->select('proyek_id', DB::raw('count(proyek_id) as total'))
-                ->where('cust_id', Session::get('cust_id'))
-                ->groupBy('proyek_id')
-                ->orderBy('total', 'desc')
-                ->first();
-            $proyekCount = json_decode(json_encode($proyekCount), true);
+        $proyekAmbil = modulDiambil::where("cust_id",Session::get('cust_id'))->count();
+        if($proyekAmbil>0){
+            if ($tipeRecommend == 'Kategori') {
+                $proyekCount = DB::table('modul_diambil')
+                    ->select('proyek_id', DB::raw('count(proyek_id) as total'))
+                    ->where('cust_id', Session::get('cust_id'))
+                    ->groupBy('proyek_id')
+                    ->orderBy('total', 'desc')
+                    ->first();
+                $proyekCount = json_decode(json_encode($proyekCount), true);
 
-            $proyekList = proyek::whereIn('proyek_id', $proyekCount)->get('kategorijob_id');
-            $proyekList = json_decode(json_encode($proyekList), true);
-            $listKategoriJob = jobKategori::get();
-            $listKategoriJob = json_decode(json_encode($listKategoriJob), true);
+                $proyekList = proyek::whereIn('proyek_id', $proyekCount)->get('kategorijob_id');
+                $proyekList = json_decode(json_encode($proyekList), true);
+                $listKategoriJob = jobKategori::get();
+                $listKategoriJob = json_decode(json_encode($listKategoriJob), true);
 
-            //dd($proyekList);
-            $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
-            $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
-            $listTag = tag::get();
-            $listTag = json_decode(json_encode($listTag), true);
+                //dd($proyekList);
+                $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
+                $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
+                $listTag = tag::get();
+                $listTag = json_decode(json_encode($listTag), true);
 
-            $listKategori = kategori::get();
-            $listKategori = json_decode(json_encode($listKategori), true);
-            return view('RekomendasiProyek', [
-                'recomendProyek' => $recommendedProyek,
-                'listkategori' => $listKategori,
-                'listkategoriJob' => $listKategoriJob,
-                'listtag' => $listTag,
-                'tipeRekomen' => 'Kategori'
-            ]);
-        } else {
-            $modulTaken = modulDiambil::where('cust_id', Session::get("cust_id"))->get('proyek_id');
-            $modulTaken = json_decode(json_encode($modulTaken), true);
+                $listKategori = kategori::get();
+                $listKategori = json_decode(json_encode($listKategori), true);
+                return view('RekomendasiProyek', [
+                    'recomendProyek' => $recommendedProyek,
+                    'listkategori' => $listKategori,
+                    'listkategoriJob' => $listKategoriJob,
+                    'listtag' => $listTag,
+                    'tipeRekomen' => 'Kategori'
+                ]);
+            } else {
+                $modulTaken = modulDiambil::where('cust_id', Session::get("cust_id"))->get('proyek_id');
+                $modulTaken = json_decode(json_encode($modulTaken), true);
 
-            $proyekCount = DB::table('tag')
-                ->select('kategori_id', DB::raw('count(kategori_id) as total'))
-                ->whereIn('proyek_id', $modulTaken)
-                ->groupBy('kategori_id')
-                ->orderBy('total', 'desc')
-                ->first();
-            $proyekCount = json_decode(json_encode($proyekCount), true);
+                $proyekCount = DB::table('tag')
+                    ->select('kategori_id', DB::raw('count(kategori_id) as total'))
+                    ->whereIn('proyek_id', $modulTaken)
+                    ->groupBy('kategori_id')
+                    ->orderBy('total', 'desc')
+                    ->first();
+                $proyekCount = json_decode(json_encode($proyekCount), true);
 
-            $tag = tag::where('kategori_id', $proyekCount['kategori_id'])->get('proyek_id');
-            $tag = json_decode(json_encode($tag), true);
+                $tag = tag::where('kategori_id', $proyekCount['kategori_id'])->get('proyek_id');
+                $tag = json_decode(json_encode($tag), true);
 
-            //dd($proyekCount);
-            $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
-            $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
+                //dd($proyekCount);
+                $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
+                $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
 
-            $listTag = tag::get();
-            $listTag = json_decode(json_encode($listTag), true);
-            $listKategoriJob = jobKategori::get();
-            $listKategoriJob = json_decode(json_encode($listKategoriJob), true);
-            $listKategori = kategori::get();
-            $listKategori = json_decode(json_encode($listKategori), true);
+                $listTag = tag::get();
+                $listTag = json_decode(json_encode($listTag), true);
+                $listKategoriJob = jobKategori::get();
+                $listKategoriJob = json_decode(json_encode($listKategoriJob), true);
+                $listKategori = kategori::get();
+                $listKategori = json_decode(json_encode($listKategori), true);
 
-            return view('RekomendasiProyek', [
-                'recomendProyek' => $recommendedProyek,
-                'listkategori' => $listKategori,
-                'listkategoriJob' => $listKategoriJob,
-                'listtag' => $listTag,
-                'tipeRekomen' => 'Tag'
-            ]);
+                return view('RekomendasiProyek', [
+                    'recomendProyek' => $recommendedProyek,
+                    'listkategori' => $listKategori,
+                    'listkategoriJob' => $listKategoriJob,
+                    'listtag' => $listTag,
+                    'tipeRekomen' => 'Tag'
+                ]);
+            }
+        }else{
+            return Redirect::back()->with('error', 'Oops, Kita belum bisa memberi rekomendasi dikarenakan anda belum pernah mengambil proyek sebelumnya');
         }
+
     }
 }

@@ -158,6 +158,7 @@ Route::middleware([cekFreelancer::class])->group(function(){
 //Route Dashboard Freelancer
 //Route::get('/dashboardfreelancer', [loginController::class,'loadDashboardFreelancer'])->middleware(['auth'])->name('dashboardfreelancer');
 Route::get('/dashboardfreelancer',[loginController::class,'loadDashboardFreelancer']);
+Route::get('/setAppBadge',[loginController::class,'setAppBadge']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

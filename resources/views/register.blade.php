@@ -62,12 +62,12 @@
                     <!-- Nomor HP -->
                     <tr>
                         <td>
-                              <label for="phone_register" class="form-label">Nomor HP</label>
+                              <label for="phone_register" class="form-label">Nomor HP (10-13 digit hanya angka)</label>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                          <input type="number" name="phone_register" class="form-control mb-2">
+                          <input type="tel" name="phone_register" class="form-control mb-2" pattern="[0-9]{10,13}">
                         </td>
                     </tr>
 

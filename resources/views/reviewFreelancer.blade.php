@@ -9,7 +9,7 @@
                 <table>
                             <tr >
                                 <td >
-                                    <div class="ml-3 row" style="width: 70%">
+                                    <div class="ml-3 row" style="width: 100%">
                                         <div class="side">
                                           <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 5</div>
                                         </div>
@@ -18,6 +18,7 @@
                                             <div style="width: {{$bintang5}}%; height: 10px; background-color: #ffc700;"></div>
                                           </div>
                                         </div>
+
                                         <div class="side">
                                           <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 4</div>
                                         </div>
@@ -26,6 +27,7 @@
                                             <div style="width:{{$bintang4}}%; height: 10px; background-color: #ffc700;"></div>
                                           </div>
                                         </div>
+
                                         <div class="side">
                                           <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 3</div>
                                         </div>
@@ -34,6 +36,7 @@
                                             <div style="width: {{$bintang3}}%; height: 10px; background-color: #ffc700;"></div>
                                           </div>
                                         </div>
+
                                         <div class="side">
                                           <div><i class='bi bi-star-fill' style='color:#ffc700'></i> 2</div>
                                         </div>
@@ -50,6 +53,7 @@
                                             <div style="width:{{$bintang1}}%; height: 10px; background-color: #ffc700;"></div>
                                           </div>
                                         </div>
+
                                       </div>
                                       <td style="text-align: left; text-align:center">
                                         <div style="width: 100%"><h2><i class='bi bi-star-fill' style='color:#ffc700'></i>

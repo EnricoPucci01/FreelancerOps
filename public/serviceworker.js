@@ -1,3 +1,5 @@
+// const { define } = require("laravel-mix");
+
 var staticCacheName = "pwa-v" + new Date().getTime();
 var filesToCache = [
     '/offline',
@@ -49,3 +51,19 @@ self.addEventListener("fetch", event => {
             })
     )
 });
+
+self.addEventListener('sync', event =>{
+
+    if (event.tag == 'sync') {
+        console.log('sync');
+        event.waitUntil(badge());
+    }
+});
+
+function badge(){
+    fetch("/setAppBadge").then(function(response){
+        if(response.status==200){
+            console.log('onload');
+        }
+    });
+}

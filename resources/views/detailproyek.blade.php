@@ -25,7 +25,7 @@
         <table class="table table-striped">
             <tr>
                 <td>
-                    Modul
+                   Judul Modul
                 </td>
                 <td>
                     Deskripsi
@@ -37,7 +37,7 @@
                     Deadline
                 </td>
                 <td>
-
+                    Pilih Modul
                 </td>
             </tr>
             <input type="hidden" name='id_proyek' value="{{$dataproyek['proyek_id']}}">

@@ -88,6 +88,12 @@ class loginController extends Controller
         ]);
     }
 
+    public function setAppBadge(){
+        $getNotif= notificationModel::where('customer_id', FacadesSession::get('cust_id'))->where("status","S")->count();
+        FacadesSession::put("notif",$getNotif);
+        return $getNotif;
+    }
+
     public function loadDashboardClient(){
         $proyek=proyek::where('cust_id',FacadesSession::get('cust_id'))->get();
         $proyek=json_decode(json_encode($proyek),true);

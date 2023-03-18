@@ -2,7 +2,7 @@
 
 @section('content')
     <center>
-        <input type="hidden" id="hidNotif" value={{session()->get('notif')}}>
+        <input type="hidden" id="hidNotif" value={{ session()->get('notif') }}>
         <table style="height: 100%">
             <tr>
                 <td class="tdPersonalInfo">
@@ -20,18 +20,18 @@
                                             echo " <a href='/loadDetailModulFreelancer/$itemModul[modul_id]/" .
                                                 Session::get('cust_id') .
                                                 "'>
-                                                                                        <div class='card text-center mt-2 bg-light'>
-                                                                                            <div class='card-body'>
-                                                                                                <h5 class='card-title text-dark'><u>$itemModul[title]</u></h5>
-                                                                                                <h6 class='card-subtitle text-secondary'>" .
+                                                                                                                                                                <div class='card text-center mt-2 bg-light'>
+                                                                                                                                                                    <div class='card-body'>
+                                                                                                                                                                        <h5 class='card-title text-dark'><u>$itemModul[title]</u></h5>
+                                                                                                                                                                        <h6 class='card-subtitle text-secondary'>" .
                                                 Carbon\Carbon::parse($itemModul['start'])->format('d-m-Y') .
                                                 ' - ' .
                                                 Carbon\Carbon::parse($itemModul['end'])->format('d-m-Y') .
                                                 "</h6>
-                                                                                                <p class='card-text text-dark'>$itemModul[deskripsi_modul]</p>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </a>";
+                                                                                                                                                                        <p class='card-text text-dark'>$itemModul[deskripsi_modul]</p>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </div>
+                                                                                                                                                            </a>";
                                         }
                                     }
                                     ?>
@@ -105,27 +105,6 @@
         (function() {
             var notif = document.getElementById("hidNotif");
             console.log("I am here");
-
-            if ('setExperimentalAppBadge' in navigator) {
-                isSupported('v2')
-            }
-
-            // Check if the previous API surface is supported.
-            if ('ExperimentalBadge' in window) {
-                isSupported('v1');
-            }
-
-            // Check if the previous API surface is supported.
-            if ('setAppBadge' in navigator) {
-                isSupported('v3');
-            }
-
-            // Update the UI to indicate whether the API is supported.
-            function isSupported(kind) {
-                console.log('supported', kind);
-                setBadge();
-            }
-
             // Wrapper to support first and second origin trial
             // See https://web.dev/badging-api/ for details.
             function setBadge() {
@@ -151,6 +130,10 @@
                     window.ExperimentalBadge.clear();
                 }
             }
+
+            navigator.serviceWorker.ready.then(function(sw) {
+                return sw.sync.register('sync');
+            });
         })();
     </script>
 @endsection

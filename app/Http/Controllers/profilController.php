@@ -111,7 +111,7 @@ class profilController extends Controller
 
 
 
-        return view('editprofil', [
+        return view('editProfil', [
             'dataProfil' => $profil,
             'dataCust' => $cust
         ]);
@@ -275,14 +275,14 @@ class profilController extends Controller
             }
 
             $rataRata = $totalBintang / $jumlahReview;
+            $bintang5 = $bintang5 / $jumlahReview * 100;
+            $bintang4 = $bintang4 / $jumlahReview * 100;
+            $bintang3 = $bintang3 / $jumlahReview * 100;
+            $bintang2 = $bintang2 / $jumlahReview * 100;
+            $bintang1 = $bintang1 / $jumlahReview * 100;
             //dd($jumlahReview);
         }
 
-        $bintang5 = $bintang5 / $jumlahReview * 100;
-        $bintang4 = $bintang4 / $jumlahReview * 100;
-        $bintang3 = $bintang3 / $jumlahReview * 100;
-        $bintang2 = $bintang2 / $jumlahReview * 100;
-        $bintang1 = $bintang1 / $jumlahReview * 100;
 
         return view('reviewFreelancer', [
             'dataReview' => $review,
@@ -381,7 +381,7 @@ class profilController extends Controller
 
         $countNotif = notificationModel::where('customer_id', $idCust)->where('status', "S")->count();
 
-        FacadesSession::put('notif',$countNotif);
+        FacadesSession::put('notif', $countNotif);
         return Redirect::back();
     }
 }
