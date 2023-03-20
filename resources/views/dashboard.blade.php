@@ -2,7 +2,6 @@
 
 @section('content')
     <center>
-        <input type="hidden" id="hidNotif" value={{ session()->get('notif') }}>
         <table style="height: 100%">
             <tr>
                 <td class="tdPersonalInfo">
@@ -11,7 +10,6 @@
                             <h5 class="card-title">Proyek Terakhir</h5>
                             <div class="listRecentProject">
                                 <table>
-
                                     <?php
                                     $i = 0;
                                     foreach ($modul as $itemModul) {
@@ -103,34 +101,6 @@
 
     <script>
         (function() {
-            var notif = document.getElementById("hidNotif");
-            console.log("I am here");
-            // Wrapper to support first and second origin trial
-            // See https://web.dev/badging-api/ for details.
-            function setBadge() {
-                console.log('set');
-                if (navigator.setAppBadge) {
-                    console.log('setBadge');
-                    navigator.setAppBadge(notif.value);
-                } else if (navigator.setExperimentalAppBadge) {
-                    navigator.setExperimentalAppBadge(notif.value);
-                } else if (window.ExperimentalBadge) {
-                    window.ExperimentalBadge.set(notif.value);
-                }
-            }
-
-            // Wrapper to support first and second origin trial
-            // See https://web.dev/badging-api/ for details.
-            function clearBadge() {
-                if (navigator.clearAppBadge) {
-                    navigator.clearAppBadge();
-                } else if (navigator.clearExperimentalAppBadge) {
-                    navigator.clearExperimentalAppBadge();
-                } else if (window.ExperimentalBadge) {
-                    window.ExperimentalBadge.clear();
-                }
-            }
-
             navigator.serviceWorker.ready.then(function(sw) {
                 return sw.sync.register('sync');
             });

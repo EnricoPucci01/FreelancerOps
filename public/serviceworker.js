@@ -11,7 +11,7 @@ var filesToCache = [
     '/images/maskable_icon144144.png',
     '/images/maskable_icon152152.png',
     '/images/LogoTA.png',
-  	'/cssStyle.css',
+    '/cssStyle.css',
 ];
 
 // Cache on install
@@ -52,18 +52,51 @@ self.addEventListener("fetch", event => {
     )
 });
 
-self.addEventListener('sync', event =>{
-
+self.addEventListener('sync', event => {
     if (event.tag == 'sync') {
-        console.log('sync');
+        console.log('Backsync');
         event.waitUntil(badge());
     }
 });
 
-function badge(){
-    fetch("/setAppBadge").then(function(response){
-        if(response.status==200){
+function badge() {
+    console.log("I am here");
+    fetch("/setAppBadge")
+        .then((response) => response.json())
+        .then((responseJSON) => {
+            console.log(responseJSON);
             console.log('onload');
-        }
-    });
+            isSupported('v2', responseJSON);
+            isSupported('v1', responseJSON);
+            isSupported('v3', responseJSON);
+
+        });
+}
+
+function setBadge(badgeVal) {
+    console.log('set');
+    if (navigator.setAppBadge) {
+        console.log('setBadge');
+        navigator.setAppBadge(badgeVal);
+    } else if (navigator.setExperimentalAppBadge) {
+        navigator.setExperimentalAppBadge(badgeVal);
+    } else if (window.ExperimentalBadge) {
+        window.ExperimentalBadge.set(badgeVal);
+    }
+}
+
+
+function clearBadge() {
+    if (navigator.clearAppBadge) {
+        navigator.clearAppBadge();
+    } else if (navigator.clearExperimentalAppBadge) {
+        navigator.clearExperimentalAppBadge();
+    } else if (window.ExperimentalBadge) {
+        window.ExperimentalBadge.clear();
+    }
+}
+
+function isSupported(kind, badgeVal) {
+    console.log('supported', kind);
+    setBadge(badgeVal);
 }

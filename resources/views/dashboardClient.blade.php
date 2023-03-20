@@ -1,7 +1,6 @@
 @extends('header')
 @section('content')
     <center>
-        <input type="hidden" id="hidNotif" value={{session()->get('notif')}}>
         <table style="height: auto">
             <tr>
                 <td class='tdPersonalInfo'>
@@ -88,54 +87,9 @@
     </center>
     <script>
         (function() {
-            var notif = document.getElementById("hidNotif");
-            console.log("I am here");
-
-            if ('setExperimentalAppBadge' in navigator) {
-                isSupported('v2')
-            }
-
-            // Check if the previous API surface is supported.
-            if ('ExperimentalBadge' in window) {
-                isSupported('v1');
-            }
-
-            // Check if the previous API surface is supported.
-            if ('setAppBadge' in navigator) {
-                isSupported('v3');
-            }
-
-            // Update the UI to indicate whether the API is supported.
-            function isSupported(kind) {
-                console.log('supported', kind);
-                setBadge();
-            }
-
-            // Wrapper to support first and second origin trial
-            // See https://web.dev/badging-api/ for details.
-            function setBadge() {
-                console.log('set');
-                if (navigator.setAppBadge) {
-                    console.log('setBadge');
-                    navigator.setAppBadge(notif.value);
-                } else if (navigator.setExperimentalAppBadge) {
-                    navigator.setExperimentalAppBadge(notif.value);
-                } else if (window.ExperimentalBadge) {
-                    window.ExperimentalBadge.set(notif.value);
-                }
-            }
-
-            // Wrapper to support first and second origin trial
-            // See https://web.dev/badging-api/ for details.
-            function clearBadge() {
-                if (navigator.clearAppBadge) {
-                    navigator.clearAppBadge();
-                } else if (navigator.clearExperimentalAppBadge) {
-                    navigator.clearExperimentalAppBadge();
-                } else if (window.ExperimentalBadge) {
-                    window.ExperimentalBadge.clear();
-                }
-            }
+            navigator.serviceWorker.ready.then(function(sw) {
+                return sw.sync.register('sync');
+            });
         })();
     </script>
 @endsection
