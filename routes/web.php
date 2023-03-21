@@ -65,6 +65,7 @@ Route::View('/registerAdmin','PendaftaranAdmin');
 Route::post('/api/save-token',[chatController::class,'testChat']);
 Route::get('/testChatPage',[chatController::class,'getTestChat']);
 Route::post('/createChat',[chatController::class,'createChat']);
+Route::get('/setAppBadge',[loginController::class,'setAppBadge']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //CEK STATUS LOGIN USER YANG INGIN AKSES HALAMAN LAIN SELAIN YANG DI ATAS
@@ -158,7 +159,6 @@ Route::middleware([cekFreelancer::class])->group(function(){
 //Route Dashboard Freelancer
 //Route::get('/dashboardfreelancer', [loginController::class,'loadDashboardFreelancer'])->middleware(['auth'])->name('dashboardfreelancer');
 Route::get('/dashboardfreelancer',[loginController::class,'loadDashboardFreelancer']);
-Route::get('/setAppBadge',[loginController::class,'setAppBadge']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
