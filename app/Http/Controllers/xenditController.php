@@ -613,6 +613,7 @@ class xenditController extends Controller
             $tanggalAdmit = date('Y-m-d H:i:s');
             DB::beginTransaction();
         $inPenarikan = new penarikan();
+        $inPenarikan->berita = "Penarikan dana admin";
         $inPenarikan->cust_id = session()->get('cust_id');
         $inPenarikan->no_rek = $request['no_rek'];
         $inPenarikan->bank = $request['bank'];

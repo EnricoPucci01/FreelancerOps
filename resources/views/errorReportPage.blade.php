@@ -17,7 +17,7 @@
         <label for="desc" class="form-label mt-3" >Anda Dapat Menyertakan Input Yang Menyebabkan Error.</label>
         <textarea class="form-control" aria-label="Deskripsikan dalam 1200 huruf" name="errDesc" maxlength="1200" id='desc'></textarea>
 
-        <label for="formFile" class="form-label">Masukan File, Sebagai Bukti Error</label>
+        <label for="formFile" class="form-label mt-3">Masukan File, Sebagai Bukti Error (Max: 300MB)</label>
         <input class="form-control" type="file" name='fileError' id="formFile">
 
         <center>

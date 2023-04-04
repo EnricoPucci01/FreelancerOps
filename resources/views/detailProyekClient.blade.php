@@ -8,17 +8,18 @@
     <div style="margin: 20px 20px 20px 20px">
         <table style="width: 100%">
             <tr>
-                <td >
+                <td>
                     <h1>{{ $dataproyek['nama_proyek'] }}
                     </h1>
-                    @if ($dataproyek['project_active']=='false')
-                    <h4>(<mark class="text-danger" style="background: none;">Tidak Aktif</mark>)</h4>
+                    @if ($dataproyek['project_active'] == 'false')
+                        <h4>(<mark class="text-danger" style="background: none;">Tidak Aktif</mark>)</h4>
                     @endif
                 </td>
 
                 <td style=" text-align: right;">
-                    @if ($dataproyek['project_active']=='false')
-                        <a href={{url("/generatevaPostMagang/$dataproyek[proyek_id]")}} class="btn btn-success">Aktifkan Proyek Sekarang</a>
+                    @if ($dataproyek['project_active'] == 'false')
+                        <a href={{ url("/generatevaPostMagang/$dataproyek[proyek_id]") }} class="btn btn-success">Aktifkan
+                            Proyek Sekarang</a>
                     @endif
                 </td>
             </tr>
@@ -55,6 +56,9 @@
                 <td>
                     Jumlah Pendaftar
                 </td>
+                <td>
+                    Status Modul
+                </td>
                 @if ($accessor == 'c')
                     <td>
 
@@ -88,6 +92,24 @@
                                 {{ $applicant['pendaftar'] }}
                             @endif
                         @endforeach
+                    </td>
+                    <td>
+                        @php
+                            $bool = false;
+                        @endphp
+                        @foreach ($modulDiambil as $item)
+                            @if ($modul['modul_id'] == $item['modul_id'])
+                                {{ $item['status'] }}
+                                @php
+                                    $bool=true;
+                                @endphp
+                            @endif
+                        @endforeach
+                        @php
+                            if (!$bool) {
+                                echo"Rekrutmen";
+                            }
+                        @endphp
                     </td>
                     <td>
                         @if ($accessor == 'c')
@@ -174,8 +196,8 @@
                                                     </div>
                                                     {{-- --------------------------------------------------------------------------------------------------- --}}
                                                     <a class='btn btn-success btn-sm '
-                                                    href={{ url("/review/$modul[modul_id]/$pay[cust_id]/$dataproyek[cust_id]") }}>Review</a>
-                                                @endif
+                                                        href={{ url("/review/$modul[modul_id]/$pay[cust_id]/$dataproyek[cust_id]") }}>Review</a>
+                                            @endif
 
                                             @if ($pay['status'] == 'Completed')
                                                 @foreach ($modulDiambil as $diambil)
@@ -183,16 +205,14 @@
                                                         <a class='btn btn-primary btn-sm'
                                                             href={{ url("/loadProgress/$modul[modul_id]/$diambil[modultaken_id]") }}>Lihat
                                                             Progress</a>
-
                                                     @endif
                                                 @endforeach
                                                 <a class='btn btn-success btn-sm '
-                                                href={{ url("/review/$modul[modul_id]/$pay[cust_id]/$dataproyek[cust_id]") }}>Review</a>
+                                                    href={{ url("/review/$modul[modul_id]/$pay[cust_id]/$dataproyek[cust_id]") }}>Review</a>
                                             @endif
                                         @endif
                                     @endforeach
                                 @endif
-
                             @endif
                         @endif
                 </tr>

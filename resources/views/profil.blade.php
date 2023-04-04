@@ -55,47 +55,50 @@
                       </ul>
                 </td>
 
-                    @if (session()->get('role')=='freelancer' || $role=='c')
-                        <td style="margin: auto;
-                            width: 100%;
-                            display: flex;
-                                justify-content: center;">
-                            <table>
-                                <tr>
-                                    <td >
-                                        <div>
-                                            <div class="mb-2">
-                                                <span class="fw-bold fs-4" >Rating</span>
-                                            </div>
+                <td style="margin: auto;
+                width: 100%;
+                display: flex;
+                    justify-content: center;">
+                <table>
+                    <tr>
+                        <td >
+                            <div>
+                                <div class="mb-2">
+                                    <span class="fw-bold fs-4" >Rating</span>
+                                </div>
 
-                                            <div class="mb-1">
-                                                <div class="rate fs-5" >
-                                                    @php
-                                                        $star=$bintang;
-                                                        for($i = 0; $i < 5; $i++){
-                                                            if($star>=1){
-                                                                echo"<i class='bi bi-star-fill' style='color:#ffc700'></i>";
-                                                            }
-                                                            else if($star>0){
-                                                                echo"<i class='bi bi-star-half' style='color:#ffc700'></i>";
-                                                            }
-                                                            else if($star<=0){
-                                                                echo"<i class='bi bi-star' style='color:gray'></i>";
-                                                            }
-                                                            $star--;
-                                                        }
-                                                    @endphp
-                                                </div>
-                                            </div>
-                                            <div class="mb-1 mt-2">
-                                                <a href={{url("/loadReview/$dataCust[cust_id]")}} class="btn btn-outline-success btn-sm" style="padding: 0px; width: 100px">Lihat</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                                <div class="mb-1">
+                                    <div class="rate fs-5" >
+                                        @php
+                                            $star=$bintang;
+                                            for($i = 0; $i < 5; $i++){
+                                                if($star>=1){
+                                                    echo"<i class='bi bi-star-fill' style='color:#ffc700'></i>";
+                                                }
+                                                else if($star>0){
+                                                    echo"<i class='bi bi-star-half' style='color:#ffc700'></i>";
+                                                }
+                                                else if($star<=0){
+                                                    echo"<i class='bi bi-star' style='color:gray'></i>";
+                                                }
+                                                $star--;
+                                            }
+                                        @endphp
+                                    </div>
+                                </div>
+                                <div class="mb-1 mt-2">
+                                    @if ( session()->get('role')=="client"||$role == 'v')
+                                    <a href={{url("/loadReviewClient/$dataCust[cust_id]")}} class="btn btn-outline-success btn-sm" style="padding: 0px; width: 100px">Lihat</a>
+                                    @else
+                                    <a href={{url("/loadReview/$dataCust[cust_id]")}} class="btn btn-outline-success btn-sm" style="padding: 0px; width: 100px">Lihat</a>
+                                    @endif
+
+                                </div>
+                            </div>
                         </td>
-                    @endif
+                    </tr>
+                </table>
+            </td>
 
                 <td>
 

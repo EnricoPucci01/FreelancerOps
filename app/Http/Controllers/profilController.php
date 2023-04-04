@@ -11,12 +11,14 @@ use App\Models\payment;
 use App\Models\penarikan;
 use App\Models\profil;
 use App\Models\review;
+use App\Models\reviewClient;
 use App\Models\sertifikat;
 use App\Models\tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use App\Models\tambahRekening;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Redirect;
 
 class profilController extends Controller
@@ -31,9 +33,14 @@ class profilController extends Controller
 
         $sertifikat = sertifikat::where('cust_id', $custId)->paginate(5);
         // $sertifikat=json_decode(json_encode($sertifikat),true);
+        if($role=="v" || session()->get('role')=="client"){
+            $review = reviewClient::where('client_id', $custId)->get();
+            $review = json_decode(json_encode($review), true);
+        }else{
+            $review = review::where('freelancer_id', $custId)->get();
+            $review = json_decode(json_encode($review), true);
+        }
 
-        $review = review::where('freelancer_id', $custId)->get();
-        $review = json_decode(json_encode($review), true);
 
         $proyekSelesai = modulDiambil::where('cust_id', $custId)->where('status', 'selesai')->count();
 
@@ -300,6 +307,77 @@ class profilController extends Controller
         ]);
     }
 
+    public function loadReviewClient($custId){
+        $review = reviewClient::where('client_id', $custId)->get();
+        $review = json_decode(json_encode($review), true);
+
+        //dd($review);
+
+        $reviewclient = reviewClient::where('client_id', $custId)->get('freelancer_id');
+        $reviewclient = json_decode(json_encode($reviewclient), true);
+
+        $reviewmodul = reviewClient::where('client_id', $custId)->get('modul_id');
+        $reviewmodul = json_decode(json_encode($reviewmodul), true);
+
+        $client = customer::whereIn('cust_id', $reviewclient)->get();
+        $client = json_decode(json_encode($client), true);
+
+        $modul = modul::whereIn('modul_id', $reviewmodul)->get();
+        $modul = json_decode(json_encode($modul), true);
+
+        $profile = profil::get();
+
+        $totalBintang = 0;
+        $rataRata = 0;
+        $jumlahReview = 0;
+        $bintang5 = 0;
+        $bintang4 = 0;
+        $bintang3 = 0;
+        $bintang2 = 0;
+        $bintang1 = 0;
+        if (count($review) > 0) {
+            $jumlahReview = count($review);
+            foreach ($review as $bintang) {
+                $totalBintang = $totalBintang + $bintang['bintang'];
+
+                if ($bintang['bintang'] == 5) {
+                    $bintang5++;
+                } else if ($bintang['bintang'] == 4) {
+                    $bintang4++;
+                } else if ($bintang['bintang'] == 3) {
+                    $bintang3++;
+                } else if ($bintang['bintang'] == 2) {
+                    $bintang2++;
+                } else if ($bintang['bintang'] == 1) {
+                    $bintang1++;
+                }
+            }
+
+            $rataRata = $totalBintang / $jumlahReview;
+            $bintang5 = $bintang5 / $jumlahReview * 100;
+            $bintang4 = $bintang4 / $jumlahReview * 100;
+            $bintang3 = $bintang3 / $jumlahReview * 100;
+            $bintang2 = $bintang2 / $jumlahReview * 100;
+            $bintang1 = $bintang1 / $jumlahReview * 100;
+            //dd($jumlahReview);
+        }
+
+
+        return view('reviewClient', [
+            'dataReview' => $review,
+            'client' => $client,
+            'modul' => $modul,
+            'rataRata' => $rataRata,
+            'jumlahReview' => $jumlahReview,
+            'profil' => $profile,
+            'bintang5' => $bintang5,
+            'bintang4' => $bintang4,
+            'bintang3' => $bintang3,
+            'bintang2' => $bintang2,
+            'bintang1' => $bintang1,
+        ]);
+    }
+
     public function loadHistoriProyek($custId)
     {
         $listModulSelesai = modulDiambil::where('cust_id', $custId)->where('status', 'selesai')->get('modul_id');
@@ -384,4 +462,5 @@ class profilController extends Controller
         FacadesSession::put('notif', $countNotif);
         return Redirect::back();
     }
+
 }

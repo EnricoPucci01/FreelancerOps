@@ -62,6 +62,7 @@ class adminController extends Controller
 
             $insertPenarikan = new penarikan();
             $insertPenarikan->cust_id = Session::get('cust_id');
+            $insertPenarikan->berita = "Penarikan dana";
             $insertPenarikan->no_rek = $request->input('no_rek');
             $insertPenarikan->bank = $request->input('bank');
             $insertPenarikan->jumlah = str_replace(".","",$request->input('total_penarikan'));

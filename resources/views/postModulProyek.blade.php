@@ -1,7 +1,7 @@
 @extends('header')
 @section('content')
     <center>
-        <form action={{ url('/submitpostproject') }} method="POST" style="padding: 10px">
+        <form action={{ url('/submitpostproject') }} method="POST" style="padding: 10px" enctype="multipart/form-data">
             @csrf
             @method('POST')
             <input type='hidden' name="tipeProyek" id="tipeProyek" value={{ session()->get('tipe_proyek') }}>
@@ -105,6 +105,9 @@
                                     Deskripsi
                                 </td>
                                 <td>
+                                    Dokumen Modul
+                                </td>
+                                <td>
                                     Bayaran
                                 </td>
                                 <td>
@@ -126,6 +129,9 @@
                                     </td>
                                     <td>
                                         Deskripsi
+                                    </td>
+                                    <td>
+                                        Dokumen Modul
                                     </td>
                                     <td>
                                         Rentang Bayaran Dari

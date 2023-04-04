@@ -1,6 +1,6 @@
 @extends('header')
 @section('content')
-
+<link rel="stylesheet" href="<?php echo asset('reviewCss.css')?>" type="text/css">
 <style type="text/css">
     .pagination {
        justify-content: center;
@@ -51,18 +51,19 @@
         @foreach ($listproyek as $proyek)
             <tr>
                 <div class="card mb-3" style="width: 30rem; margin-top: 20px">
-                    <div class="card-body">
+                    <div class="card-header">
                         <h5 class="card-title">{{$proyek->nama_proyek}}</h5>
-
                         @foreach ($listkategoriJob as $katJob)
                             @if ($katJob['kategorijob_id']==$proyek->kategorijob_id)
                                 <h6 class="card-subtitle mb-2 text-muted">{{$katJob['judul_kategori']}}</h5>
                             @endif
                         @endforeach
+                    </div>
+                    <div class="card-body">
 
 
                         <p class="card-text">{{$proyek->desc_proyek}}</p>
-                        <p class="card-text">Proyek Dimulai Pada {{Carbon\Carbon::parse($proyek->start_proyek)->format("d-m-Y")}}</p>
+                        <p class="card-text">Proyek Dimulai Pada <b>{{Carbon\Carbon::parse($proyek->start_proyek)->format("d-m-Y")}}</b><br>Deadline Pada <b>{{Carbon\Carbon::parse($proyek->deadline)->format("d-m-Y")}}</b></p>
                         <hr>
                         <div class="card-text">
                             @foreach ($listtag as $tag)

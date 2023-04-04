@@ -2,26 +2,26 @@
 @section('content')
 
     <div style="margin: 20px 20px 20px 20px">
-        <form action="{{url("/submitReview/$freelancer[cust_id]/$client/$modul[modul_id]")}}" method="post" enctype="multipart/form-data">
+        <form action="{{url("/submitReviewClient/$modulId/$proyekId/$freelancerId/$clientId")}}" method="post" enctype="multipart/form-data">
             @method('POST')
             @csrf
             <div class="card mt-3 center" style="width:50%">
                 <div class="card-header">
-                  <h1 class="fw-bold">{{$freelancer['nama']}}</h1>
+                  <h1 class="fw-bold">{{$clientName->nama}}</h1>
                 </div>
 
                 <div class="card-body">
                     <table style="width: 100%">
                       <tr>
                         <td>
-                          <h5 class="card-title">Review Untuk {{$modul['title']}}</h5>
+                            <h5 class="card-title">Review Untuk Modul {{$modulName->title}} Dari Proyek {{$proyekName->nama_proyek}}</h5>
                         </td>
 
                       </tr>
 
                       <tr>
                         <td>
-                          <p class="form-label mt-3" >Apakah Kinerja Freelancer {{$freelancer['nama']}} Memuaskan?</p>
+                          <p class="form-label mt-3" >Dari 1 untuk sangat tidak menyenangkan hingga 5 untuk sangat menyenangkan, Seberapa menyenangkan pengalaman anda berkerja sama dengan Client {{$clientName->nama}}?</p>
                         </td>
 
                       </tr>
@@ -46,7 +46,7 @@
 
                       <tr>
                         <td>
-                          <p class="form-label mt-3" style="margin-top:50px">Pengalaman Anda Bekerja Dengan Freelancer Ini</p>
+                          <p class="form-label mt-3" style="margin-top:50px">Pengalaman Anda Bekerja Dengan Client Ini</p>
                         </td>
 
                       </tr>
@@ -62,7 +62,7 @@
 
                     <center>
                         <button type="submit" class="btn btn-success mt-3">Submit</button>
-                        <a href={{url("/loadDetailProyekClient/$proyekId/c/".session()->get('cust_id'))}} class="btn btn-warning mt-3">Kembali</a>
+                        <a href={{url("/loadDetailModulFreelancer/$proyekId/".session()->get('cust_id'))}} class="btn btn-warning mt-3">Kembali</a>
                     </center>
                 </div>
               </div>

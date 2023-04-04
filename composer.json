@@ -26,6 +26,7 @@
         "silviolleite/laravelpwa": "^2.0",
         "snapappointments/bootstrap-select": "^1.13",
         "spatie/laravel-google-calendar": "^3.5",
+        "tanthammar/laravel-window-size": "^2.1",
         "xendit/xendit-php": "^2.17"
     },
     "require-dev": {

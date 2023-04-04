@@ -106,12 +106,14 @@
                             Tanggal Penyetujuan
                         </td>
                         <td>
+                            Berita
+                        </td>
+                        <td>
                             No. Rekening
                         </td>
                         <td>
                             Bank
                         </td>
-
                         <td>
                             Jumlah
                         </td>
@@ -126,6 +128,9 @@
                             </td>
                             <td>
                                 {{ $penarikan['tanggal_admit'] }}
+                            </td>
+                            <td>
+                                {{ $penarikan['berita'] }}
                             </td>
                             <td>
                                 {{ $penarikan['no_rek'] }}

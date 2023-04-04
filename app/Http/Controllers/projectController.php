@@ -14,6 +14,7 @@ use App\Models\payment;
 use App\Models\progress;
 use App\Models\proyek;
 use App\Models\review;
+use App\Models\reviewClient;
 use App\Models\tag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -79,6 +80,24 @@ class projectController extends Controller
             Session::put('deadline', $request->input("deadline"));
             Session::put('tanggal_mulai', $request->input("tanggal_mulai"));
 
+            $filename = "";
+
+            if (!empty($request->file("dokumen"))) {
+                $filename = "Dokumen " . $request->input("name_project") . "." . $request->file("dokumen")->getClientOriginalExtension();
+                $path = $request->file('dokumen')->storeAs("dokumen", $filename, 'public');
+                if ($path != "" && $path != null) {
+                    $image = $request->file('dokumen'); //image file from frontend
+                    $firebase_storage_path = 'dokumen/';
+                    $localfolder = public_path('firebase-temp-uploads') . '/';
+                    if ($image->move($localfolder, $filename)) {
+                        $uploadedfile = fopen($localfolder . $filename, 'r');
+                        app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+                        //will remove from local laravel folder
+                        unlink($localfolder . $filename);
+                    }
+                }
+            }
+            Session::put('dokumen_name', $filename);
             $tag = kategori::get();
             $kategoriJob = jobKategori::get();
             return view('postModulProyek', [
@@ -97,25 +116,61 @@ class projectController extends Controller
         $modulMagangArr = [];
         if (Session::get('tipe_proyek') == 'magang') {
             for ($i = 0; $i < (int)$request->input('hid_val'); $i++) {
+
+                $filename = "";
+
+                if (!empty($request->file("dokumenModul" . $i . ""))) {
+                    $filename = "DokumenModul " . $request->input("nama_modul" . $i . "") . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                    $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
+                    if ($path != "" && $path != null) {
+                        $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
+                        $firebase_storage_path = 'dokumenModul/';
+                        $localfolder = public_path('firebase-temp-uploads') . '/';
+                        if ($image->move($localfolder, $filename)) {
+                            $uploadedfile = fopen($localfolder . $filename, 'r');
+                            app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+                            //will remove from local laravel folder
+                            unlink($localfolder . $filename);
+                        }
+                    }
+                }
                 $modulTemp = array(
                     "nama_modul" => $request->input("nama_modul" . $i . ""),
                     "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
+                    "dokumen_modul" => $filename,
                     "bayaran1" => $request->input("rentang1_bayaran" . $i . ""),
                     "bayaran2" => $request->input("rentang2_bayaran" . $i . ""),
                     "deadline_modul" => $request->input("deadline_modul" . $i . ""),
                 );
                 array_push($modulMagangArr, $modulTemp);
-
                 if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
                     $deadlineModulIsGreater = true;
                 }
             }
-        }
-        else {
+        } else {
             for ($i = 0; $i < (int)$request->input('hid_val'); $i++) {
+
+                $filename = "";
+
+                if (!empty($request->file("dokumenModul" . $i . ""))) {
+                    $filename = "DokumenModul " . $request->input("nama_modul" . $i . "") . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                    $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
+                    if ($path != "" && $path != null) {
+                        $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
+                        $firebase_storage_path = 'dokumenModul/';
+                        $localfolder = public_path('firebase-temp-uploads') . '/';
+                        if ($image->move($localfolder, $filename)) {
+                            $uploadedfile = fopen($localfolder . $filename, 'r');
+                            app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+                            //will remove from local laravel folder
+                            unlink($localfolder . $filename);
+                        }
+                    }
+                }
                 $modulTemp = array(
                     "nama_modul" => $request->input("nama_modul" . $i . ""),
                     "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
+                    "dokumen_modul" => $filename,
                     "bayaran" => $request->input("bayaran" . $i . ""),
                     "deadline_modul" => $request->input("deadline_modul" . $i . ""),
                 );
@@ -134,7 +189,7 @@ class projectController extends Controller
             $postProject->cust_id = Session::get('cust_id');
             $postProject->nama_proyek = Session::get('name_project');
             $postProject->desc_proyek = Session::get('desc_project');
-
+            $postProject->dokumentasi_proyek = Session::get('dokumen_name');
             if (Session::get('tipe_proyek') == "magang") {
                 $postProject->total_pembayaran = "0";
                 $postProject->range_bayaran1 = $request->input('rentang_pembayaran1');
@@ -169,6 +224,7 @@ class projectController extends Controller
                         $modul->proyek_id = $id;
                         $modul->title = $itemArr['nama_modul'];
                         $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
+                        $modul->dokumentasi = $itemArr['dokumen_modul'];
                         $modul->bayaran = 0;
                         $modul->bayaran_min = $itemArr['bayaran1'];
                         $modul->bayaran_max = $itemArr['bayaran2'];
@@ -184,6 +240,7 @@ class projectController extends Controller
                         $modul->proyek_id = $id;
                         $modul->title = $itemArr['nama_modul'];
                         $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
+                        $modul->dokumentasi = $itemArr['dokumen_modul'];
                         $modul->bayaran = $itemArr['bayaran'];
                         $modul->bayaran_min = 0;
                         $modul->bayaran_max = 0;
@@ -292,10 +349,29 @@ class projectController extends Controller
         $modulTaken = modulDiambil::where('proyek_id', $id)->where('cust_id', $custId)->where('status', '!=', 'dibatalkan')->get();
         $modulTaken = json_decode(json_encode($modulTaken), true);
 
+        $clientName = customer::where('cust_id', $dataproyek['cust_id'])->first();
+
+        $review = reviewClient::where('client_id', $dataproyek['cust_id'])->get();
+
+        $totalBintang = 0;
+        $rataRata = 0;
+        $jumlahReview = 0;
+        if (count($review) > 0) {
+            $jumlahReview = count($review);
+            foreach ($review as $bintang) {
+                $totalBintang = $totalBintang + $bintang['bintang'];
+            }
+
+            $rataRata = $totalBintang / $jumlahReview;
+            //dd($jumlahReview);
+        }
+
         return view('detailproyek', [
             "dataproyek" => $dataproyek,
             "datamodul" => $datamodul,
-            'datamodultaken' => $modulTaken
+            'datamodultaken' => $modulTaken,
+            "avgBintang" => $rataRata,
+            'clientNama' => $clientName
         ]);
     }
 
@@ -307,7 +383,7 @@ class projectController extends Controller
         $datamodul = modul::where('proyek_id', $id)->get();
         $datamodul = json_decode(json_encode($datamodul), true);
 
-        $modulTaken = modulDiambil::where('proyek_id', $id)->where('status', "!=", 'dibatalkan')->get();
+        $modulTaken = modulDiambil::where('proyek_id', $id)->where('status', '!=', 'dibatalkan')->get();
         $modulTaken = json_decode(json_encode($modulTaken), true);
 
         $payment = payment::get();
@@ -327,8 +403,10 @@ class projectController extends Controller
 
         $db = DB::select($query);
         $db = json_decode(json_encode($db), true);
-        //dd($db);
 
+        $modulDibatalkan = modulDiambil::where('proyek_id', $id)->where('status', 'dibatalkan')->distinct()->get('modul_id');
+        $modulDibatalkan = json_decode(json_encode($modulDibatalkan), true);
+        //dd($modulTaken);
         return view('detailProyekClient', [
             "dataproyek" => $dataproyek,
             "datamodul" => $datamodul,
@@ -336,15 +414,16 @@ class projectController extends Controller
             'datapayment' => $payment,
             'accessor' => $accessor,
             'id' => Session::get("cust_id"),
-            'dataApplicant' => $db
+            'dataApplicant' => $db,
+            'modulDibatalkan'=>$modulDibatalkan
         ]);
     }
 
     public function ajukancv(Request $request)
     {
-        if($request->input('checkambil')==null){
+        if ($request->input('checkambil') == null) {
             return Redirect::back()->with("error", 'Anda belum memilih modul!');
-        } else{
+        } else {
             if (!empty($request->file("filecv"))) {
                 DB::beginTransaction();
                 //var_dump($request->input('checkambil'));
@@ -373,14 +452,14 @@ class projectController extends Controller
                         $newApplicant->status = 'pending';
                         $newApplicant->save();
 
-                        $modul=modul::where("modul_id",$diambil)->first();
-                        $proyek=proyek::where("proyek_id",$modul->proyek_id)->first();
+                        $modul = modul::where("modul_id", $diambil)->first();
+                        $proyek = proyek::where("proyek_id", $modul->proyek_id)->first();
 
 
                         $newNotif = new notificationModel();
-                        $newNotif->customer_id=$proyek->cust_id;
-                        $newNotif->message=session::get("name")." telah mendaftar untuk modul ".$modul->title;
-                        $newNotif->status="S";
+                        $newNotif->customer_id = $proyek->cust_id;
+                        $newNotif->message = session::get("name") . " telah mendaftar untuk modul " . $modul->title;
+                        $newNotif->status = "S";
                         $newNotif->save();
                     }
                     if ($newApplicant) {
@@ -398,7 +477,6 @@ class projectController extends Controller
                 return Redirect::back()->with("error", 'CV anda kosong');
             }
         }
-
     }
 
     public function loadApplicant($modulId, $proyekId, $idCust)
@@ -412,6 +490,8 @@ class projectController extends Controller
         $applicantModul = applicant::where('proyek_id', $proyekId)->where('modul_id', $modulId)->get();
         $applicantModul = json_decode(json_encode($applicantModul), true);
 
+        $judulModul=modul::where('modul_id',$modulId)->first();
+
         //var_dump($customerList);
 
         return view(
@@ -421,7 +501,8 @@ class projectController extends Controller
                 "cv" => $applicantModul,
                 "modulId" => $modulId,
                 "proyekId" => $proyekId,
-                'idCust' => $idCust
+                'idCust' => $idCust,
+                'judul' => $judulModul
             ]
         );
     }
@@ -447,16 +528,16 @@ class projectController extends Controller
             $delApplicant->status = 'diterima';
             $delApplicant->save();
             if ($delApplicant) {
-                $newNotif =new notificationModel();
-                $newNotif->customer_id=$custId;
-                $newNotif->message = "CV anda untuk modul ".$modul->title." telah di terima, Silahkan melakukan tanda tangan pada kontrak untuk menjamin keamanan.";
-                $newNotif->status="S";
+                $newNotif = new notificationModel();
+                $newNotif->customer_id = $custId;
+                $newNotif->message = "CV anda untuk modul " . $modul->title . " telah di terima, Silahkan melakukan tanda tangan pada kontrak untuk menjamin keamanan.";
+                $newNotif->status = "S";
                 $newNotif->save();
 
-                $newNotifClient= new notificationModel();
-                $newNotifClient->customer_id=Session::get("cust_id");
-                $newNotifClient->message="Anda berhasil menerima ".$nama->nama." sebagai freelancer, Silahkan melakukan tanda tangan pada konreak untuk menjamin keamanan.";
-                $newNotifClient->status="S";
+                $newNotifClient = new notificationModel();
+                $newNotifClient->customer_id = Session::get("cust_id");
+                $newNotifClient->message = "Anda berhasil menerima " . $nama->nama . " sebagai freelancer, Silahkan melakukan tanda tangan pada konreak untuk menjamin keamanan.";
+                $newNotifClient->status = "S";
                 $newNotifClient->save();
 
                 $delApplicant->delete();
@@ -480,7 +561,7 @@ class projectController extends Controller
 
     public function loadListProyekFreelancer($custId)
     {
-        $modulDiambil = modulDiambil::where('cust_id', $custId)->where('status', "!=", 'selesai')->where('status', '!=', 'dibatalkan')->get('modul_id');
+        $modulDiambil = modulDiambil::where('cust_id', $custId)->get('modul_id');
         $modulDiambil = json_decode(json_encode($modulDiambil), true);
 
         $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->paginate(5);
@@ -495,6 +576,8 @@ class projectController extends Controller
 
     public function loadDetailModulFreelancer($modulId, $custId)
     {
+        $status = "";
+        $tooltip = "";
         $dataModul = modul::where('modul_id', $modulId)->first();
         $dataModul = json_decode(json_encode($dataModul), true);
 
@@ -504,12 +587,33 @@ class projectController extends Controller
 
         $kontrak = modulDiambil::where('modul_id', $modulId)->first();
         $kontrak = json_decode(json_encode($kontrak), true);
+
+        $paymentStatus = payment::where('modul_id', $modulId)->first();
+
+        if ($paymentStatus == null) {
+            $status = "Tidak ada Pembayaran";
+            $tooltip = "Data pembayaran tidak ditemukan.";
+        } else if ($paymentStatus->status == "Paid") {
+            $status = "Pembayaran Selesai";
+            $tooltip = "Pembayaran telah dilakukan oleh client & Proyek sedang diperiksa.";
+        } else if ($paymentStatus->status == "unpaid") {
+            $status = "Belum Dibayar";
+            $tooltip = "Tagihan telah dibuat tetapi pembayaran belum dilakukan.";
+        } else if ($paymentStatus->status == "closed") {
+            $status = "Penutupan pembayaran diajukan";
+            $tooltip = "Client telah mengajukan permohonan penutupan pembayaran kepada admin.";
+        } else if ($paymentStatus->status == "Completed") {
+            $status = "Pembayaran Ditutup";
+            $tooltip = "Penutupan pembayaran disetujui dan pembayaran telah di teruskan kepada freelancer.";
+        }
         //dd($kontrak);
         return view('detailModulFreelancer', [
             'dataModul' => $dataModul,
             'dataProyek' => $dataProyek,
             'kontrak' => $kontrak,
             'custId' => $custId,
+            'statusPay' => $status,
+            'tooltip' => $tooltip
         ]);
     }
 
@@ -527,7 +631,7 @@ class projectController extends Controller
         DB::beginTransaction();
         $filename = "";
         $status = '';
-        $message="";
+        $message = "";
         if ($request->has('cb')) {
             $status = 'finish';
             $message = " telah menyelesaikan proyek untuk modul ";
@@ -554,8 +658,8 @@ class projectController extends Controller
             }
         }
         $modul = modul::where('modul_id', $modulId)->first();
-        $proyek= proyek::where("proyek_id", $modul->proyek_id)->first();
-        $custname= customer::where("cust_id", $proyek->cust_id)->first();
+        $proyek = proyek::where("proyek_id", $modul->proyek_id)->first();
+        $custname = customer::where("cust_id", $proyek->cust_id)->first();
         $updateProgress = new progress();
         $updateProgress->modul_id = $modulId;
         $updateProgress->upload_time = $UploadDate;
@@ -564,10 +668,10 @@ class projectController extends Controller
         $updateProgress->status = $status;
         $updateProgress->save();
 
-        $newNotif= new notificationModel();
-        $newNotif->customer_id= $custname->cust_id;
-        $newNotif->message=Session::get("name").$message.$modul->title;
-        $newNotif->status="S";
+        $newNotif = new notificationModel();
+        $newNotif->customer_id = $custname->cust_id;
+        $newNotif->message = Session::get("name") . $message . $modul->title;
+        $newNotif->status = "S";
         $newNotif->save();
         if ($updateProgress) {
             if ($status == "finish") {
@@ -701,12 +805,12 @@ class projectController extends Controller
         $insertReview->review_desc = $review;
         $insertReview->review_time = $reviewTime;
         $insertReview->save();
-        $cust= customer::where("cust_id",$clientId)->first();
-        $modul= modul::where("modul_id",$modulId)->first();
-        $newNotif= new notificationModel();
-        $newNotif->customer_id=$freelancerId;
-        $newNotif->message="Review telah di berikan kepada anda oleh ".$cust->nama." untuk modul ".$modul->title;
-        $newNotif->status="S";
+        $cust = customer::where("cust_id", $clientId)->first();
+        $modul = modul::where("modul_id", $modulId)->first();
+        $newNotif = new notificationModel();
+        $newNotif->customer_id = $freelancerId;
+        $newNotif->message = "Review telah di berikan kepada anda oleh " . $cust->nama . " untuk modul " . $modul->title;
+        $newNotif->status = "S";
         $newNotif->save();
 
         if ($insertReview && $newNotif) {
@@ -750,12 +854,12 @@ class projectController extends Controller
         $insertError->report_time = $date;
         $insertError->save();
 
-        $modul= modul::where("modul_id",$modulId)->first();
+        $modul = modul::where("modul_id", $modulId)->first();
 
-        $newNotif= new notificationModel();
-        $newNotif->customer_id= $freelancerId;
-        $newNotif->message="Error telah di laporkan untuk modul ".$modul->title;
-        $newNotif->status="S";
+        $newNotif = new notificationModel();
+        $newNotif->customer_id = $freelancerId;
+        $newNotif->message = "Error telah di laporkan untuk modul " . $modul->title;
+        $newNotif->status = "S";
         $newNotif->save();
         if ($insertError && $newNotif) {
             DB::commit();
@@ -818,13 +922,13 @@ class projectController extends Controller
             $progress->status = 'Error Fix';
             $progress->save();
 
-            $modul= modul::where("modul_id",$modulId)->first();
-            $proyek= proyek::where("proyek_id",$modul->proyek_id)->first();
+            $modul = modul::where("modul_id", $modulId)->first();
+            $proyek = proyek::where("proyek_id", $modul->proyek_id)->first();
 
-            $newNotif= new notificationModel();
-            $newNotif->customer_id=$proyek->cust_id;
-            $newNotif->message="Perbaikan laporan error tanggal ". $error['report_time']." untuk modul ".$modul->title." telah di berikan";
-            $newNotif->status="S";
+            $newNotif = new notificationModel();
+            $newNotif->customer_id = $proyek->cust_id;
+            $newNotif->message = "Perbaikan laporan error tanggal " . $error['report_time'] . " untuk modul " . $modul->title . " telah di berikan";
+            $newNotif->status = "S";
             $newNotif->save();
 
             if ($progress && $newNotif) {
@@ -844,8 +948,8 @@ class projectController extends Controller
 
     public function loadRecomendedProject($tipeRecommend)
     {
-        $proyekAmbil = modulDiambil::where("cust_id",Session::get('cust_id'))->count();
-        if($proyekAmbil>0){
+        $proyekAmbil = modulDiambil::where("cust_id", Session::get('cust_id'))->count();
+        if ($proyekAmbil > 0) {
             if ($tipeRecommend == 'Kategori') {
                 $proyekCount = DB::table('modul_diambil')
                     ->select('proyek_id', DB::raw('count(proyek_id) as total'))
@@ -861,7 +965,7 @@ class projectController extends Controller
                 $listKategoriJob = json_decode(json_encode($listKategoriJob), true);
 
                 //dd($proyekList);
-                $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
+                $recommendedProyek = proyek::where('project_active', 'true')->where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
                 $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
                 $listTag = tag::get();
                 $listTag = json_decode(json_encode($listTag), true);
@@ -891,7 +995,7 @@ class projectController extends Controller
                 $tag = json_decode(json_encode($tag), true);
 
                 //dd($proyekCount);
-                $recommendedProyek = proyek::where('project_active','true')->where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
+                $recommendedProyek = proyek::where('project_active', 'true')->where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
                 $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
 
                 $listTag = tag::get();
@@ -909,9 +1013,52 @@ class projectController extends Controller
                     'tipeRekomen' => 'Tag'
                 ]);
             }
-        }else{
+        } else {
             return Redirect::back()->with('error', 'Oops, Kita belum bisa memberi rekomendasi dikarenakan anda belum pernah mengambil proyek sebelumnya');
         }
+    }
 
+    public function reviewClientPage($modulId, $proyekId, $freelancerId, $clientId)
+    {
+        $clientNama = customer::where('cust_id', $clientId)->first();
+        $proyekNama = proyek::where('proyek_id', $proyekId)->first();
+        $modulNama = modul::where('modul_id', $modulId)->first();
+        return view('reviewPageClient', [
+            'freelancerId' => $freelancerId,
+            'clientId' => $clientId,
+            'modulId' => $modulId,
+            'proyekId' => $proyekId,
+            'clientName' => $clientNama,
+            'proyekName' => $proyekNama,
+            'modulName' => $modulNama
+        ]);
+    }
+
+    public function submitReviewClient(Request $request, $modulId, $proyekId, $freelancerId, $clientId)
+    {
+        $reviewClient = new reviewClient();
+        $reviewClient->freelancer_id = $freelancerId;
+        $reviewClient->client_id = $clientId;
+        $reviewClient->modul_id = $modulId;
+        $reviewClient->proyek_id = $proyekId;
+        $reviewClient->review = $request->input('revDesc');
+        $reviewClient->bintang = $request->input('rate');
+        $reviewClient->save();
+
+        $cust = customer::where("cust_id", $freelancerId)->first();
+        $modul = modul::where("modul_id", $modulId)->first();
+        $newNotif = new notificationModel();
+        $newNotif->customer_id = $clientId;
+        $newNotif->message = "Review telah di berikan kepada anda oleh " . $cust->nama . " untuk modul " . $modul->title;
+        $newNotif->status = "S";
+        $newNotif->save();
+
+        if ($reviewClient && $newNotif) {
+            DB::commit();
+            return Redirect::back()->with('success', 'Review Berhasil Diberikan!');
+        } else {
+            DB::rollback();
+            return Redirect::back()->with('error', 'Review Gagal Diberikan!');
+        }
     }
 }

@@ -17,11 +17,7 @@ use App\Http\Controllers\xenditController;
 use App\Http\Middleware\cekCLient;
 use App\Http\Middleware\cekFreelancer;
 use App\Http\Middleware\cekLogin;
-use App\Models\profil;
-use Google\Service\MyBusinessAccountManagement\Admin;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +40,9 @@ use Illuminate\Support\Facades\Session;
 Route::get('/', function () {
     return view('login');
 });
+Route::get('/freelanceropsadminlogin', function () {
+    return view('loginAdmin');
+});
 Route::get('/create-symlink', function () {
     symlink(storage_path('/app/public'), public_path('storage'));
     echo "Symlink Created. Thanks";
@@ -52,8 +51,9 @@ Route::get('/offline', function () {
 
     return view('vendor/laravelpwa/offline');
 
-    });
+});
 Route::get('/loginops',[loginController::class,'login']);
+Route::get('/loginopsAdmin',[loginController::class,'loginAdmin']);
 Route::get('/register', [registerController::class,'loadRegister']);
 Route::post('/submitregister',[registerController::class,'generateCode']);
 Route::get('/sendEmail/{mail}/{type}',[emailController::class,'sendEmail']);
@@ -80,6 +80,13 @@ Route::get('/browse',[projectController::class,'loadBrowseProject']);
 Route::get('/autoRejectApplicant',[loginController::class,'autoRejectApplicant']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Route Review
+Route::get('/review/{modulId}/{freelancerId}/{clientId}',[projectController::class,'reviewPage']);
+Route::post('/submitReview/{freelancerId}/{clientId}/{modulId}',[projectController::class,'submitReview']);
+Route::get('/reviewClient/{modulId}/{proyekId}/{freelancerId}/{clientId}',[projectController::class,'reviewClientPage']);
+Route::post('/submitReviewClient/{modulId}/{proyekId}/{freelancerId}/{clientId}',[projectController::class,'submitReviewClient']);
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //========================================================================================================================
 //ROUTE UNTUK USER CLIENT
@@ -113,13 +120,6 @@ Route::get('/loadHistoriTransaksi',[profilController::class,'loadHistoriTransaks
 //Route Error Report
 Route::get('/errorReport/{modulId}/{progressId}',[projectController::class,'loadErrorReport']);
 Route::post('/fileError/{modulId}/{freelancerId}/{progressId}',[projectController::class,'reportError']);
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//Route Review
-Route::get('/review/{modulId}/{freelancerId}/{clientId}',[projectController::class,'reviewPage']);
-Route::post('/submitReview/{freelancerId}/{clientId}/{modulId}',[projectController::class,'submitReview']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -283,7 +283,9 @@ Route::post('/submitChat/{roomId}',[chatController::class,'sendChat']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route Load Review Freelancer
 Route::get('/loadReview/{cust_id}',[profilController::class,'loadReview']);
+Route::get('/loadReviewClient/{cust_id}',[profilController::class,'loadReviewClient']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 Route::get('/loadProfil/{role}/{custId}',[profilController::class,'loadProfil']);
 Route::get('/loadEditProfil/{custId}',[profilController::class,'loadEditProfil']);

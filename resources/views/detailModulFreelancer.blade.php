@@ -8,13 +8,15 @@
 
             <table class="table table-striped" >
                 <tr>
-                    <th scope="row">
-                        <h1> {{$dataModul['title']}}</h1>
+                    <th scope="row" style="vertical-align: middle;">
+                        <h1>{{$dataModul['title']}}</h1>
+                        <h6>Status: <u data-toggle="tooltip" data-placement="bottom" title="{{$tooltip}}">{{$statusPay}}</u></h6>
                     </th>
                     <td></td>
                     {{-- <td scope="col" style="text-align: center;  vertical-align: middle;">
-                        <a href="{{url("/downloadKontrak/$kontrak[kontrak_kerja]")}}" class="btn btn-warning btn-lg"><i class="bi bi-download"></i></a>
+                        <i class="bi bi-check2-circle" style="font-size: 3em; color:green"></i>
                     </td> --}}
+                    {{-- <a href="{{url("/downloadKontrak/$kontrak[kontrak_kerja]")}}" class="btn btn-warning btn-lg"><i class="bi bi-download"></i></a> --}}
                 </tr>
             </table>
         <div>
@@ -42,6 +44,7 @@
 
         <center>
             <button type="submit" id='btSub' class="btn btn-success mt-3">Update Progress</button>
+            <a class="btn btn-success mt-3" href={{url("/reviewClient/$dataModul[modul_id]/$dataProyek[proyek_id]/$custId/$dataProyek[cust_id]")}}>Review Client</a>
         </center>
     </form>
 <script>

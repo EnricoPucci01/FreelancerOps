@@ -196,7 +196,7 @@
     </script>
 </head>
 
-<body class="bg-light">
+<body class="bg-light" style="padding:10px">
     @include('alert')
     @yield('content')
 

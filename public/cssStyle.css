@@ -7,7 +7,6 @@
 .mainLogo:hover{
     background-color: whitesmoke;
 }
-
   .topnav a {
     float: left;
     color: #f2f2f2;
@@ -29,19 +28,17 @@
   /*dashboard*/
 .recentProjectContainer{
     margin-top: 20px;
+    margin-bottom: 20px;
     box-shadow: 1px 1px 5px 5px gray;
-    height: 93%;
-    width: 500px;
-    padding: 10px;
+    padding: 3px;
 }
 
 .recentProjectContainerAdminFreelancer{
     margin-top: 20px;
     margin-bottom: 20px;
     box-shadow: 1px 1px 5px 5px gray;
-    height: 94%;
-    width: 500px;
-    padding: 10px;
+    vertical-align: top;
+    padding: 3px;
 }
 
 .viewAllRecentProject{
@@ -56,37 +53,39 @@
 .personalInfo{
     margin-top: 20px;
     box-shadow: 1px 1px 5px 5px gray;
-    height: 93%;
+    height: 90%;
     width: 500px;
     padding: 3px;
     margin-left: 30px;
 }
 
 .tdPersonalInfo{
+    width: 50%;
     vertical-align: top;
-    height: 400px;
+    float:left;
+    flex:1;
 }
 
 .tdPersonalInfoAdminFreelancer{
+    width: 50%;
     vertical-align: top;
+    float:left;
 }
 
 .personalInfoAdminFreelancer{
     margin-top: 20px;
     box-shadow: 1px 1px 5px 5px gray;
-    height: 50%;
-    width: 500px;
     padding: 3px;
     margin-left: 30px;
+    height: 100%;
 }
 
 .infoUang{
     margin-top: 20px;
     box-shadow: 1px 1px 5px 5px gray;
     height: 41%;
-    width: 95%;
+    width: 100%;
     padding: 3px;
-    margin-left: 30px;
 }
 
 /*Login*/

@@ -4,7 +4,7 @@
     <div class="card mt-3 mb-3" style="width: 70%;" >
         <div class="card-body">
           <h3 class="card-title">Post Project</h3>
-          <form action={{url("/postmodul")}} method="POST">
+          <form action={{url("/postmodul")}} method="POST" enctype="multipart/form-data">
             @csrf
             @method('POST')
               <table>
@@ -30,7 +30,16 @@
                         <textarea type="text" name="desc_project" class="form-control"> </textarea>
                       </td>
                   </tr>
-
+                  <tr>
+                    <td>
+                        <label for="dokumen" class="form-label">Dokumen mengenai proyek (PDF, JPG, PNG)</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                        <input class="form-control" type="file" name='dokumen' id="dokumen" accept=".pdf,.jpg,.png">
+                    </td>
+                  </tr>
                 <!-- Tipe Proyek -->
                 <tr>
                     <td>
