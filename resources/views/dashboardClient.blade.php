@@ -84,9 +84,15 @@
                     <div class='border border-dark bg-mute rounded' style="padding:5px;">
                         <table style="width: 100%">
                             <tr>
-                                <td style="width:42%;">
+                                <td style="width:30%;">
                                     <h6 class="card-subtitle mb-1 font-weight-bold text-dark fs-5">Total Proyek</h6>
                                     <h5 class="card-title text-dark text-uppercase fw-bold fs-4">{{$proyekTerbit}}</h5>
+                                </td>
+                                <td style="border-right:2px solid black;">
+                                </td>
+                                <td style="width:30%;">
+                                    <h6 class="ml-2 card-subtitle mb-1 font-weight-bold text-dark fs-5">Modul Selesai</h6>
+                                    <h5 class="ml-2 card-title text-dark text-uppercase fw-bold fs-4">{{$modulSelesai}}</h5>
                                 </td>
                                 <td style="border-right:2px solid black;">
                                 </td>

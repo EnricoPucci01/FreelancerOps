@@ -116,7 +116,11 @@
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalToggleLabel2">Peringatan</h5>
                                         <button type="button" class="btn-close close" data-dismiss="modal"
-                                            aria-label="Close"></button>
+                                            aria-label="Close">
+                                            @if (session()->has('errorCal'))
+                                                {{session()->forget('errorCal')}}
+                                            @endif
+                                        </button>
                                     </div>
                                     <div class="modal-body">
                                         Anda telah memiliki acara pada hari tersebut, anda yakin tetap ingi menambahkan

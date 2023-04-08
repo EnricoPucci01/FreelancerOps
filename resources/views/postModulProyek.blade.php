@@ -131,7 +131,7 @@
                                         Deskripsi
                                     </td>
                                     <td>
-                                        Dokumen Modul
+                                        Dokumen
                                     </td>
                                     <td>
                                         Rentang Bayaran Dari

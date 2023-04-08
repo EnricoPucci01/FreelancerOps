@@ -11,7 +11,7 @@
                     </td>
 
                     <td>
-                        <a href="" class="btn btn-success"><i class="bi bi-download"></i></a>
+                        <a href={{asset("/storage/dokumen/$dataproyek[dokumentasi_proyek]")}} download class="btn btn-success"><i class="bi bi-download"></i></a>
                     </td>
                 </tr>
             </table>
@@ -120,7 +120,7 @@
                             {{ $modul['end'] }}
                         </td>
                         <td>
-                            <a href="" class="btn btn-success"><i class="bi bi-download"></i></a>
+                            <a href={{asset("/storage/dokumenModul/$modul[dokumentasi]")}} download class="btn btn-success"><i class="bi bi-download"></i></a>
                         </td>
                         <td>
                             @php

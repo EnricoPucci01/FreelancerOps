@@ -62,7 +62,7 @@
                     <!-- Nomor HP -->
                     <tr>
                         <td>
-                              <label for="phone_register" class="form-label">Nomor HP (10-13 digit hanya angka)</label>
+                              <label for="phone_register" class="form-label">Nomor HP (10-13 Digit Angka)</label>
                         </td>
                     </tr>
                     <tr>

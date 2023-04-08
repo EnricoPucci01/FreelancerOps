@@ -15,12 +15,12 @@
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
             var cell7 = row.insertCell(6);
-            cell1.innerHTML = '<input type="text" name="nama_modul' + hid_val.value + '">';
-            cell2.innerHTML = '<textarea name="desc_modul' + hid_val.value + '"></textarea>';
-            cell3.innerHTML = '<input type="file" accept=".png,.jpg,.pdf" name="dokumenModul' + hid_val.value + '">';
-            cell4.innerHTML = '<input type="text" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="rentang1_bayaran' + hid_val.value + '" name="rentang1_bayaran' + hid_val.value + '">';
-            cell5.innerHTML = '<input type="text" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="rentang2_bayaran' + hid_val.value + '" name="rentang2_bayaran' + hid_val.value + '">';
-            cell6.innerHTML = '<input type="date" name="deadline_modul' + hid_val.value + '">';
+            cell1.innerHTML = '<input type="text" class="form-control" name="nama_modul' + hid_val.value + '">';
+            cell2.innerHTML = '<textarea class="form-control" name="desc_modul' + hid_val.value + '"></textarea>';
+            cell3.innerHTML = '<input type="file" class="form-control" accept=".png,.jpg,.pdf" name="dokumenModul' + hid_val.value + '">';
+            cell4.innerHTML = '<input type="text" class="form-control" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="rentang1_bayaran' + hid_val.value + '" name="rentang1_bayaran' + hid_val.value + '">';
+            cell5.innerHTML = '<input type="text" class="form-control" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="rentang2_bayaran' + hid_val.value + '" name="rentang2_bayaran' + hid_val.value + '">';
+            cell6.innerHTML = '<input type="date" class="form-control" name="deadline_modul' + hid_val.value + '">';
             hid_val.value = parseInt(hid_val.value) + 1;
             cell7.innerHTML = "<button type='button' class='btn btn-danger' onclick='delFunction(" + hid_val.value + ")'> <i class='bi bi-trash-fill'></i> </button>";
 
@@ -33,11 +33,11 @@
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
-            cell1.innerHTML = '<input type="text" name="nama_modul' + hid_val.value + '">';
-            cell2.innerHTML = '<textarea name="desc_modul' + hid_val.value + '"></textarea>';
-            cell3.innerHTML = '<input type="file" accept=".pdf,.jpg,.png" name="dokumenModul' + hid_val.value + '">';
-            cell4.innerHTML = '<input type="text" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="bayaran' + hid_val.value + '" name="bayaran' + hid_val.value + '">';
-            cell5.innerHTML = '<input type="date" name="deadline_modul' + hid_val.value + '">';
+            cell1.innerHTML = '<input type="text" class="form-control" name="nama_modul' + hid_val.value + '">';
+            cell2.innerHTML = '<textarea class="form-control" name="desc_modul' + hid_val.value + '"></textarea>';
+            cell3.innerHTML = '<input type="file" class="form-control" accept=".pdf,.jpg,.png" name="dokumenModul' + hid_val.value + '">';
+            cell4.innerHTML = '<input type="text" class="form-control" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="bayaran' + hid_val.value + '" name="bayaran' + hid_val.value + '">';
+            cell5.innerHTML = '<input type="date" class="form-control" name="deadline_modul' + hid_val.value + '">';
             hid_val.value = parseInt(hid_val.value) + 1;
             cell6.innerHTML = '<button type="button" class="btn btn-danger deletebtn" onclick="delFunction(' + hid_val.value + ')"> <i class="bi bi-trash-fill"></i> </button>';
 

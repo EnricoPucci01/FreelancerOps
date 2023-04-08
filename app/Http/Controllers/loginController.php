@@ -153,15 +153,19 @@ class loginController extends Controller
         $select= DB::select($pengeluaran);
         $select=json_decode(json_encode($select),true);
 
-        $proyekTerbit = proyek::where('cust_id', FacadesSession::get('cust_id'))->count();
+        $proyekTerbit = proyek::where('cust_id', FacadesSession::get('cust_id'))->get('proyek_id');
         $proyekTerbit = json_decode(json_encode($proyekTerbit), true);
-        //dd($modulFreelancer);
-        //dd($select);
+
+        $modulSelesai = modulDiambil::whereIn('proyek_id',$proyekTerbit)->where('status','selesai')->count();
+        $modulSelesai = json_decode(json_encode($modulSelesai), true);
+        //dd(count($proyekTerbit));
+        //dd($modulSelesai);
         FacadesSession::put("notif", $getNotif);
         return view('dashboardClient', [
             'proyek' => $proyek,
             "pengeluaran"=>(is_null($select[0]['jumlah']))?'0':$select[0]['jumlah'],
-            'proyekTerbit'=>$proyekTerbit
+            'proyekTerbit'=>count($proyekTerbit),
+            'modulSelesai'=>$modulSelesai
         ]);
     }
 

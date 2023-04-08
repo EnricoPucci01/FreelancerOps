@@ -22,7 +22,7 @@ class gCalendarController extends Controller
     public function insertEvent(Request $request){
         $getProf=profil::where('cust_id',Session::get('cust_id'))->first();
         $events= Event::get(Carbon::parse($request->input('start_Event')),Carbon::parse($request->input('end_Event')),[],$getProf->calendar_id);
-
+        $events= json_decode(json_encode($events),true);
         //dd($events);
         if($request->input('warningCal')=='noinsert'){
             $formValidate=$request->validate
@@ -45,7 +45,7 @@ class gCalendarController extends Controller
             Session::put('startDate',$startDate);
             Session::put('endDate',$endDate);
             Session::put('eventname',$request->input('name_Event'));
-            if($events!=null){
+            if(!empty($events)){
                 Session::put('errorCal','error');
                 return Redirect::back();
              }else{
@@ -57,9 +57,17 @@ class gCalendarController extends Controller
 
                  //dd($inEvent);
                  if($inEvent!=null){
-                     return Redirect::back()->with('success','Acara Berhasil Di Tambahkan, Silahkan Cek Google Calendar Anda!');
+
+                    Session::forget('startDate');
+                    Session::forget('endDate');
+                    Session::forget('eventname');
+                    return Redirect::back()->with('success','Acara Berhasil Di Tambahkan, Silahkan Cek Google Calendar Anda!');
                  }else{
-                     return Redirect::back()->with('error','Acara Gagal Di Tambahkan!');
+
+                    Session::forget('startDate');
+                    Session::forget('endDate');
+                    Session::forget('eventname');
+                    return Redirect::back()->with('error','Acara Gagal Di Tambahkan!');
                  }
              }
         }else{
@@ -74,8 +82,16 @@ class gCalendarController extends Controller
             Session::forget('eventname');
             //dd($inEvent);
             if($inEvent!=null){
+
+                Session::forget('startDate');
+                Session::forget('endDate');
+                Session::forget('eventname');
                 return Redirect::back()->with('success','Acara Berhasil Di Tambahkan, Silahkan Cek Google Calendar Anda!');
             }else{
+
+                Session::forget('startDate');
+                Session::forget('endDate');
+                Session::forget('eventname');
                 return Redirect::back()->with('error','Acara Gagal Di Tambahkan!');
             }
         }

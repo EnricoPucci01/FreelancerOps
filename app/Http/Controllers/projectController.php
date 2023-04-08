@@ -83,7 +83,7 @@ class projectController extends Controller
             $filename = "";
 
             if (!empty($request->file("dokumen"))) {
-                $filename = "Dokumen " . $request->input("name_project") . "." . $request->file("dokumen")->getClientOriginalExtension();
+                $filename = "Dokumen" . str_replace(' ', '', $request->input("name_project")) . "." . $request->file("dokumen")->getClientOriginalExtension();
                 $path = $request->file('dokumen')->storeAs("dokumen", $filename, 'public');
                 if ($path != "" && $path != null) {
                     $image = $request->file('dokumen'); //image file from frontend
@@ -120,7 +120,7 @@ class projectController extends Controller
                 $filename = "";
 
                 if (!empty($request->file("dokumenModul" . $i . ""))) {
-                    $filename = "DokumenModul " . $request->input("nama_modul" . $i . "") . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                    $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
                     $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
                     if ($path != "" && $path != null) {
                         $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
@@ -153,7 +153,7 @@ class projectController extends Controller
                 $filename = "";
 
                 if (!empty($request->file("dokumenModul" . $i . ""))) {
-                    $filename = "DokumenModul " . $request->input("nama_modul" . $i . "") . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                    $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
                     $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
                     if ($path != "" && $path != null) {
                         $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
@@ -415,7 +415,7 @@ class projectController extends Controller
             'accessor' => $accessor,
             'id' => Session::get("cust_id"),
             'dataApplicant' => $db,
-            'modulDibatalkan'=>$modulDibatalkan
+            'modulDibatalkan' => $modulDibatalkan
         ]);
     }
 
@@ -490,7 +490,7 @@ class projectController extends Controller
         $applicantModul = applicant::where('proyek_id', $proyekId)->where('modul_id', $modulId)->get();
         $applicantModul = json_decode(json_encode($applicantModul), true);
 
-        $judulModul=modul::where('modul_id',$modulId)->first();
+        $judulModul = modul::where('modul_id', $modulId)->first();
 
         //var_dump($customerList);
 
@@ -561,16 +561,22 @@ class projectController extends Controller
 
     public function loadListProyekFreelancer($custId)
     {
-        $modulDiambil = modulDiambil::where('cust_id', $custId)->get('modul_id');
+        $modulDiambil = modulDiambil::where('cust_id', $custId)->where('status',"!=",'dibatalkan')->get('modul_id');
         $modulDiambil = json_decode(json_encode($modulDiambil), true);
 
         $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->paginate(5);
         // $modulFreelancer=json_decode(json_encode($modulFreelancer),true);
-
-
+        $listProgress = array();
+        foreach ($modulDiambil as $modul) {
+            $progress = progress::where('modul_id', $modul['modul_id'])->orderBy('upload_time', 'DESC')->first();
+            array_push($listProgress, $progress);
+        }
+        $listProgress = json_decode(json_encode($listProgress), true);
+        //dd($listProgress);
         return view('listProyekFreelancer', [
             'listproyek' => $modulFreelancer,
-            'custId' => $custId
+            'custId' => $custId,
+            'listProgress'=>$listProgress
         ]);
     }
 
