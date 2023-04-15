@@ -288,6 +288,7 @@ Route::get('/loadReviewClient/{cust_id}',[profilController::class,'loadReviewCli
 
 
 Route::get('/loadProfil/{role}/{custId}',[profilController::class,'loadProfil']);
+Route::get('/loadProfilKontrak/{role}/{custId}',[profilController::class,'loadProfilKontrak']);
 Route::get('/loadEditProfil/{custId}',[profilController::class,'loadEditProfil']);
 Route::post('/submiteditprofil/{custId}',[profilController::class,'editProfil']);
 

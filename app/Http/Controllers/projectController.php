@@ -536,7 +536,7 @@ class projectController extends Controller
 
                 $newNotifClient = new notificationModel();
                 $newNotifClient->customer_id = Session::get("cust_id");
-                $newNotifClient->message = "Anda berhasil menerima " . $nama->nama . " sebagai freelancer, Silahkan melakukan tanda tangan pada konreak untuk menjamin keamanan.";
+                $newNotifClient->message = "Anda berhasil menerima " . $nama->nama . " sebagai freelancer, Silahkan melakukan tanda tangan pada kontrak untuk menjamin keamanan.";
                 $newNotifClient->status = "S";
                 $newNotifClient->save();
 

@@ -36,7 +36,7 @@ class profilController extends Controller
         if($role=="v" || session()->get('role')=="client"){
             $review = reviewClient::where('client_id', $custId)->get();
             $review = json_decode(json_encode($review), true);
-        }else{
+        }else if($role=="v" || session()->get('role')=="client"){
             $review = review::where('freelancer_id', $custId)->get();
             $review = json_decode(json_encode($review), true);
         }
@@ -65,7 +65,43 @@ class profilController extends Controller
             'proyekSelesai' => $proyekSelesai
         ]);
     }
+    public function loadProfilKontrak($role, $custId)
+    {
+        $profil = profil::where('cust_id', $custId)->first();
+        $profil = json_decode(json_encode($profil), true);
 
+        $cust = customer::where('cust_id', $custId)->first();
+        $cust = json_decode(json_encode($cust), true);
+
+        $sertifikat = sertifikat::where('cust_id', $custId)->paginate(5);
+        // $sertifikat=json_decode(json_encode($sertifikat),true);
+        $review = review::where('freelancer_id', $custId)->get();
+        $review = json_decode(json_encode($review), true);
+
+
+        $proyekSelesai = modulDiambil::where('cust_id', $custId)->where('status', 'selesai')->count();
+
+        $totalBintang = 0;
+        $rataRata = 0;
+        if (count($review) > 0) {
+            $jumlahReview = count($review);
+            foreach ($review as $bintang) {
+                $totalBintang = $totalBintang + $bintang['bintang'];
+            }
+
+            $rataRata = $totalBintang / $jumlahReview;
+            //dd($jumlahReview);
+        }
+
+        return view('profil', [
+            'dataProfil' => $profil,
+            'dataCust' => $cust,
+            'dataSertifikat' => $sertifikat,
+            'role' => $role,
+            'bintang' => $rataRata,
+            'proyekSelesai' => $proyekSelesai
+        ]);
+    }
     public function loadProfilApplicant($role, $custId, $applicantId, $modulId, $proyekId)
     {
         $profil = profil::where('cust_id', $custId)->first();
@@ -173,7 +209,9 @@ class profilController extends Controller
             if (!empty($editProf)) {
                 $editProf->pekerjaan = $request->input('profile_job');
                 $editProf->deskripsi_diri = $request->input('profile_desc');
-                $editProf->foto = $filename;
+                if(!empty($request->file('profile_foto'))){
+                    $editProf->foto = $filename;
+                }
                 $editProf->save();
                 if ($editProf) {
                     DB::commit();

@@ -141,6 +141,7 @@ a{
 }
 
 .other .msg {
+  	background: bisque;
     order: 1;
     border-top-left-radius: 0px;
     box-shadow: -1px 2px 0px #D4D4D4;
@@ -163,6 +164,7 @@ a{
     align-items: flex-end;
 }
 .self .msg {
+  	background: palegreen;
     order: 1;
     border-bottom-right-radius: 0px;
     box-shadow: 1px 2px 0px #D4D4D4;
@@ -185,7 +187,6 @@ a{
 }
 
 .msg {
-    background: white;
     min-width: 50px;
     padding: 10px;
     border-radius: 2px;
@@ -194,7 +195,7 @@ a{
 .msg p {
     font-size: 0.8rem;
     margin: 0 0 0.2rem 0;
-    color: #777;
+    color: black;
 }
 .msg img {
     position: relative;
@@ -222,7 +223,7 @@ a{
 
 .msg time {
     font-size: 0.7rem;
-    color: #ccc;
+    color: slategray;
     margin-top: 3px;
     float: right;
     cursor: default;
@@ -233,7 +234,7 @@ a{
 }
 .msg time:before{
     content:"\f017";
-    color: #ddd;
+    color: slategray;
     font-family: FontAwesome;
     display: inline-block;
     margin-right: 4px;
@@ -352,4 +353,7 @@ input.textarea {
 }
 .emojis:active {
     opacity: 0.9;
+}
+.chatContainer{
+    margin-top: 20px;
 }

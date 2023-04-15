@@ -44,7 +44,7 @@
                         <td>
                             @foreach ($dataFreelancer as $freelancer)
                                 @if ($freelancer['cust_id']==$payment['cust_id'])
-                                    <a href={{url("/loadProfil/v/$freelancer[cust_id]")}}>{{$freelancer['nama']}}</a>
+                                    <a href={{url("/loadProfilKontrak/v/$freelancer[cust_id]")}}>{{$freelancer['nama']}}</a>
                                 @endif
                             @endforeach
                         </td>

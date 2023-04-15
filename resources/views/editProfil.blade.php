@@ -69,15 +69,9 @@
                       </td>
                   </tr>
                   <tr>
-                        @if (empty($dataProfil['deskripsi_diri']))
-                            <td>
-                                <textarea type="text" name="profile_desc" class="form-control mb-2"> </textarea>
-                            </td>
-                        @else
-                            <td>
-                                <textarea type="text" name="profile_desc" value="{{$dataProfil['deskripsi_diri']}}" class="form-control mb-2"> </textarea>
-                            </td>
-                        @endif
+                    <td>
+                        <textarea type="text" name="profile_desc" value="{{$dataProfil['deskripsi_diri']}}" class="form-control mb-2"> {{$dataProfil['deskripsi_diri']}}</textarea>
+                    </td>
                   </tr>
               </table>
               <button type="submit" class="btn btn-primary" style="margin-top: 10px">Edit</button>

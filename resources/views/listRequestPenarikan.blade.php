@@ -48,11 +48,11 @@
                             <td>
                                 @foreach ($dataCust as $cust)
                                     @if ($cust['cust_id'] == $penarikan['cust_id'])
-                                        <button class="btn btn-success" type="button" data-bs-target="#modalPost"
+                                        <button class="btn btn-success" type="button" data-bs-target={{"#modalPost$penarikan[penarikan_id]"}}
                                             data-bs-toggle="modal">Setuju</button>
 
                                         {{-- Modal Post --}}
-                                        <div class="modal fade" tabindex="-1"aria-hidden="true" id="modalPost">
+                                        <div class="modal fade" tabindex="-1"aria-hidden="true" id={{"modalPost$penarikan[penarikan_id]"}}>
                                             <form action={{ url("/createDisb/$cust[nama]/$penarikan[penarikan_id]") }}
                                                 method="POST" enctype="multipart/form-data">
                                                 @csrf

@@ -49,7 +49,7 @@ class pdfController extends Controller
             $idProyek=proyek::where('cust_id',Session::get('cust_id'))->get('proyek_id');
             $idProyek=json_decode(json_encode($idProyek),true);
 
-            $listKontrak=modulDiambil::whereIn('proyek_id',$idProyek)->get();
+            $listKontrak=modulDiambil::whereIn('proyek_id',$idProyek)->where('status',$statusKontrak)->get();
         }
         return view('listKontrak',[
             'listKontrak'=>$listKontrak,
