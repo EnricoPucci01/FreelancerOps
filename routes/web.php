@@ -55,9 +55,8 @@ Route::get('/offline', function () {
 Route::get('/loginops',[loginController::class,'login']);
 Route::get('/loginopsAdmin',[loginController::class,'loginAdmin']);
 Route::get('/register', [registerController::class,'loadRegister']);
+
 Route::post('/submitregister',[registerController::class,'generateCode']);
-Route::get('/sendEmail/{mail}/{type}',[emailController::class,'sendEmail']);
-Route::post('/verify',[emailController::class,'verify']);
 Route::get('/registerUser',[registerController::class,'registerUser']);
 Route::get('/logout',[loginController::class,'logout']);
 Route::post('/submitregisterAdmin',[registerController::class,'generateCode']);
@@ -66,6 +65,13 @@ Route::post('/api/save-token',[chatController::class,'testChat']);
 Route::get('/testChatPage',[chatController::class,'getTestChat']);
 Route::post('/createChat',[chatController::class,'createChat']);
 Route::get('/setAppBadge',[loginController::class,'setAppBadge']);
+
+Route::get('/sendEmail/{mail}/{type}',[emailController::class,'sendEmail']);
+Route::post('/verify',[emailController::class,'verify']);
+Route::post('/verifyPassChange',[emailController::class,'verifyPassChange']);
+
+Route::view('/lupaPass','passChange');
+Route::post('/submitPassChange', [registerController::class,'submitPassChange']);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //CEK STATUS LOGIN USER YANG INGIN AKSES HALAMAN LAIN SELAIN YANG DI ATAS

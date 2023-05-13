@@ -93,7 +93,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <select class="selectpicker form-control mb-2" id='role' name="pendidikan_register" data-style="btn-default btn-lg">
+                            <select class="selectpicker form-control mb-2" id='pendidikan' name="pendidikan_register" data-style="btn-default btn-lg">
                                 <option value="SD">Sekolah Dasar</option>
                                 <option value="SMP">Sekolah Menengah Pertama</option>
                                 <option value="SMA">Sekolah Menengah Atas</option>

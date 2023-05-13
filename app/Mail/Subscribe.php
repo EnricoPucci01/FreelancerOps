@@ -37,7 +37,7 @@ class Subscribe extends Mailable
             $subject="Hai, Anda memiliki pembayaran yang belum selesai!";
             $markdown = "emails.unclosed";
         }else if($this->type == "verify"){
-            $subject="Berikut adalah kode Verifikasi anda!";
+            $subject="Berikut adalah kode Verifikasi anda";
             $markdown = "emails.verify";
         }
         else if($this->type == "inactive"){
@@ -52,7 +52,10 @@ class Subscribe extends Mailable
             $subject="Halo, Apakah anda memiliki kendala atau masukan untuk FreelancerOps?";
             $markdown = "emails.quisioner";
         }
-
+        else if($this->type == "newPass"){
+            $subject="Berikut adalah kode verifikasi anda untuk mengubah password";
+            $markdown = "emails.newPass";
+        }
         return $this->subject($subject)
         ->markdown($markdown);
     }

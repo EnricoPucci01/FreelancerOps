@@ -52,8 +52,19 @@
               </table>
               <button type="submit" class="btn btn-primary mt-3">Masuk</button>
           </form>
-          <p>Belum Memiliki Akun?</p>
-          <a href="/register" class="card-link">Daftar Disini</a>
+          <table style="width:100%">
+            <tr>
+                <td style="text-align: center">
+                    <p>Belum Memiliki Akun?</p>
+                    <a href="/register" class="card-link">Daftar Disini</a>
+                </td>
+                <td style="text-align: center">
+                    <p>Lupa Password?</p>
+                    <a href="/lupaPass" class="card-link">Klik Disini</a>
+                </td>
+            </tr>
+          </table>
+
         </div>
       </div>
 </center>

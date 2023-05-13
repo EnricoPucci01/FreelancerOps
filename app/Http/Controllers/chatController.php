@@ -158,47 +158,51 @@ class chatController extends Controller
 
     public function sendMessage(Request $request)
     {
-        $clientId = 0;
-        $freelancerId = 0;
-        $jam = date('H:i');
-        $target = explode("_", $request->input('reciever'));
+        if($request->input('pesan')==null){
+            return Redirect::back()->with('error', 'Pesan Tidak dapat kosong!');
+        }else{
+            $clientId = 0;
+            $freelancerId = 0;
+            $jam = date('H:i');
+            $target = explode("_", $request->input('reciever'));
 
-        $reciever = $target[0];
-        $topik = $target[1];
+            $reciever = $target[0];
+            $topik = $target[1];
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-        $chatRoom = new chatroom();
-        $chatRoom->sender_id = Session::get("cust_id");
-        $chatRoom->reciever_id = $reciever;
-        $chatRoom->topik_proyek = str_replace('%20', ' ', $topik);
-        $chatRoom->unread_reciever = '1';
-        $chatRoom->unread_sender= '0';
-        $chatRoom->save();
-        $newNotif= new notificationModel();
-        $newNotif->customer_id=$chatRoom->reciever_id;
-        $newNotif->message=Session::get("name")." telah membuat ruang obrolan baru untuk anda";
-        $newNotif->status="S";
-        $newNotif->save();
-        if ($chatRoom) {
-            $chat = new chat();
-            $chat->room_id = $chatRoom->room_id;
-            $chat->sender_id = Session::get('cust_id');
-            $chat->message = $request->input('pesan');
-            $chat->message_time = $jam;
-            $chat->status_read = "S";
-            $chat->save();
-            $this->broadcastMessage(Session::get('cust_id'), $request->input('pesan'),$chatRoom->room_id);
-            if ($chat) {
-                DB::commit();
-                return Redirect::back()->with('success', 'Pesan Berhasil Di Kirim!');
+            $chatRoom = new chatroom();
+            $chatRoom->sender_id = Session::get("cust_id");
+            $chatRoom->reciever_id = $reciever;
+            $chatRoom->topik_proyek = str_replace('%20', ' ', $topik);
+            $chatRoom->unread_reciever = '1';
+            $chatRoom->unread_sender= '0';
+            $chatRoom->save();
+            $newNotif= new notificationModel();
+            $newNotif->customer_id=$chatRoom->reciever_id;
+            $newNotif->message=Session::get("name")." telah membuat ruang obrolan baru untuk anda";
+            $newNotif->status="S";
+            $newNotif->save();
+            if ($chatRoom) {
+                $chat = new chat();
+                $chat->room_id = $chatRoom->room_id;
+                $chat->sender_id = Session::get('cust_id');
+                $chat->message = $request->input('pesan');
+                $chat->message_time = $jam;
+                $chat->status_read = "S";
+                $chat->save();
+                $this->broadcastMessage(Session::get('cust_id'), $request->input('pesan'),$chatRoom->room_id);
+                if ($chat) {
+                    DB::commit();
+                    return Redirect::back()->with('success', 'Pesan Berhasil Di Kirim!');
+                } else {
+                    DB::rollback();
+                    return Redirect::back()->with('error', 'Pesan Gagal Di Kirim!');
+                }
             } else {
                 DB::rollback();
-                return Redirect::back()->with('error', 'Pesan Gagal Di Kirim!');
+                return Redirect::back()->with('error', 'Chatroom Gagal Dibuat');
             }
-        } else {
-            DB::rollback();
-            return Redirect::back()->with('error', 'Chatroom Gagal Dibuat');
         }
     }
 

@@ -19,7 +19,6 @@ class loginController extends Controller
 {
     public function login(Request $request)
     {
-
         $formValidate = $request->validate(
             [
                 'email_login' => 'required|email',
@@ -34,10 +33,10 @@ class loginController extends Controller
 
         $loginResult = customer::where("email", $request->input('email_login'))->withTrashed()->get();
         $dataLogin = json_decode(json_encode($loginResult), true);
-        if ($dataLogin[0]['deleted_at'] == null) {
-            if (count($loginResult) <= 0) {
-                return \redirect("/")->with('error', 'Email anda tidak terdaftar');
-            } else {
+        if (count($loginResult) <= 0) {
+            return \redirect("/")->with('error', 'Email anda tidak terdaftar');
+        } else {
+            if ($dataLogin[0]['deleted_at'] == null) {
                 $dataLogin = json_decode(json_encode($loginResult), true);
                 if (Hash::check($request->input('pass_login'), $dataLogin[0]['password'])) {
                     FacadesSession::put('active', $dataLogin[0]['email']);
@@ -61,9 +60,9 @@ class loginController extends Controller
                 } else {
                     return \redirect("/")->with('error', 'Password anda tidak terdaftar');
                 }
+            } else {
+                return \redirect("/")->with('error', 'Akun Anda Tidak Aktif Harap Hubungi Admin Untuk Mengaktifkan Akun Kembali');
             }
-        } else {
-            return \redirect("/")->with('error', 'Akun Anda Tidak Aktif Harap Hubungi Admin Untuk Mengaktifkan Akun Kembali');
         }
     }
 

@@ -36,7 +36,7 @@ class profilController extends Controller
         if($role=="v" || session()->get('role')=="client"){
             $review = reviewClient::where('client_id', $custId)->get();
             $review = json_decode(json_encode($review), true);
-        }else if($role=="v" || session()->get('role')=="client"){
+        }else{
             $review = review::where('freelancer_id', $custId)->get();
             $review = json_decode(json_encode($review), true);
         }

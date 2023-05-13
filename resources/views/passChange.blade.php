@@ -21,37 +21,22 @@
     <center>
         <div class="card" style="width: 50rem;" >
             <div class="card-body">
-              <h3 class="card-title">Verifikasi E-Mail</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Kode Verifikasi Telah Dikirimkan Ke Email Anda</h6>
-            @if ($type == 'newPass')
-            <form action={{url("/verifyPassChange")}} method="POST">
+              <h3 class="card-title">Ubah Password</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Masukan Email yang telah anda registrasikan sebelumnya</h6>
+              <form action={{url("/submitPassChange")}} method="POST">
                 @csrf
                 @method('POST')
                     <div class="card" style="width: 40%;">
                         <div class="card-body">
-                        <h5 class="card-title">Verifikasi Email</h5>
-                            <input type="text" name='code' class="form-control">
-                        <button type="submit" class="btn btn-primary mt-3">Verifikasi</button>
+                        <h5 class="card-title">Email</h5>
+                            <input type="text" name='email' class="form-control">
+                            <h5 class="card-title">Password Baru</h5>
+                            <input type="password" name='newPass' class="form-control">
+                        <button type="submit" class="btn btn-primary mt-3">Ubah Password</button>
                         </div>
                     </div>
                   <a href="{{url('/')}}" class="btn btn-secondary" style="margin-top: 10px">Kembali</a>
               </form>
-            @endif
-            @if ($type=='verify')
-            <form action={{url("/verify")}} method="POST">
-                @csrf
-                @method('POST')
-                    <div class="card" style="width: 40%;">
-                        <div class="card-body">
-                        <h5 class="card-title">Verifikasi Email</h5>
-                            <input type="text" name='code' class="form-control">
-                        <button type="submit" class="btn btn-primary mt-3">Verifikasi</button>
-                        </div>
-                    </div>
-                  <a href="{{url('/')}}" class="btn btn-secondary" style="margin-top: 10px">Kembali</a>
-              </form>
-            @endif
-
             </div>
           </div>
     </center>

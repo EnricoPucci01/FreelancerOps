@@ -106,4 +106,18 @@ class registerController extends Controller
             return \redirect("/register")->with("error", "Email have been registered by other user");
         }
     }
+
+    public function submitPassChange(Request $request){
+        if($request->input('email') == null || $request->input('newPass') == null){
+            return redirect()->back()->with('error','Email atau password baru tidak dapat kosong!');
+        }else{
+            Session::put('emailPass',$request->input('email'));
+            Session::put('newPass', $request->input('newPass'));
+            $uniqueCode=uniqid();
+            Session::put('uniqueCode',$uniqueCode);
+            $email=$request->input("email");
+            return redirect("sendEmail/$email/newPass");
+        }
+
+    }
 }

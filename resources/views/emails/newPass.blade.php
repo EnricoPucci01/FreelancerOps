@@ -1,7 +1,7 @@
 @component('mail::message')
-# Kode Verifikasi Anda
+# Kode Verifikasi Ubah Password
 Halo {{$email}},
-Berikut adalah kode verifikasi anda, demi keamanan akun kode ini harap jangan di sebarkan.
+Berikut adalah kode verifikasi anda untuk mengubah password.
 <br>
 
 <b>{{Session::get('uniqueCode')}}</b>

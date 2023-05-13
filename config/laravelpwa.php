@@ -8,41 +8,41 @@ return [
         'start_url' => '/',
         'background_color' => '#e48b0c',
         'theme_color' => '#2469a7',
-        'display' => 'standalone',
-        'orientation'=> 'landscape',
-        'status_bar'=> 'black',
+        "display" => "browser",
+        'orientation' => 'landscape',
+        'status_bar' => 'black',
         'icons' => [
             '72x72' => [
                 'path' => '/images/maskable_icon7272.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'any'
             ],
             '96x96' => [
                 'path' => '/images/maskable_icon9696.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'maskable'
             ],
             '128x128' => [
                 'path' => '/images/maskable_icon128128.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'any'
             ],
             '144x144' => [
                 'path' => '/images/maskable_icon144144.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'any'
             ],
             '152x152' => [
                 'path' => '/images/maskable_icon152152.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'maskable'
             ],
             '192x192' => [
                 'path' => '/images/maskable_icon192192.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'maskable'
             ],
             '384x384' => [
                 'path' => '/images/maskable_icon384384.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'maskable'
             ],
             '512x512' => [
                 'path' => '/images/maskable_icon512512.png',
-                'purpose' => 'any maskable'
+                'purpose' => 'any'
             ],
         ],
         'splash' => [
@@ -59,24 +59,58 @@ return [
         ],
         'shortcuts' => [
             [
-                'name' => 'Shortcut Link 1',
-                'description' => 'Shortcut Link 1 Description',
-                'url' => '/shortcutlink1',
+                'name' => 'Login',
+                'description' => 'Menuju Login',
+                'url' => '/',
                 'icons' => [
-                    "src" => "/images/maskable_icon7272.png",
-                    "purpose" => "any maskable"
-                ]
-            ],
-            [
-                'name' => 'Shortcut Link 2',
-                'description' => 'Shortcut Link 2 Description',
-                'url' => '/shortcutlink2',
-              'icons' => [
-                    "src" => "/images/maskable_icon.png",
-                    "purpose" => "any"
+                    'src' => "/images/maskable_icon512512.png",
+                    'purpose' => 'any',
+                    "sizes" => "96x96",
                 ]
             ]
         ],
-        'custom' => []
+        'custom' => [
+            'lang' => 'id',
+            "scope" => "/",
+            "categories" => ["business", "productivity", "utilities"],
+            "description" => "FreelancerOPS membantu anda sebagai freelancer untuk mencari pekerjaan ataupun magang!",
+            "dir" => "ltr",
+            "prefer_related_applications" => false,
+            "display_override" => [
+                "window-control-overlay",
+                "standalone",
+                "browser"
+            ],
+            "screenshots" => [
+                [
+                    "src" => "/images/dashboard.png",
+                    "sizes" => "1366x768",
+                    "type" => "image/png",
+                    "platform" => "wide",
+                ],
+                [
+                    "src" => "/images/listmodul.png",
+                    "sizes" => "1366x768",
+                    "type" => "image/png",
+                    "platform" => "wide",
+                ],
+                [
+                    "src" => "/images/tambahmodul.png",
+                    "sizes" => "1366x768",
+                    "type" => "image/png",
+                    "platform" => "wide",
+                ]
+            ],
+            "related_applications" => [
+                [
+                    "platform" => "webapp",
+                    "url" => "https://www.freelancer.co.id/"
+                ],
+                [
+                    "platform" => "webapp",
+                    "url" => "https://www.sribu.com/"
+                ]
+            ],
+        ]
     ]
 ];
