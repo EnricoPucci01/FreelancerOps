@@ -153,7 +153,7 @@
         @endforeach
 
 
-        <a href={{ url("/loadDetailProyekClient/$proyekId/c") }} class="btn btn-secondary mt-3 mb-3">Kembali</a>
+        <a href={{ url()->previous(); }} class="btn btn-secondary mt-3 mb-3">Kembali</a>
     </center>
 
     <script>

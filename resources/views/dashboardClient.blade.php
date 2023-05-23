@@ -1,7 +1,7 @@
 @extends('header')
 @section('content')
     <center>
-        <div >
+        <div>
             <div class='tdPersonalInfo'>
                 <div class="card recentProjectContainerAdminFreelancer">
                     <div class="card-body" style="text-align: left">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-            <div class='tdPersonalInfo' >
+            <div class='tdPersonalInfo'>
                 <div class="card personalInfoAdminFreelancer">
                     <div class="card-body " style="text-align: left">
                         <div class="border border-dark rounded" style="padding: 5px">
@@ -49,8 +49,8 @@
                                 <tr>
                                     <td>
                                         {{-- <a href={{url("/login")}} class="btn btn-outline-primary mb-2 mt-2 fw-bold" style="width: 92%">Obrolan</a> --}}
-                                        <a href={{ url('/loadChatroom') }}
-                                            class="btn btn-outline-dark mb-2 mt-2 fw-bold" style="width: 100%">
+                                        <a href={{ url('/loadChatroom') }} class="btn btn-outline-dark mb-2 mt-2 fw-bold"
+                                            style="width: 100%">
                                             Obrolan</a>
                                     </td>
                                 </tr>
@@ -62,8 +62,8 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a href={{ url('/loadHistoriTransaksi') }}
-                                            class="btn btn-outline-dark mb-2 fw-bold" style="width: 100%">Histori
+                                        <a href={{ url('/loadHistoriTransaksi') }} class="btn btn-outline-dark mb-2 fw-bold"
+                                            style="width: 100%">Histori
                                             Transaksi</a>
                                     </td>
                                 </tr>
@@ -84,20 +84,53 @@
                     <div class='border border-dark bg-mute rounded' style="padding:5px;">
                         <table style="width: 100%">
                             <tr>
-                                <td style="width:30%;">
+                                <td style="width:25%;">
                                     <h6 class="card-subtitle mb-1 font-weight-bold text-dark fs-5">Total Proyek</h6>
-                                    <h5 class="card-title text-dark text-uppercase fw-bold fs-4">{{$proyekTerbit}}</h5>
+                                    <h5 class="card-title text-dark text-uppercase fw-bold fs-4">{{ $proyekTerbit }}</h5>
                                 </td>
                                 <td style="border-right:2px solid black;">
                                 </td>
-                                <td style="width:30%;">
-                                    <h6 class="ml-2 card-subtitle mb-1 font-weight-bold text-dark fs-5">Modul Selesai</h6>
-                                    <h5 class="ml-2 card-title text-dark text-uppercase fw-bold fs-4">{{$modulSelesai}}</h5>
+                                <td style="width:25%;">
+                                    <h6 class="ml-2 card-subtitle mb-1 font-weight-bold text-dark fs-5">Modul Selesai
+                                    </h6>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <h5 class="ml-2 card-title text-dark text-uppercase fw-bold fs-4">
+                                                    {{ $modulSelesai }}</h5>
+                                            </td>
+                                            <td>
+                                                <a href={{ url('/modulSelesai') }} class="btn btn-sm btn-dark ml-2 mb-2">
+                                                    Lihat Semua ></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="border-right:2px solid black;">
+                                </td>
+                                <td style="width:25%;">
+                                    <h6 class="ml-2 card-subtitle mb-1 font-weight-bold text-dark fs-5">Modul Dalam
+                                        Pengerjaan</h6>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <h5 class="ml-2 card-title text-dark text-uppercase fw-bold fs-4">
+                                                    {{ $modulPengerjaan }}</h5>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-dark btn-sm mb-2 ml-2"
+                                                    href={{ url('/modulPengerjaan') }}>
+                                                    Lihat Semua >
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                                 <td style="border-right:2px solid black;">
                                 </td>
                                 <td>
-                                    <h6 class="ml-2 card-subtitle mb-1 font-weight-bold text-dark fs-6">Pengeluaran 30Hari Terakhir</h6>
+                                    <h6 class="ml-2 card-subtitle mb-1 font-weight-bold text-dark fs-6">Pengeluaran 30Hari
+                                        Terakhir</h6>
                                     <h5 class="ml-2 card-title text-dark text-uppercase fw-bold fs-4">@money($pengeluaran, 'IDR', true)</h5>
                                 </td>
                             </tr>

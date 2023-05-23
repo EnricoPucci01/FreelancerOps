@@ -37,7 +37,8 @@
             <h6 class="text-start">@money($dataproyek['total_pembayaran'], 'IDR', true)</h6>
         @endif
         <hr>
-        <h5 class="text-start">Deadline: {{ $dataproyek['deadline'] }}</h5>
+        <h5 class="text-start">Dimulai Pada: {{ Carbon\Carbon::parse($dataproyek['start_proyek'])->format('d-m-Y') }}</h5>
+        <h5 class="text-start">Deadline: {{Carbon\Carbon::parse($dataproyek['deadline'])->format('d-m-Y')  }}</h5>
         <hr>
         <table class="table table-striped">
             <thead class="fw-bold">
@@ -101,13 +102,13 @@
                             @if ($modul['modul_id'] == $item['modul_id'])
                                 {{ $item['status'] }}
                                 @php
-                                    $bool=true;
+                                    $bool = true;
                                 @endphp
                             @endif
                         @endforeach
                         @php
                             if (!$bool) {
-                                echo"Rekrutmen";
+                                echo 'Rekrutmen';
                             }
                         @endphp
                     </td>
@@ -220,7 +221,7 @@
 
         </table>
         <center>
-            <a href={{ url('/listprojectclient') }} class="btn btn-secondary"> Kembali </a>
+            <a href={{ url()->previous() }} class="btn btn-secondary"> Kembali </a>
         </center>
 
 

@@ -11,6 +11,7 @@ use App\Models\modul;
 use App\Models\modulDiambil;
 use App\Models\notificationModel;
 use App\Models\payment;
+use App\Models\pembatalanFreelancer;
 use App\Models\progress;
 use App\Models\proyek;
 use App\Models\review;
@@ -559,24 +560,33 @@ class projectController extends Controller
         }
     }
 
-    public function loadListProyekFreelancer($custId)
+    public function loadListProyekFreelancer($mode)
     {
-        $modulDiambil = modulDiambil::where('cust_id', $custId)->where('status',"!=",'dibatalkan')->get('modul_id');
+        $modulDiambil = modulDiambil::where('cust_id', Session::get("cust_id"))->where('status', "!=", 'dibatalkan')->get('modul_id');
         $modulDiambil = json_decode(json_encode($modulDiambil), true);
 
-        $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->paginate(5);
+        if ($mode == "deadline") {
+            $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('end', 'ASC')->paginate(5);
+        } else if ($mode == 'tglmulai') {
+            $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('start', 'ASC')->paginate(5);
+        } else if ($mode == 'reset') {
+            $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->paginate(5);
+        }
+
         // $modulFreelancer=json_decode(json_encode($modulFreelancer),true);
         $listProgress = array();
         foreach ($modulDiambil as $modul) {
-            $progress = progress::where('modul_id', $modul['modul_id'])->orderBy('upload_time', 'DESC')->first();
+            $progress = progress::where('modul_id', $modul['modul_id'])->orderBy('updated_at', 'DESC')->first();
             array_push($listProgress, $progress);
         }
         $listProgress = json_decode(json_encode($listProgress), true);
+        //$modulFreelancer = json_decode(json_encode($modulFreelancer), true);
         //dd($listProgress);
         return view('listProyekFreelancer', [
             'listproyek' => $modulFreelancer,
-            'custId' => $custId,
-            'listProgress'=>$listProgress
+            'custId' => Session::get("cust_id"),
+            'listProgress' => $listProgress,
+            'mode' => $mode
         ]);
     }
 
@@ -627,9 +637,10 @@ class projectController extends Controller
     {
         $formValidate = $request->validate(
             [
-                'progDesc' => 'max:1000'
+                'progDesc' => 'required|max:1000'
             ],
             [
+                'progDesc.required'=>"Deskripsi Progress tidak dapat kosong",
                 'progDesc.max' => 'Panjang maksimal nama modul adalah 1000 karakter!'
             ]
         );
@@ -762,6 +773,26 @@ class projectController extends Controller
 
                 return redirect()->back()->with('error', 'Freelancer gagal dibatalkan!');
             }
+        }
+    }
+
+    public function permohonanPembatalanFreelancer(Request $request, $modulTakenId)
+    {
+        DB::beginTransaction();
+        $pembatalan = new pembatalanFreelancer();
+        $pembatalan->modultaken_id = $modulTakenId;
+        $pembatalan->alasan = $request->input('alasan');
+        $pembatalan->status = 'pend';
+        $pembatalan->save();
+
+        if ($pembatalan) {
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Permohonan telah di ajukan!');
+        } else {
+            DB::rollback();
+
+            return redirect()->back()->with('error', 'Permohonan gagal di ajukan!');
         }
     }
 
@@ -1066,5 +1097,85 @@ class projectController extends Controller
             DB::rollback();
             return Redirect::back()->with('error', 'Review Gagal Diberikan!');
         }
+    }
+
+    public function loadModulPengerjaan()
+    {
+        //dari cust id get proyek id
+        $proyek = proyek::where('cust_id', Session::get('cust_id'))->get('proyek_id');
+        $proyek = json_decode(json_encode($proyek), true);
+        $modulDiambil = modulDiambil::whereIn('proyek_id', $proyek)->where('status', 'pengerjaan')->get();
+        $modulDiambil = json_decode(json_encode($modulDiambil), true);
+
+        $listProgress = array();
+        foreach ($modulDiambil as $modulAmbil) {
+            $progress = progress::where('modul_id', $modulAmbil['modul_id'])->orderBy('updated_at', 'DESC')->first();
+            array_push($listProgress, $progress);
+        }
+
+        $proyekCust = proyek::where('cust_id', Session::get('cust_id'))->get();
+
+        $modul = modul::whereIn('proyek_id', $proyek)->get();
+
+        // dd(
+        //     $listProgress
+        // );
+        return view('modulPengerjaan', [
+            'modulDiambil' => $modulDiambil,
+            'listProgress' => $listProgress,
+            'proyekCust' => $proyekCust,
+            'modul' => $modul
+        ]);
+    }
+    public function loadModulSelesai()
+    {
+        //dari cust id get proyek id
+        $proyek = proyek::where('cust_id', Session::get('cust_id'))->get('proyek_id');
+        $proyek = json_decode(json_encode($proyek), true);
+        $modulDiambil = modulDiambil::whereIn('proyek_id', $proyek)->where('status', 'selesai')->get();
+        $modulDiambil = json_decode(json_encode($modulDiambil), true);
+
+        $listProgress = array();
+        foreach ($modulDiambil as $modulAmbil) {
+            $progress = progress::where('modul_id', $modulAmbil['modul_id'])->orderBy('updated_at', 'DESC')->first();
+            array_push($listProgress, $progress);
+        }
+
+        $listPembayaran = array();
+        foreach ($modulDiambil as $modulAmbil) {
+            $dataPembayaran = payment::where('modul_id', $modulAmbil['modul_id'])->first();
+
+            if ($dataPembayaran == null) {
+                $arrData = [
+                    "modul_id" => $modulAmbil['modul_id'],
+                    'status' => 'Belum Terbayar'
+                ];
+                array_push($listPembayaran, $arrData);
+            } else {
+                if (!str_contains($dataPembayaran['external_id'], 'pm')) {
+                    $arrData = [
+                        'payment_id' => $dataPembayaran['payment_id'],
+                        "modul_id" => $dataPembayaran['modul_id'],
+                        'status' => $dataPembayaran['status']
+                    ];
+                    array_push($listPembayaran, $arrData);
+                }
+            }
+        }
+
+        $proyekCust = proyek::where('cust_id', Session::get('cust_id'))->get();
+
+        $modul = modul::whereIn('proyek_id', $proyek)->get();
+
+        // dd(
+        //     $listPembayaran
+        // );
+        return view('modulSelesai', [
+            'modulDiambil' => $modulDiambil,
+            'listProgress' => $listProgress,
+            'proyekCust' => $proyekCust,
+            'modul' => $modul,
+            'listPembayaran' => $listPembayaran
+        ]);
     }
 }

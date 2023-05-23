@@ -62,7 +62,7 @@
 
                     <center>
                         <button type="submit" class="btn btn-success mt-3">Submit</button>
-                        <a href={{url("/loadDetailProyekClient/$proyekId/c/".session()->get('cust_id'))}} class="btn btn-warning mt-3">Kembali</a>
+                        <a href={{url()->previous()}} class="btn btn-secondary mt-3">Kembali</a>
                     </center>
                 </div>
               </div>

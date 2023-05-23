@@ -19,7 +19,7 @@
                         <input class="form-control mb-2" type="file" name='fileSertifikat' id="formFile">
                       </div>
                       <button type='submit' class="btn btn-primary">Simpan</button>
-                      <button class="btn btn-warning">Kembali</button>
+                      <a href={{url()->previous()}} class="btn btn-secondary">Kembali</a>
                 </form>
             </div>
           </div>

@@ -85,7 +85,6 @@ function setBadge(badgeVal) {
     }
 }
 
-
 function clearBadge() {
     if (navigator.clearAppBadge) {
         navigator.clearAppBadge();

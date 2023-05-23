@@ -40,7 +40,7 @@
             </tbody>
           </table>
           <button class="btn btn-success" data-bs-target="#modalBayar" data-bs-toggle="modal">Bayar</button>
-          <a href={{url("/loadDetailProyekClient/$dataProyek[proyek_id]/c")}} class="btn btn-secondary">Kembali</a>
+          <a href={{url()->previous()}} class="btn btn-secondary">Kembali</a>
         </div>
       </div>
       {{---------------------------------------------------MODAL-------------------------------------------------}}

@@ -32,8 +32,8 @@
                             @endif
 
                             <p class="card-text">{{ $proyek['desc_proyek'] }}</p>
-                            <p class="card-text">Proyek Dimulai Pada
-                                {{ Carbon\Carbon::parse($proyek->start_proyek)->format('d-m-Y') }}</p>
+                            <p class="card-text">Dimulai Pada:
+                               <b>{{ Carbon\Carbon::parse($proyek->start_proyek)->format('d-m-Y') }}</p></b>
                             <hr>
                             <div class="card-text">
                                 @foreach ($listtag as $tag)

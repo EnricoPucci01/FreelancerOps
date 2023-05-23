@@ -144,7 +144,7 @@ class loginController extends Controller
     public function loadDashboardClient()
     {
         $email=customer::where('cust_id',FacadesSession::get('cust_id'))->first();
-        $proyek = proyek::where('cust_id', FacadesSession::get('cust_id'))->get();
+        $proyek = proyek::where('cust_id', FacadesSession::get('cust_id'))->orderBy('created_at', 'DESC')->get();
         $proyek = json_decode(json_encode($proyek), true);
         $getNotif = notificationModel::where('customer_id', FacadesSession::get('cust_id'))->where('status', "S")->count();
 
@@ -157,6 +157,9 @@ class loginController extends Controller
 
         $modulSelesai = modulDiambil::whereIn('proyek_id',$proyekTerbit)->where('status','selesai')->count();
         $modulSelesai = json_decode(json_encode($modulSelesai), true);
+
+        $modulPengerjaan = modulDiambil::whereIn('proyek_id',$proyekTerbit)->where('status','pengerjaan')->count();
+        $modulPengerjaan = json_decode(json_encode($modulPengerjaan), true);
         //dd(count($proyekTerbit));
         //dd($modulSelesai);
         FacadesSession::put("notif", $getNotif);
@@ -164,7 +167,8 @@ class loginController extends Controller
             'proyek' => $proyek,
             "pengeluaran"=>(is_null($select[0]['jumlah']))?'0':$select[0]['jumlah'],
             'proyekTerbit'=>count($proyekTerbit),
-            'modulSelesai'=>$modulSelesai
+            'modulSelesai'=>$modulSelesai,
+            'modulPengerjaan'=>$modulPengerjaan
         ]);
     }
 

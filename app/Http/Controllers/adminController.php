@@ -10,6 +10,7 @@ use App\Models\modul;
 use App\Models\modulDiambil;
 use App\Models\notificationModel;
 use App\Models\payment;
+use App\Models\pembatalanFreelancer;
 use App\Models\penarikan;
 use App\Models\proyek;
 use Carbon\Carbon;
@@ -98,6 +99,36 @@ class adminController extends Controller
         return view('listRequestPenarikan', [
             'dataPenarikan' => $dataPenarikan,
             'dataCust' => $dataCust
+        ]);
+    }
+
+    public function loadPembatalanFreelancer()
+    {
+       $listPembatalan = pembatalanFreelancer::where('status','=','pend')->get();
+
+       $arrDataPembatalan = array();
+
+       foreach ($listPembatalan as $itemPembatalan) {
+        $modulTaken= modulDiambil::where('modultaken_id',$itemPembatalan->modultaken_id)->first();
+        $clientData= customer::where('cust_id',$itemPembatalan->client_id)->first();
+        $freelancerData=customer::where('cust_id',$modulTaken->cust_id)->first();
+        $proyekData=proyek::where('proyek_id',$modulTaken->proyek_id)->first();
+        $modulData=modul::where('modul_id',$modulTaken->modul_id)->first();
+        $array = [
+            "pembatalanId"=>$itemPembatalan->pembatalan_id,
+            "client"=>$clientData->nama,
+            "freelancer"=>$freelancerData->nama,
+            "proyek"=>$proyekData->nama_proyek,
+            "modul"=>$modulData->title,
+            "alasan"=>$itemPembatalan->alasan,
+            "modulTakenId"=>$itemPembatalan->modultaken_id,
+        ];
+        array_push($arrDataPembatalan, $array);
+       }
+
+        //dd($arrDataPembatalan);
+        return view('listPembatalanFreelancer', [
+            'arrDataPembatalan' => $arrDataPembatalan
         ]);
     }
 
@@ -850,6 +881,47 @@ class adminController extends Controller
         }else{
             DB::rollBack();
             return Redirect::back()->with('error','Kategori gagal ditambahkan!');
+        }
+    }
+
+    public function batalkanFreelancerAdmin($modulTakenId,$pembatalanId,$mode){
+        DB::beginTransaction();
+        $modulTerambil = modulDiambil::where('modultaken_id', $modulTakenId)->first();
+        $pembatalanReq = pembatalanFreelancer::where('pembatalan_id',$pembatalanId)->first();
+
+        if($mode == "acc"){
+            $modulTerambil->status = 'dibatalkan';
+            $modulTerambil->save();
+
+            $pembatalanReq->status = $mode;
+            $pembatalanReq->save();
+            if ($modulTerambil&&$pembatalanReq) {
+                $modul = modul::where('modul_id', $modulTerambil->modul_id)->first();
+                $modul->status = 'not taken';
+                $modul->save();
+
+                if ($modul && $modulTerambil) {
+                    DB::commit();
+
+                    return redirect()->back()->with('success', 'Freelancer berhasil dibatalkan!');
+                } else {
+                    DB::rollback();
+
+                    return redirect()->back()->with('error', 'Freelancer gagal dibatalkan!');
+                }
+            }
+        }else if($mode == 'dec'){
+            $pembatalanReq->status=$mode;
+            $pembatalanReq->save();
+            $pembatalanReq->delete();
+
+            if($pembatalanReq){
+                DB::commit();
+                return redirect()->back()->with('success', 'Penolakan Pembatalan Berhasil!');
+            }else{
+                DB::rollback();
+                return redirect()->back()->with('errot', 'Penolakan Pembatalan Gagal!');
+            }
         }
     }
 }

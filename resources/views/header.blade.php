@@ -80,7 +80,7 @@
             @if (session()->get('role') == 'freelancer')
                 <a href="{{ url('/dashboardfreelancer') }}">Dashboard</a>
                 <a href={{ url('/browse') }}>Browse</a>
-                <a href={{ url('/listProyekFreelancer/' . session()->get('cust_id')) }}>My Projects</a>
+                <a href={{ url('/listProyekFreelancer/reset') }}>My Projects</a>
                 <a href={{url('/loadNotif/'.session()->get('cust_id'))}} class="notification">
                     <i class="bi bi-bell-fill"></i>
                     <span class="badge">{{ session()->get('notif') }}</span>

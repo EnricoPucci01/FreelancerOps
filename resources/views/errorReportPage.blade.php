@@ -22,7 +22,7 @@
 
         <center>
             <button type="submit" id='btSub' class="btn btn-success mt-3">Laporkan Error</button>
-            <a href="#" class="btn btn-warning mt-3">Kembali</a>
+            <a href={{url()->previous()}} class="btn btn-secondary mt-3">Kembali</a>
         </center>
     </form>
 

@@ -51,6 +51,11 @@
                     </tr>
                     <tr>
                         <td>
+                            <a href={{url("/loadPembatalanFreelancer")}} class="btn btn-outline-dark fw-bold" style="width: 100%">Permohonan Pembatalan Freelancer</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <a href={{url("/openTag")}} class="btn btn-outline-dark fw-bold" style="width: 100%">Tambah Tag</a>
                         </td>
                     </tr>
