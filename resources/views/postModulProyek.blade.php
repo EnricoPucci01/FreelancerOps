@@ -6,6 +6,7 @@
             @method('POST')
             <input type='hidden' name="tipeProyek" id="tipeProyek" value={{ session()->get('tipe_proyek') }}>
             <input type='hidden' name="hid_val" id="hid_val" value='0'>
+            <input type='hidden' name="hid_val_del" id="hid_val_del" value='0'>
             <div class="card" style="width: 100%; margin-top: 20px; padding:10px">
                 <div class="card-body">
                     <h3 class="card-title">Tambah Modul</h3>
@@ -96,32 +97,37 @@
 
                     <button type='button' class='btn btn-primary form-control mt-2' id="btnok">Tambah Modul</button>
                     @if (session()->get('tipe_proyek') == 'normal')
-                        <table id="modul_table" class="table table-striped mt-2">
-                            <thead class='thead-light'>
-                                <td>
-                                    Nama
-                                </td>
-                                <td>
-                                    Deskripsi
-                                </td>
-                                <td>
-                                    Dokumen Modul
-                                </td>
-                                <td>
-                                    Bayaran
-                                </td>
-                                <td>
-                                    Deadline
-                                </td>
-                                <td>
+                        <table  class="table table-striped mt-2">
+                            <thead class='thead-light' >
+                                <tr>
+                                    <td>
+                                        Nama
+                                    </td>
+                                    <td>
+                                        Deskripsi
+                                    </td>
+                                    <td>
+                                        Dokumen Modul
+                                    </td>
+                                    <td>
+                                        Bayaran
+                                    </td>
+                                    <td>
+                                        Deadline
+                                    </td>
+                                    <td>
 
-                                </td>
+                                    </td>
+                                </tr>
                             </thead>
+                            <tbody id="modul_table">
+
+                            </tbody>
                         </table>
                     @endif
                     @if (session()->get('tipe_proyek') == 'magang')
                         <!-- Modul Magang-->
-                        <table id="modul_table_Magang" class="table table-striped mt-2">
+                        <table class="table table-striped mt-2">
                             <thead class='thead-light'>
                                 <tr>
                                     <td>
@@ -147,6 +153,9 @@
                                     </td>
                                 </tr>
                             </thead>
+                            <tbody id="modul_table_Magang">
+
+                            </tbody>
                         </table>
                     @endif
 

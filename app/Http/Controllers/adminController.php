@@ -13,6 +13,7 @@ use App\Models\payment;
 use App\Models\pembatalanFreelancer;
 use App\Models\penarikan;
 use App\Models\proyek;
+use App\Models\tambahRekening;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -42,7 +43,6 @@ class adminController extends Controller
 
     public function subTarikDana(Request $request)
     {
-
         $formValidate = $request->validate([
             'no_rek' => 'required|numeric',
             'total_penarikan' => 'required|'
@@ -53,7 +53,6 @@ class adminController extends Controller
             'total_penarikan.numeric' => 'Total Penarikan hanya boleh berisi angka!',
         ]);
 
-
         $tanggalReq = date('Y-m-d H:i:s');
 
         $saldoPenarik = customer::where('cust_id',Session::get('cust_id'))->first();
@@ -61,11 +60,13 @@ class adminController extends Controller
         if((int)$saldoPenarik->saldo >= (int)str_replace(".","",$request->input('total_penarikan'))){
             DB::beginTransaction();
 
+            $norek= tambahRekening::where("norek_id", $request->input('no_rek'))->first();
+
             $insertPenarikan = new penarikan();
             $insertPenarikan->cust_id = Session::get('cust_id');
             $insertPenarikan->berita = "Penarikan dana";
-            $insertPenarikan->no_rek = $request->input('no_rek');
-            $insertPenarikan->bank = $request->input('bank');
+            $insertPenarikan->no_rek = $norek->nomor_rek;
+            $insertPenarikan->bank = $norek->bank;
             $insertPenarikan->jumlah = str_replace(".","",$request->input('total_penarikan'));
             $insertPenarikan->tanggal_request = $tanggalReq;
             $insertPenarikan->save();
@@ -81,7 +82,6 @@ class adminController extends Controller
             DB::rollback();
             return Redirect::back()->with('error', 'Jumlah penarikan anda lebih besar dari saldo anda!');
         }
-
     }
 
     public function loadPenarikanDana()
@@ -199,22 +199,6 @@ class adminController extends Controller
         }
         $judulKategori = jobKategori::find($kategoriJobId);
         $itemKategori = jobKategori::get();
-        $chartBulan = new chartControl;
-        $chartBulan->labels($bulan);
-        $chartBulan->dataset('', 'bar', $count)->options(
-            [
-                'backgroundColor' => [
-                    "rgb(54, 162, 235)",
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)',
-                    'rgb(55, 212, 79)',
-                    'rgb(60, 66, 61)',
-                    'rgb(245, 118, 7)',
-                    'rgb(8, 69, 115)',
-                    'rgb(88, 8, 115)'
-                ]
-            ]
-        );
 
         $query = "SELECT MONTHNAME(modul_diambil.created_at) as months ,count(modul_diambil.modultaken_id) as counts
         FROM modul_diambil
@@ -234,12 +218,13 @@ class adminController extends Controller
         //dd($dbKategori);
 
         return view('laporanBulanAktif', [
-            "chart2" => $chartBulan,
             "judul" => $judulKategori->judul_kategori,
             'rekap' => $dbSortedMonth,
             'rekapKategori' => $dbKategori,
             'itemKategori' => $itemKategori,
-            'selected' => $kategoriJobId
+            'selected' => $kategoriJobId,
+            'labels'=>$bulan,
+            'data'=>$count
         ]);
     }
 
@@ -304,60 +289,12 @@ class adminController extends Controller
             array_push($count, $Valnama['jumlah']);
         }
 
-
-        // $chart_options = [
-        //     'chart_title' => 'Tingkat Edukasi',
-        //     'report_type' => 'group_by_string',
-        //     'model' => 'App\Models\customer',
-        //     'group_by_field' => 'pendidikan',
-        //     'aggregate_function' => 'count',
-        //     'aggregate_field' => 'pendidikan',
-        //     'chart_type' => 'bar',
-        //     'chart_color' => '255, 0, 30, 1',
-        //     'where_raw' => "role = 'freelancer'"
-        // ];
-        // $chart1 = new LaravelChart($chart_options);
-
-
-        // $chartumur = new chartControl;
-        // $chartumur->labels($umur);
-        // $chartumur->dataset('Umur Customer', 'pie', $jumlah)->options(
-        //     [
-        //         'backgroundColor' => [
-        //             "rgb(54, 162, 235)",
-        //             'rgb(255, 99, 132)',
-        //             'rgb(255, 205, 86)',
-        //             'rgb(55, 212, 79)',
-        //             'rgb(60, 66, 61)',
-        //             'rgb(245, 118, 7)',
-        //             'rgb(8, 69, 115)',
-        //             'rgb(88, 8, 115)'
-        //         ]
-        //     ]
-        // );
-
-        $chartspesialisasi = new chartControl;
-        $chartspesialisasi->labels($skill);
-        $chartspesialisasi->dataset('Skill Freelancer', 'pie', $count)->options(
-            [
-                'backgroundColor' => [
-                    "rgb(54, 162, 235)",
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)',
-                    'rgb(55, 212, 79)',
-                    'rgb(60, 66, 61)',
-                    'rgb(245, 118, 7)',
-                    'rgb(8, 69, 115)',
-                    'rgb(88, 8, 115)'
-                ]
-            ]
-        );
-
         return view("laporanFreelancer", [
-            'chart2' => $chartspesialisasi,
             'judul2' => 'Grafik Spesialisasi Freelancer',
             'dataFreelancer' => $dbspesialisasi,
-            'dataKebutuhan' =>$dbKebutuhan
+            'dataKebutuhan' =>$dbKebutuhan,
+            'labels'=>$skill,
+            'data'=>$count
         ]);
     }
 
@@ -529,27 +466,8 @@ class adminController extends Controller
         $total = array();
         foreach ($db as $Valnama) {
             array_push($bulan, $Valnama['bulan']);
-            array_push($total, $Valnama['total']);
+            array_push($total, (int)$Valnama['total']);
         }
-
-
-        $chartPendapatan = new chartControl;
-        $chartPendapatan->labels($bulan);
-        $chartPendapatan->dataset('', 'line', $total);
-        // ->options(
-        //     [
-        //         'backgroundColor' => [
-        //             "rgb(54, 162, 235)",
-        //             'rgb(255, 99, 132)',
-        //             'rgb(255, 205, 86)',
-        //             'rgb(55, 212, 79)',
-        //             'rgb(60, 66, 61)',
-        //             'rgb(245, 118, 7)',
-        //             'rgb(8, 69, 115)',
-        //             'rgb(88, 8, 115)'
-        //         ]
-        //     ]
-        // );
 
         $queryChart1 = "SELECT payment.status as statusPay,Count(payment_id) as jumlah
         FROM payment
@@ -575,10 +493,13 @@ class adminController extends Controller
 
         return view('chart', [
             'chart1' => $chart1,
-            'chart2' => $chartPendapatan,
+            'chart2' => "1",
             'judul2' => 'Grafik Laporan Pendapatan',
             'chart' => '0',
-            'statusChart1'=>$dbChart1
+            'statusChart1'=>$dbChart1,
+            'labels'=>$bulan,
+            'data'=>$total,
+            'type'=>'line'
         ]);
     }
 
@@ -710,23 +631,6 @@ class adminController extends Controller
             array_push($jumlah, $Valnama['jumlah']);
         }
 
-        $chartumur = new chartControl;
-        $chartumur->labels($nama);
-        $chartumur->dataset('Tag Proyek', 'pie', $jumlah)->options(
-            [
-                'backgroundColor' => [
-                    "rgb(54, 162, 235)",
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)',
-                    'rgb(55, 212, 79)',
-                    'rgb(60, 66, 61)',
-                    'rgb(245, 118, 7)',
-                    'rgb(8, 69, 115)',
-                    'rgb(88, 8, 115)'
-                ]
-            ]
-        );
-
 
         $query = "SELECT kategori_job.judul_kategori as nama, COUNT(kategori_job.kategorijob_id) as jumlah
         FROM (
@@ -751,29 +655,18 @@ class adminController extends Controller
             array_push($jumlahKategori, $Valnama['jumlah']);
         }
 
-        $chartKategori = new chartControl;
-        $chartKategori->labels($namaKategori);
-        $chartKategori->dataset('Kategori Proyek', 'pie', $jumlahKategori)->options(
-            [
-                'backgroundColor' => [
-                    "rgb(54, 162, 235)",
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)',
-                    'rgb(55, 212, 79)',
-                    'rgb(60, 66, 61)',
-                    'rgb(245, 118, 7)',
-                    'rgb(8, 69, 115)',
-                    'rgb(88, 8, 115)'
-                ]
-            ]
-        );
-
         return view("chart", [
-            'chart' => $chartumur,
+            'chart' => '1',
+            'type0'=>"pie",
+            'data0'=>$jumlah,
+            'labels0'=>$nama,
             'judul' => 'Grafik Tag Proyek Favorit',
             'chart1' => '0',
-            'chart2' => $chartKategori,
-            'judul2' => 'Grafik Kategori Proyek Favorit'
+            'chart2' => '1',
+            'judul2' => 'Grafik Kategori Proyek Favorit',
+            'labels'=>$namaKategori,
+            'data'=>$jumlahKategori,
+            'type'=>'pie'
         ]);
     }
 

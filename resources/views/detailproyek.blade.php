@@ -11,7 +11,8 @@
                     </td>
 
                     <td>
-                        <a href={{asset("/storage/dokumen/$dataproyek[dokumentasi_proyek]")}} download class="btn btn-success"><i class="bi bi-download"></i></a>
+                        <a href={{ asset("/storage/dokumen/$dataproyek[dokumentasi_proyek]") }} download
+                            class="btn btn-success"><i class="bi bi-download"></i></a>
                     </td>
                 </tr>
             </table>
@@ -120,7 +121,8 @@
                             {{ $modul['end'] }}
                         </td>
                         <td>
-                            <a href={{asset("/storage/dokumenModul/$modul[dokumentasi]")}} download class="btn btn-success"><i class="bi bi-download"></i></a>
+                            <a href={{ asset("/storage/dokumenModul/$modul[dokumentasi]") }} download
+                                class="btn btn-success"><i class="bi bi-download"></i></a>
                         </td>
                         <td>
                             @php
@@ -131,7 +133,7 @@
                                     echo "<button type='button' class='btn btn-danger bi bi-x' data-toggle='tooltip' data-placement='top' title='Modul Telah Di Ambil'>
                                         </button>";
                                 } else {
-                                    echo "<input class='form-check-input' type='checkbox' value=$modul[modul_id] name='checkambil[]'>";
+                                    echo "<input class='form-check-input' id='cbMod' type='checkbox' value=$modul[modul_id] name='checkambil[]' onclick=onCheck()>";
                                 }
                             @endphp
 
@@ -141,15 +143,29 @@
             </table>
 
             <label for="formFile" class="form-label">Masukan Portofolio/CV anda</label>
-            <input class="form-control" type="file" name='filecv' id="formFile" accept="application/pdf">
+            <input class="form-control" type="file" name='filecv' id="formFile" accept="application/pdf" required>
             <label for="desc" class="form-label mt-3">Deskripsikan Mengapa Client Harus Memilih Anda?</label>
             <textarea class="form-control" aria-label="Deskripsikan dalam 1000 huruf" name="custDesc" maxlength="1000"
-                id='desc'></textarea>
-
+                id='desc' required></textarea>
+            <p class="text-danger font-weight-bold" id="warn" style="display:block">*Anda belum memilih modul!</p>
             <center>
                 <button type="submit" class="btn btn-primary mt-3"> Ajukan CV </button>
                 <a href={{ url()->previous() }} class="btn btn-secondary mt-3"> Kembali </a>
             </center>
         </form>
     </div>
+@endsection
+@section('script')
+    <script>
+        function onCheck() {
+            var i = 0;
+            var markedCheckbox = document.querySelectorAll('input[type="checkbox"]:checked');
+            var warning = document.getElementById("warn");
+            if(markedCheckbox.length > 0){
+                warning.style.display = "none";
+            }else{
+                warning.style.display = "block";
+            }
+        }
+    </script>
 @endsection

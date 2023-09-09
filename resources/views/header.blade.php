@@ -80,7 +80,7 @@
             @if (session()->get('role') == 'freelancer')
                 <a href="{{ url('/dashboardfreelancer') }}">Dashboard</a>
                 <a href={{ url('/browse') }}>Browse</a>
-                <a href={{ url('/listProyekFreelancer/reset') }}>My Projects</a>
+                <a href={{ url('/listProyekFreelancer/default') }}>My Projects</a>
                 <a href={{url('/loadNotif/'.session()->get('cust_id'))}} class="notification">
                     <i class="bi bi-bell-fill"></i>
                     <span class="badge">{{ session()->get('notif') }}</span>
@@ -210,7 +210,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-
 
     @yield('script')
 </body>

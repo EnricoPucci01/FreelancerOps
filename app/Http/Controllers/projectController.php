@@ -115,71 +115,77 @@ class projectController extends Controller
         $deadlineModulIsGreater = false;
         $modulArr = [];
         $modulMagangArr = [];
+        $hid_val = $request->input('hid_val');
         if (Session::get('tipe_proyek') == 'magang') {
-            for ($i = 0; $i < (int)$request->input('hid_val'); $i++) {
 
-                $filename = "";
+            for ($i = 0; $i < (int)$hid_val; $i++) {
+                if ($request->hasAny("nama_modul" . $i . "")){
+                    $filename = "";
 
-                if (!empty($request->file("dokumenModul" . $i . ""))) {
-                    $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
-                    $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
-                    if ($path != "" && $path != null) {
-                        $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
-                        $firebase_storage_path = 'dokumenModul/';
-                        $localfolder = public_path('firebase-temp-uploads') . '/';
-                        if ($image->move($localfolder, $filename)) {
-                            $uploadedfile = fopen($localfolder . $filename, 'r');
-                            app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
-                            //will remove from local laravel folder
-                            unlink($localfolder . $filename);
+                    if (!empty($request->file("dokumenModul" . $i . ""))) {
+                        $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                        $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
+                        if ($path != "" && $path != null) {
+                            $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
+                            $firebase_storage_path = 'dokumenModul/';
+                            $localfolder = public_path('firebase-temp-uploads') . '/';
+                            if ($image->move($localfolder, $filename)) {
+                                $uploadedfile = fopen($localfolder . $filename, 'r');
+                                app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+                                //will remove from local laravel folder
+                                unlink($localfolder . $filename);
+                            }
                         }
                     }
-                }
-                $modulTemp = array(
-                    "nama_modul" => $request->input("nama_modul" . $i . ""),
-                    "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
-                    "dokumen_modul" => $filename,
-                    "bayaran1" => $request->input("rentang1_bayaran" . $i . ""),
-                    "bayaran2" => $request->input("rentang2_bayaran" . $i . ""),
-                    "deadline_modul" => $request->input("deadline_modul" . $i . ""),
-                );
-                array_push($modulMagangArr, $modulTemp);
-                if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
-                    $deadlineModulIsGreater = true;
+                    $modulTemp = array(
+                        "nama_modul" => $request->input("nama_modul" . $i . ""),
+                        "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
+                        "dokumen_modul" => $filename,
+                        "bayaran1" => $request->input("rentang1_bayaran" . $i . ""),
+                        "bayaran2" => $request->input("rentang2_bayaran" . $i . ""),
+                        "deadline_modul" => $request->input("deadline_modul" . $i . ""),
+                    );
+                    array_push($modulMagangArr, $modulTemp);
+                    if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
+                        $deadlineModulIsGreater = true;
+                    }
                 }
             }
         } else {
-            for ($i = 0; $i < (int)$request->input('hid_val'); $i++) {
+            for ($i = 0; $i < (int)$hid_val; $i++) {
+                if ($request->hasAny("nama_modul" . $i . "")) {
+                    $filename = "";
 
-                $filename = "";
-
-                if (!empty($request->file("dokumenModul" . $i . ""))) {
-                    $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
-                    $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
-                    if ($path != "" && $path != null) {
-                        $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
-                        $firebase_storage_path = 'dokumenModul/';
-                        $localfolder = public_path('firebase-temp-uploads') . '/';
-                        if ($image->move($localfolder, $filename)) {
-                            $uploadedfile = fopen($localfolder . $filename, 'r');
-                            app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
-                            //will remove from local laravel folder
-                            unlink($localfolder . $filename);
+                    if (!empty($request->file("dokumenModul" . $i . ""))) {
+                        $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                        $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
+                        if ($path != "" && $path != null) {
+                            $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
+                            $firebase_storage_path = 'dokumenModul/';
+                            $localfolder = public_path('firebase-temp-uploads') . '/';
+                            if ($image->move($localfolder, $filename)) {
+                                $uploadedfile = fopen($localfolder . $filename, 'r');
+                                app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+                                //will remove from local laravel folder
+                                unlink($localfolder . $filename);
+                            }
                         }
                     }
-                }
-                $modulTemp = array(
-                    "nama_modul" => $request->input("nama_modul" . $i . ""),
-                    "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
-                    "dokumen_modul" => $filename,
-                    "bayaran" => $request->input("bayaran" . $i . ""),
-                    "deadline_modul" => $request->input("deadline_modul" . $i . ""),
-                );
-                array_push($modulArr, $modulTemp);
-                if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
-                    $deadlineModulIsGreater = true;
+                    $modulTemp = array(
+                        "nama_modul" => $request->input("nama_modul" . $i . ""),
+                        "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
+                        "dokumen_modul" => $filename,
+                        "bayaran" => $request->input("bayaran" . $i . ""),
+                        "deadline_modul" => $request->input("deadline_modul" . $i . ""),
+                    );
+                    array_push($modulArr, $modulTemp);
+
+                    if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
+                        $deadlineModulIsGreater = true;
+                    }
                 }
             }
+            //dd($modulArr);
         }
         if ($deadlineModulIsGreater) {
             return \redirect("/postproject")->with('error', 'Deadline modul tidak dapat melebihi deadline proyek');
@@ -560,16 +566,21 @@ class projectController extends Controller
         }
     }
 
-    public function loadListProyekFreelancer($mode)
+    public function loadListProyekFreelancer(Request $request,$mode)
     {
+        $proyek = proyek::get();
         $modulDiambil = modulDiambil::where('cust_id', Session::get("cust_id"))->where('status', "!=", 'dibatalkan')->get('modul_id');
         $modulDiambil = json_decode(json_encode($modulDiambil), true);
-
-        if ($mode == "deadline") {
-            $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('end', 'ASC')->paginate(5);
-        } else if ($mode == 'tglmulai') {
-            $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('start', 'ASC')->paginate(5);
-        } else if ($mode == 'reset') {
+        $selected="";
+        if ($mode == "sort") {
+            if($request->input("rbsort") == "tanggalDeadline"){
+                $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('end', 'ASC')->paginate(5);
+            }else if($request->input("rbsort")=="tanggalMulai"){
+                $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('start', 'ASC')->paginate(5);
+            }
+            $selected=$request->input("rbsort");
+        } else if($mode == "default"){
+            $selected="reset";
             $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->paginate(5);
         }
 
@@ -586,7 +597,8 @@ class projectController extends Controller
             'listproyek' => $modulFreelancer,
             'custId' => Session::get("cust_id"),
             'listProgress' => $listProgress,
-            'mode' => $mode
+            'allproyek'=>$proyek,
+            'checkedRb'=>$selected,
         ]);
     }
 
@@ -640,7 +652,7 @@ class projectController extends Controller
                 'progDesc' => 'required|max:1000'
             ],
             [
-                'progDesc.required'=>"Deskripsi Progress tidak dapat kosong",
+                'progDesc.required' => "Deskripsi Progress tidak dapat kosong",
                 'progDesc.max' => 'Panjang maksimal nama modul adalah 1000 karakter!'
             ]
         );
@@ -955,7 +967,7 @@ class projectController extends Controller
             $progress->modul_id = $modulId;
             $progress->upload_time = $UploadDate;
             $progress->file_dir = $filename;
-            $progress->progress = "Perbaikan Untuk Laporan Error Tanggal " . $error['report_time'];
+            $progress->progress = "[Perbaikan Untuk Laporan Error Tanggal " . $error['report_time']."] ".$request->input("descPerbaikan");
             $progress->status = 'Error Fix';
             $progress->save();
 
@@ -1003,7 +1015,6 @@ class projectController extends Controller
 
                 //dd($proyekList);
                 $recommendedProyek = proyek::where('project_active', 'true')->where('start_proyek', '>=', Carbon::now())->whereIn('kategorijob_id', $proyekList)->get();
-                $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
                 $listTag = tag::get();
                 $listTag = json_decode(json_encode($listTag), true);
 
@@ -1033,7 +1044,6 @@ class projectController extends Controller
 
                 //dd($proyekCount);
                 $recommendedProyek = proyek::where('project_active', 'true')->where('start_proyek', '>=', Carbon::now())->whereIn('proyek_id', $tag)->get();
-                $recommendedProyek = json_decode(json_encode($recommendedProyek), true);
 
                 $listTag = tag::get();
                 $listTag = json_decode(json_encode($listTag), true);
@@ -1042,6 +1052,7 @@ class projectController extends Controller
                 $listKategori = kategori::get();
                 $listKategori = json_decode(json_encode($listKategori), true);
 
+                //dd($recommendedProyek);
                 return view('RekomendasiProyek', [
                     'recomendProyek' => $recommendedProyek,
                     'listkategori' => $listKategori,

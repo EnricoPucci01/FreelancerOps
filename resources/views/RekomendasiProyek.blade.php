@@ -15,38 +15,61 @@
                     href={{ url('/loadRecomend/Tag') }}><u>Tag</u></a>
             </nav>
             <table>
-                @foreach ($recomendProyek as $proyek)
-                    <tr>
-                        <div class="card mb-3" style="width: 30rem; margin-top: 20px">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $proyek['nama_proyek'] }}</h5>
-                                @foreach ($listkategoriJob as $katJob)
-                                    @if ($katJob['kategorijob_id'] == $proyek['kategorijob_id'])
-                                        <h6 class="card-subtitle mb-2 text-muted">{{ $katJob['judul_kategori'] }}</h5>
-                                    @endif
-                                @endforeach
-                                <p class="card-text">{{ $proyek['desc_proyek'] }}</p>
-                                <hr>
-                                <div class="card-text">
-                                    @foreach ($listtag as $tag)
-                                        @if ($proyek['proyek_id'] == $tag['proyek_id'])
-                                            @foreach ($listkategori as $kategori)
-                                                @if ($tag['kategori_id'] == $kategori['kategori_id'])
-                                                    <p class="badge rounded-pill bg-primary" style="margin-bottom: 0px">
-                                                        #{{ $kategori['nama_kategori'] }}
-                                                    </p>
-                                                @endif
-                                            @endforeach
+                @if (count($recomendProyek) <= 0)
+                    <div class="card mb-3" style="width: 30rem; margin-top: 20px; text-align:left">
+                        <h5 class="card-title">Tidak ada rekomendasi</h5>
+                    </div>
+                @else
+                    @foreach ($recomendProyek as $proyek)
+                        <tr>
+                            <div class="card mb-3" style="width: 30rem; margin-top: 20px; text-align:left">
+                                <img class="card-img-top" src={{ asset("/storage/dokumen/$proyek->dokumentasi_proyek") }} >
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{$proyek->nama_proyek}}</h5>
+                                    @foreach ($listkategoriJob as $katJob)
+                                        @if ($katJob['kategorijob_id']==$proyek->kategorijob_id)
+                                            <h6 class="card-subtitle mb-2 text-muted">{{$katJob['judul_kategori']}}</h5>
                                         @endif
                                     @endforeach
+                                    <hr>
+                                    <p class="card-text">{{ $proyek->desc_proyek }}</p>
+
+                                    @if ($dataproyek['tipe_proyek'] == 'magang')
+                                        @money($modul['bayaran_min'], 'IDR', true) - @money($modul['bayaran_max'], 'IDR', true)
+                                    @else
+                                        @money($modul['bayaran'], 'IDR', true)
+                                    @endif
+                                    <hr>
+                                    <p class="card-text">Dimulai:
+                                        <b>{{ Carbon\Carbon::parse($proyek->start_proyek)->format('d-m-Y') }}</b> Deadline:
+                                        <b>{{ Carbon\Carbon::parse($proyek->deadline)->format('d-m-Y') }}</b>
+                                    </p>
+
+                                    <hr>
+                                    <div class="card-text">
+                                        @foreach ($listtag as $tag)
+                                            @if ($proyek->proyek_id == $tag['proyek_id'])
+                                                @foreach ($listkategori as $kategori)
+                                                    @if ($tag['kategori_id'] == $kategori['kategori_id'])
+                                                        <p class="badge rounded-pill bg-primary" style="margin-bottom: 0px">
+                                                            #{{ $kategori['nama_kategori'] }}
+                                                        </p>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                    <hr>
+                                    <a href={{ url("/loadProyek/$proyek->proyek_id/" . session()->get('cust_id')) }}
+                                        class="btn btn-primary">Lihat
+                                        Detail</a>
                                 </div>
-                                <hr>
-                                <a href={{ url("/loadProyek/$proyek[proyek_id]/" . session()->get('cust_id')) }}
-                                    class="btn btn-primary">Lihat Detail</a>
                             </div>
-                        </div>
-                    </tr>
-                @endforeach
+                        </tr>
+                    @endforeach
+                @endif
+
             </table>
         </div>
     </center>

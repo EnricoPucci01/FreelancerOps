@@ -8,7 +8,7 @@
         .sidebar {
             margin: 0;
             padding: 0;
-            width: 200px;
+            width: 220px;
             background-color: #f1f1f1;
             position: absolute;
             height: 35%;
@@ -68,14 +68,37 @@
         }
     </style>
     <center>
-        <div class="sidebar">
-            <div style="background:#1b63a1; height:15%; color:white; font-weight:bold; font-size:20px" class="center">
+        <div class="sidebar" style="height: 170px; text-align:left;">
+            <div style="background:#1b63a1; height:20%; color:white; font-weight:bold; font-size:20px;padding-left:10px"
+                class="center">
                 <p>Sort</p>
             </div>
-            <a href={{ url('/listProyekFreelancer/deadline') }} class={{  $mode == "deadline" ? 'active' : "" }}>Tanggal
-                Deadline</a>
-            <a href={{ url('/listProyekFreelancer/tglmulai') }} class={{  $mode == "tglmulai" ? 'active' : "" }}>Tanggal Mulai</a>
-            <a href={{ url('/listProyekFreelancer/reset') }}>Reset</a>
+            <form action={{ url('/listProyekFreelancer/sort') }} style="padding-left:10px">
+
+                <input type="radio" id="tanggalDeadline" name="rbsort" value="tanggalDeadline"
+                    {{ $checkedRb == 'tanggalDeadline' ? 'checked' : '' }}>
+                <label for="tanggalDeadline">Deadline terdekat</label> <br>
+
+                <input type="radio" id="tanggalMulai" name="rbsort" value="tanggalMulai"
+                    {{ $checkedRb == 'tanggalMulai' ? 'checked' : '' }}>
+                <label for="tanggalMulai">Tanggal mulai terdekat</label> <br>
+                <div style="margin-top: 20px">
+                    <table>
+                        <tr>
+                            <td>
+                                <button type="submit" name="btnSort" class="btn btn-success">
+                                    Sortir
+                                </button>
+                            </td>
+                            <td>
+                                <a href={{ url('/listProyekFreelancer/default') }}>Reset</a>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                </div>
+            </form>
         </div>
         @if (count($listproyek) > 0)
             <table>
@@ -84,6 +107,53 @@
                         <div class="card mb-2" style="width: 30rem; margin-top: 20px">
                             <div class="card-header">
                                 <h5 class="card-title">{{ $proyek->title }}</h5>
+
+                                @foreach ($allproyek as $proj)
+                                    @if ($proj->proyek_id == $proyek->proyek_id)
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ $proj->nama_proyek }}</h5>
+
+                                            {{-- -------------------------------------------------MODAL----------------------------------------------- --}}
+                                            {{-- Modal Post --}}
+                                            <div class="modal fade" tabindex="-1"aria-hidden="true" id="modalPost{{$proyek->modul_id}}" style="text-align: left">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <form
+                                                        action="{{ url("/updateProgress/$proyek[modul_id]/$proj[tipe_proyek]") }}"
+                                                        method="post" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalToggleLabel2">
+                                                                    Selesaikan Modul {{$proyek->title}}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <label for="formFile" class="form-label">Masukan File
+                                                                    Proyek</label>
+                                                                <input class="form-control" type="file" name='fileModul'
+                                                                    id="formFile">
+                                                                <label for="desc" class="form-label mt-3">Deskripsikan
+                                                                    Progress Anda</label>
+                                                                <textarea class="form-control" aria-label="Deskripsikan dalam 1000 huruf" name="progDesc" maxlength="1000"
+                                                                    id='desc'></textarea>
+                                                                <input type="checkbox" class="form-check-input ml-0"
+                                                                    id="exampleCheck1" name='cb[]' value='finish' checked
+                                                                    disabled>
+                                                                <label class="form-check-label ml-3 fw-bold"
+                                                                    for="exampleCheck1">&nbsp;Modul Sudah
+                                                                    Selesai</label>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Selesaikan</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {{-- ---------------------------------------------------------------------------------------------------- --}}
+                                    @endif
+                                @endforeach
                             </div>
                             <div class="card-body" style="text-align: start">
                                 <h6>Progress Terakhir</h6>
@@ -111,6 +181,9 @@
                                     class="btn btn-primary btn-sm">Lihat Detail</a>
                                 <a href={{ url("/loadError/$proyek[modul_id]") }} class="btn btn-warning btn-sm">Lihat
                                     Laporan Error</a>
+                                <button type="button" data-bs-target="#modalPost{{$proyek->modul_id}}" data-bs-toggle="modal"
+                                    class="btn btn-success btn-sm">Selesaikan Modul
+                                </button>
                             </div>
                         </div>
                     </tr>
@@ -123,5 +196,4 @@
         @endif
         {{ $listproyek->links('pagination::bootstrap-4') }}
     </center>
-
 @endsection

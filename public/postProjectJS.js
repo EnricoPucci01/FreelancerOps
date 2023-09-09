@@ -4,10 +4,11 @@
     var table = document.getElementById("modul_table");
     var table_magang = document.getElementById("modul_table_Magang");
     var hid_val = document.getElementById('hid_val');
+    var hid_val_del = document.getElementById('hid_val_del');
     select.addEventListener('click', function () {
-        if (jenisProyek.value == "magang") {
 
-            var row = table_magang.insertRow(1);
+        if (jenisProyek.value == "magang") {
+            var row = table_magang.insertRow(hid_val_del.value);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
@@ -18,15 +19,15 @@
             cell1.innerHTML = '<input type="text" class="form-control" name="nama_modul' + hid_val.value + '">';
             cell2.innerHTML = '<textarea class="form-control" name="desc_modul' + hid_val.value + '"></textarea>';
             cell3.innerHTML = '<input type="file" class="form-control" accept=".png,.jpg,.pdf" name="dokumenModul' + hid_val.value + '">';
-            cell4.innerHTML = '<input type="text" class="form-control" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="rentang1_bayaran' + hid_val.value + '" name="rentang1_bayaran' + hid_val.value + '">';
-            cell5.innerHTML = '<input type="text" class="form-control" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="rentang2_bayaran' + hid_val.value + '" name="rentang2_bayaran' + hid_val.value + '">';
+            cell4.innerHTML = '<input type="text" class="form-control" onkeyup="editTotal(' + hid_val.value + ')" id="rentang1_bayaran' + hid_val.value + '" name="rentang1_bayaran' + hid_val.value + '">';
+            cell5.innerHTML = '<input type="text" class="form-control" onkeyup="editTotal(' + hid_val.value + ')" id="rentang2_bayaran' + hid_val.value + '" name="rentang2_bayaran' + hid_val.value + '">';
             cell6.innerHTML = '<input type="date" class="form-control" name="deadline_modul' + hid_val.value + '">';
+            cell7.innerHTML = '<button type="button" class="btn btn-danger deletebtn" value=' + hid_val.value + '  id="delete' + hid_val.value + '" onclick=delFunction(' + hid_val_del.value + ')> <i class="bi bi-trash-fill"></i> </button>';
             hid_val.value = parseInt(hid_val.value) + 1;
-            cell7.innerHTML = "<button type='button' class='btn btn-danger' onclick='delFunction(" + hid_val.value + ")'> <i class='bi bi-trash-fill'></i> </button>";
-
+            hid_val_del.value = parseInt(hid_val_del.value) + 1;
             console.log("hidval: " + hid_val.value);
         } else {
-            var row = table.insertRow(1);
+            var row = table.insertRow(hid_val_del.value);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
@@ -36,11 +37,11 @@
             cell1.innerHTML = '<input type="text" class="form-control" name="nama_modul' + hid_val.value + '">';
             cell2.innerHTML = '<textarea class="form-control" name="desc_modul' + hid_val.value + '"></textarea>';
             cell3.innerHTML = '<input type="file" class="form-control" accept=".pdf,.jpg,.png" name="dokumenModul' + hid_val.value + '">';
-            cell4.innerHTML = '<input type="text" class="form-control" value="0" onkeyup="editTotal(' + hid_val.value + ')" id="bayaran' + hid_val.value + '" name="bayaran' + hid_val.value + '">';
+            cell4.innerHTML = '<input type="text" class="form-control" onkeyup="editTotal(' + hid_val.value + ')" id="bayaran' + hid_val.value + '" name="bayaran' + hid_val.value + '">';
             cell5.innerHTML = '<input type="date" class="form-control" name="deadline_modul' + hid_val.value + '">';
+            cell6.innerHTML = '<button type="button" class="btn btn-danger deletebtn" value=' + hid_val.value + ' onclick=delFunction(' + hid_val_del.value + ')> <i class="bi bi-trash-fill"></i> </button>';
             hid_val.value = parseInt(hid_val.value) + 1;
-            cell6.innerHTML = '<button type="button" class="btn btn-danger deletebtn" onclick="delFunction(' + hid_val.value + ')"> <i class="bi bi-trash-fill"></i> </button>';
-
+            hid_val_del.value = parseInt(hid_val_del.value) + 1;
             console.log("hidval: " + hid_val.value);
         }
     }, false);
@@ -48,10 +49,48 @@
 })();
 
 function delFunction(idx) {
+    var jenisProyek = document.getElementById("tipeProyek");
     var hid_val = document.getElementById('hid_val');
-    hid_val.value = parseInt(hid_val.value) - 1;
-    document.getElementById("modul_table").deleteRow(idx);
-    console.log("hidval: " + hid_val.value);
+    var totalBayar = 0;
+    var totalBayar1 = 0;
+    var totalBayar2 = 0;
+    var valDel = document.getElementById('hid_val_del');
+
+
+
+    valDel.value = parseInt(valDel.value) - 1;
+    if (jenisProyek.value == "magang") {
+        var table = document.getElementById('modul_table_Magang');
+        var rowCount = table.rows.length;
+        table.deleteRow(idx);
+        var rentangpembayaran1 = document.getElementById('rentangPembayaran1');
+        var rentangpembayaran2 = document.getElementById('rentangPembayaran2');
+        for (var i = 0; i < rowCount; i++) {
+            table.rows[i].cells[6].innerHTML = '<button type="button" class="btn btn-danger deletebtn" value=' + i + ' onclick=delFunction(' + i + ')> <i class="bi bi-trash-fill"></i> </button>';
+            var bayar1 = document.getElementById('rentang1_bayaran' + i);
+            var bayar2 = document.getElementById('rentang2_bayaran' + i);
+            if (bayar1 != null && bayar2 != null) {
+
+                totalBayar1 = totalBayar1 + parseInt(bayar1.value.replace(".", ""));
+                totalBayar2 = totalBayar2 + parseInt(bayar2.value.replace(".", ""));
+            }
+            rentangpembayaran1.value = totalBayar1;
+            rentangpembayaran2.value = totalBayar2;
+        }
+    } else {
+        var table = document.getElementById('modul_table');
+        var rowCount = table.rows.length;
+        table.deleteRow(idx);
+        var pembayaran = document.getElementById('totalPembayaran');
+        for (var i = 0; i < rowCount; i++) {
+            table.rows[i].cells[5].innerHTML = '<button type="button" class="btn btn-danger deletebtn" value=' + i + ' onclick=delFunction(' + i + ')> <i class="bi bi-trash-fill"></i> </button>';
+            var bayar = document.getElementById('bayaran' + i);
+            if (bayar != null) {
+                totalBayar = totalBayar + parseInt(bayar.value.replace(".", ""));
+            }
+            pembayaran.value = totalBayar;
+        }
+    }
 }
 
 function editTotal(idx) {
@@ -67,8 +106,11 @@ function editTotal(idx) {
         for (let index = 0; index < hidVal.value; index++) {
             var bayar1 = document.getElementById('rentang1_bayaran' + index);
             var bayar2 = document.getElementById('rentang2_bayaran' + index);
-            totalBayar1 = totalBayar1 + parseInt(bayar1.value.replace(".", ""));
-            totalBayar2 = totalBayar2 + parseInt(bayar2.value.replace(".", ""));
+            if (bayar1 != null && bayar2 != null) {
+
+                totalBayar1 = totalBayar1 + parseInt(bayar1.value.replace(".", ""));
+                totalBayar2 = totalBayar2 + parseInt(bayar2.value.replace(".", ""));
+            }
         }
         rentangpembayaran1.value = totalBayar1;
         rentangpembayaran2.value = totalBayar2;
@@ -79,7 +121,9 @@ function editTotal(idx) {
 
         for (let index = 0; index < hidVal.value; index++) {
             var bayar = document.getElementById('bayaran' + index);
-            totalBayar = totalBayar + parseInt(bayar.value.replace(".", ""));
+            if (bayar != null) {
+                totalBayar = totalBayar + parseInt(bayar.value.replace(".", ""));
+            }
         }
         pembayaran.value = totalBayar;
     }
@@ -87,7 +131,7 @@ function editTotal(idx) {
     console.log("totalBayar: " + totalBayar);
 }
 
-function editTotalMagang(idx){
+function editTotalMagang(idx) {
     var bayar1 = document.getElementById('rentang1_bayaran' + idx);
     var bayar2 = document.getElementById('rentang2_bayaran' + idx);
     var arr = [];

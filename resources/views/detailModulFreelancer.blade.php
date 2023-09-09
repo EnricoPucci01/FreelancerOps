@@ -36,11 +36,11 @@
     <hr>
         <label for="formFile" class="form-label">Masukan File Anda, Bila ada</label>
         <input class="form-control" type="file" name='fileModul' id="formFile">
-        <label for="desc" class="form-label mt-3" >Deskripsikan Progress Anda?</label>
+        <label for="desc" class="form-label mt-3" >Deskripsikan Progress Anda</label>
         <textarea class="form-control" aria-label="Deskripsikan dalam 1000 huruf" name="progDesc" maxlength="1000" id='desc'></textarea>
 
         <input type="checkbox" class="form-check-input ml-0" id="exampleCheck1" name='cb[]' value='finish' onclick="selectionChanged()">
-        <label class="form-check-label ml-3" for="exampleCheck1"  >Selesaikan Modul</label>
+        <label class="form-check-label ml-3 fw-bold" for="exampleCheck1">&nbsp;Modul Sudah Selesai</label>
 
         <center>
             <button type="submit" id='btSub' class="btn btn-success mt-3">Update Progress</button>

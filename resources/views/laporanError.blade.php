@@ -105,6 +105,8 @@
                     <div class="modal-body">
                         <h6>Masukan File Yang Sudah Selesai</h6>
                         <input type="file" class="form-control" name="fileSelesai">
+                        <h6>Deskripsi Perbaikan</h6>
+                        <textarea name="descPerbaikan" rows="4" cols="50"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Ya</button>

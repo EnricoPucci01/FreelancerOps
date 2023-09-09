@@ -9,7 +9,7 @@
 <center>
 @if (session()->get('role')=='freelancer')
 <div class="p-3 mb-2  mt-3 alert bg-warning fw-bold" role="alert" style="width: 70%;">
-    <a href={{url("/loadRecomend/Kategori")}} class="text-light">
+    <a href={{url("/loadRecomend/Kategori")}} class="text-dark">
         Lihat Rekomendasi Proyek Dari Kita <i class="bi bi-arrow-right"></i>
     </a>
 </div>
@@ -51,23 +51,23 @@
         @foreach ($listproyek as $proyek)
             <tr>
                 <div class="card mb-3" style="width: 30rem; margin-top: 20px; text-align:left">
-                    <div class="card-header">
+                    <img class="card-img-top" src={{ asset("/storage/dokumen/$proyek->dokumentasi_proyek") }} >
+
+                    <div class="card-body">
                         <h5 class="card-title">{{$proyek->nama_proyek}}</h5>
                         @foreach ($listkategoriJob as $katJob)
                             @if ($katJob['kategorijob_id']==$proyek->kategorijob_id)
                                 <h6 class="card-subtitle mb-2 text-muted">{{$katJob['judul_kategori']}}</h5>
                             @endif
                         @endforeach
-                    </div>
-                    <div class="card-body">
-
+                        <hr>
                         <p class="card-text">{{$proyek->desc_proyek}}</p>
 
                         @if ($proyek->tipe_proyek == 'normal')
-                        <p class="card-text">Bayaran: <b>{{$proyek->total_pembayaran}}</b></p>
+                        <p class="card-text">Bayaran: <b> @money($proyek->total_pembayaran, 'IDR', true)</b></p>
                         @endif
                         @if ($proyek->tipe_proyek == 'magang')
-                        <p class="card-text">Bayaran: <b>{{$proyek->range_bayaran1}}</b> - <b>{{$proyek->range_bayaran2}}</b></p>
+                        <p class="card-text">Bayaran: <b>@money($proyek->range_bayaran1, 'IDR', true)</b> - <b>@money($proyek->range_bayaran2, 'IDR', true)</b></p>
                         @endif
                         <hr>
                         <p class="card-text">Dimulai: <b>{{Carbon\Carbon::parse($proyek->start_proyek)->format("d-m-Y")}}</b>  Deadline: <b>{{Carbon\Carbon::parse($proyek->deadline)->format("d-m-Y")}}</b></p>

@@ -27,7 +27,7 @@
                   </tr>
                   <tr>
                       <td>
-                        <textarea type="text" name="desc_project" class="form-control"> </textarea>
+                        <textarea type="text" name="desc_project" class="form-control"></textarea>
                       </td>
                   </tr>
                   <tr>

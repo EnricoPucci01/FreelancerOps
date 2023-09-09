@@ -579,12 +579,13 @@ class xenditController extends Controller
         Xendit::setApiKey($this->privateKey);
         $getList = \Xendit\VirtualAccounts::getVABanks();
         $getList = json_decode(json_encode($getList), true);
-
+        $danaTersedia = customer::where('cust_id', Session::get('cust_id'))->first();
         $rekeningpenarikan = tambahRekening::where('cust_id', Session::get('cust_id'))->get();
         $rekeningpenarikan = json_decode(json_encode($rekeningpenarikan), true);
         return view('requestTarik', [
             'dataBank' => $getList,
-            'dataRekening' => $rekeningpenarikan
+            'dataRekening' => $rekeningpenarikan,
+            'saldo'=>$danaTersedia
         ]);
     }
 
