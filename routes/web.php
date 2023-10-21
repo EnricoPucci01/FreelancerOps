@@ -125,7 +125,7 @@ Route::middleware([cekLogin::class])->group(function () {
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         //Route Histori Transaksi
-        Route::get('/loadHistoriTransaksi', [profilController::class, 'loadHistoriTransaksi']);
+        Route::get('/loadHistoriTransaksi/{filterStatus}', [profilController::class, 'loadHistoriTransaksi']);
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

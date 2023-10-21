@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use App\Models\tambahRekening;
+use Carbon\Carbon;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Redirect;
 
@@ -437,21 +438,40 @@ class profilController extends Controller
         ]);
     }
 
-    public function loadHistoriTransaksi()
+    public function loadHistoriTransaksi(Request $request,$filterStatus)
     {
-        $dataPayment = payment::where('email', session()->get('active'))->get();
-        $dataPayment = json_decode(json_encode($dataPayment), true);
+        if($filterStatus == "noFilter"){
+            $dataPayment = payment::where('email', session()->get('active'))->get();
+            $dataPayment = json_decode(json_encode($dataPayment), true);
 
-        $dataFreelancer = customer::where('role', 'freelancer')->get();
-        $dataFreelancer = json_decode(json_encode($dataFreelancer), true);
+            $numberOfPayment = payment::where('email', session()->get('active'))->count();
+            //dd($dataPayment);
 
-        $dataModul = modul::get();
-        $dataModul = json_decode(json_encode($dataModul), true);
+            $dataFreelancer = customer::where('role', 'freelancer')->get();
+            $dataFreelancer = json_decode(json_encode($dataFreelancer), true);
+
+            $dataModul = modul::get();
+            $dataModul = json_decode(json_encode($dataModul), true);
+
+        }else{
+            $dataPayment = payment::where('email', session()->get('active'))->whereDate('created_at','<=',$request->input('toDate'))->whereDate('created_at','>=',$request->input('fromDate'))->get();
+            $dataPayment = json_decode(json_encode($dataPayment), true);
+
+
+            $numberOfPayment = payment::where('email', session()->get('active'))->whereDate('created_at','<=',$request->input('toDate'))->whereDate('created_at','>=',$request->input('fromDate'))->count();
+
+            $dataFreelancer = customer::where('role', 'freelancer')->get();
+            $dataFreelancer = json_decode(json_encode($dataFreelancer), true);
+
+            $dataModul = modul::get();
+            $dataModul = json_decode(json_encode($dataModul), true);
+        }
 
         return view('historiTransaksi', [
             'dataPayment' => $dataPayment,
             'dataFreelancer' => $dataFreelancer,
-            'dataModul' => $dataModul
+            'dataModul' => $dataModul,
+            'totalTrans'=>$numberOfPayment
         ]);
     }
 

@@ -25,6 +25,12 @@
                         Kontrak
                     </td>
                     <td>
+                        Proyek
+                    </td>
+                    <td>
+                        Modul
+                    </td>
+                    <td>
                         Status
                     </td>
                     <td>
@@ -42,6 +48,20 @@
                         <td>
                             {{$kontrak['kontrak_kerja']}}
 
+                        </td>
+                        <td>
+                            @foreach ($listProyek as $item)
+                            @if ($item['proyek_id'] == $kontrak['proyek_id'])
+                            {{$item['nama_proyek']}}
+                            @endif
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach ($listModul as $item)
+                            @if ($item['modul_id'] == $kontrak['modul_id'])
+                            {{$item['title']}}
+                            @endif
+                            @endforeach
                         </td>
                         <td>
                             <p class="text-primary fw-bold">{{$kontrak['status']}}</p>

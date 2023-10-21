@@ -62,7 +62,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a href={{ url('/loadHistoriTransaksi') }} class="btn btn-outline-dark mb-2 fw-bold"
+                                        <a href={{ url('/loadHistoriTransaksi/noFilter') }} class="btn btn-outline-dark mb-2 fw-bold"
                                             style="width: 100%">Histori
                                             Transaksi</a>
                                     </td>

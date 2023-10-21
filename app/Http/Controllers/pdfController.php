@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\customer;
+use App\Models\modul;
 use App\Models\modulDiambil;
 use App\Models\proyek;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
@@ -45,15 +46,24 @@ class pdfController extends Controller
     public function loadListKontrak($statusKontrak){
         if(Session::get('role')=='freelancer'){
             $listKontrak=modulDiambil::where('cust_id',Session::get('cust_id'))->where('status',$statusKontrak)->get();
+
+            $listModulKontrak = modul::get();
+
+            $listProyekKontrak = proyek::get();
         }else {
             $idProyek=proyek::where('cust_id',Session::get('cust_id'))->get('proyek_id');
             $idProyek=json_decode(json_encode($idProyek),true);
 
             $listKontrak=modulDiambil::whereIn('proyek_id',$idProyek)->where('status',$statusKontrak)->get();
+            $listModulKontrak = modul::get();
+
+            $listProyekKontrak = proyek::get();
         }
         return view('listKontrak',[
             'listKontrak'=>$listKontrak,
-            'status'=>$statusKontrak
+            'status'=>$statusKontrak,
+            'listModul'=>$listModulKontrak,
+            'listProyek'=>$listProyekKontrak
         ]);
     }
 
