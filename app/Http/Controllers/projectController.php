@@ -629,6 +629,8 @@ class projectController extends Controller
         $paymentStatus = payment::where('modul_id', $modulId)->first();
         // $paymentStatus = json_decode(json_encode($paymentStatus), true);
         // dd($paymentStatus);
+
+        $progress = progress::where('modul_id', $modulId)->orderBy('progress_id','desc')->first();
         if ($paymentStatus == null) {
             $status = "Tidak ada Pembayaran";
             $tooltip = "Data pembayaran tidak ditemukan.";
@@ -652,7 +654,8 @@ class projectController extends Controller
             'kontrak' => $kontrak,
             'custId' => $custId,
             'statusPay' => $status,
-            'tooltip' => $tooltip
+            'tooltip' => $tooltip,
+            'progress'=>$progress
         ]);
     }
 

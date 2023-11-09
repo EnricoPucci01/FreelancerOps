@@ -233,7 +233,7 @@ Route::middleware([cekLogin::class])->group(function () {
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         //Route histori
-        Route::get('/histori', [profilController::class, 'loadHistori']);
+        Route::get('/histori/{isFiltered}', [profilController::class, 'loadHistori']);
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

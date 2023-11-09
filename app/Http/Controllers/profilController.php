@@ -242,27 +242,49 @@ class profilController extends Controller
         }
     }
 
-    public function loadHistori()
+    public function loadHistori(Request $request, $isFiltered)
     {
-        $dataPayment = payment::where('cust_id', session()->get('cust_id'))->where('status', 'Completed')->get();
-        $dataPayment = json_decode(json_encode($dataPayment), true);
+        if($isFiltered == "noFilter"){
+            $dataPayment = payment::where('cust_id', session()->get('cust_id'))->where('status', 'Completed')->get();
+            $dataPayment = json_decode(json_encode($dataPayment), true);
 
-        $dataPenarikan = penarikan::withTrashed()->where('cust_id', session()->get('cust_id'))->get();
-        $dataPenarikan = json_decode(json_encode($dataPenarikan), true);
+            $dataPenarikan = penarikan::withTrashed()->where('cust_id', session()->get('cust_id'))->get();
+            $dataPenarikan = json_decode(json_encode($dataPenarikan), true);
 
-        $total = 0;
-        foreach ($dataPayment as $key) {
-            $total = $total + (int) $key['amount'];
-        }
-
-        $totalPenarikan = 0;
-        foreach ($dataPenarikan as $penarikan) {
-            if (!is_null($penarikan['tanggal_admit'])) {
-                $totalPenarikan = $totalPenarikan + (int) $penarikan['jumlah'];
+            $total = 0;
+            foreach ($dataPayment as $key) {
+                $total = $total + (int) $key['amount'];
             }
-        }
 
-        $sisaSaldo = (int)$total - (int)$totalPenarikan;
+            $totalPenarikan = 0;
+            foreach ($dataPenarikan as $penarikan) {
+                if (!is_null($penarikan['tanggal_admit'])) {
+                    $totalPenarikan = $totalPenarikan + (int) $penarikan['jumlah'];
+                }
+            }
+
+            $sisaSaldo = (int)$total - (int)$totalPenarikan;
+        }else{
+            $dataPayment = payment::where('cust_id', session()->get('cust_id'))->where('status', 'Completed')->whereDate('created_at','<=',$request->input('toDate'))->whereDate('created_at','>=',$request->input('fromDate'))->get();
+            $dataPayment = json_decode(json_encode($dataPayment), true);
+
+            $dataPenarikan = penarikan::withTrashed()->where('cust_id', session()->get('cust_id'))->whereDate('created_at','<=',$request->input('toDate'))->whereDate('created_at','>=',$request->input('fromDate'))->get();
+            $dataPenarikan = json_decode(json_encode($dataPenarikan), true);
+
+            $total = 0;
+            foreach ($dataPayment as $key) {
+                $total = $total + (int) $key['amount'];
+            }
+
+            $totalPenarikan = 0;
+            foreach ($dataPenarikan as $penarikan) {
+                if (!is_null($penarikan['tanggal_admit'])) {
+                    $totalPenarikan = $totalPenarikan + (int) $penarikan['jumlah'];
+                }
+            }
+
+            $sisaSaldo = (int)$total - (int)$totalPenarikan;
+        }
 
         return view('histori', [
             'dataPayment' => $dataPayment,

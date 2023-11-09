@@ -38,10 +38,42 @@
                 </tr>
             </table>
         </div>
+        <div class="card mt-2">
+            <form action="/histori/withFilter">
+                @csrf
+                @method('POST')
+                <div style="text-align: center;width: 100%;">
+                    <table style="display: inline-block; margin: 2px;">
+                        <tr>
+                            <td style="text-align: left; font-weight: bold;">
+                                <label for="birthdaytime">Filter Tanggal</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input class= "form-control" type="date" id="birthdaytime" name="fromDate">
+                            </td>
+                            <td>
+                                -
+                            </td>
+                            <td>
+                                <input class= "form-control"  type="date" id="birthdaytime" name="toDate">
+                            </td>
+                            <td>
+                                <button button type="submit" class="btn btn-warning form-control"><i class="bi bi-search"></i></button>
+                            </td>
+                            <td>
+                                <a href={{url("/histori/noFilter")}} class="btn btn-secondary form-control"><i class="bi bi-arrow-clockwise"></i></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </form>
+        </div>
 
         <div class="card mt-3 mb-3">
             <h5 class="card-header">Histori Saldo Masuk</h5>
-
 
             <div class="card-body" style="text-align: center">
                 <table class="table table-striped">

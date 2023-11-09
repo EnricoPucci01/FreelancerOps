@@ -101,7 +101,7 @@
                 <div class="rounded" style="padding-top:10px">
                     <a href={{ url('/loadRequestTarik') }} class="btn btn-outline-dark fw-bold"
                         style="width: 100%">Penarikan</a>
-                    <a href={{ url('/histori') }} class="btn btn-outline-dark fw-bold mt-2"
+                    <a href={{ url('/histori/noFilter') }} class="btn btn-outline-dark fw-bold mt-2"
                         style="width: 100%">Histori Saldo</a>
                 </div>
             </div>

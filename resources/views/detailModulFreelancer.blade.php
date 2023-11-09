@@ -30,9 +30,18 @@
                 <h5 class="text-start">Total Bayaran</h5>
                 <h6 class="text-start">@money($dataModul['bayaran'], 'IDR', true)</h6>
             @endif
+            <hr>
+            <h5 class="text-start">Progress Terakhir</h5>
+            @if ($progress == null)
+                Belum Ada Progress Diserahkan
+            @else
+                <b>{{$progress->upload_time}}</b> <br>
+                {{$progress->progress}}
+            @endif
 
             <hr>
-            <h5 class="text-start">Deadline: {{ $dataModul['end'] }}</h5>
+            <h5 class="text-start">Mulai: {{Carbon\Carbon::parse($dataModul['start'])->format('d-m-Y')}}</h5>
+            <h5 class="text-start">Deadline: {{Carbon\Carbon::parse($dataModul['end'])->format('d-m-Y')}}</h5>
             <hr>
             <label for="formFile" class="form-label">Masukan File Anda, Bila ada</label>
             <input class="form-control" type="file" name='fileModul' id="formFile">
