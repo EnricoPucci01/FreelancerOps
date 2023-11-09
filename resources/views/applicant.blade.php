@@ -98,7 +98,7 @@
                                             {{ $itemCV['applicant_desc'] }}
                                         </div>
                                         <hr>
-                                        <a href="{{ url("/previewcv/$itemCV[cv]") }}" class="btn btn-primary">Lihat CV</a>
+                                        <a href={{url("/storage/cv/$itemCV[cv]")}} download class="btn btn-success">Lihat CV</a>
                                         <a href="{{ url("/loadProfilApplicant/c/$itemCV[cust_id]/$itemCV[applicant_id]/$modulId/$proyekId") }}"
                                             class="btn btn-primary">Lihat Profil</a>
                                         <button class="btn btn-primary"

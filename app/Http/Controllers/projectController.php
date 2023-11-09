@@ -434,7 +434,7 @@ class projectController extends Controller
             if (!empty($request->file("filecv"))) {
                 DB::beginTransaction();
                 //var_dump($request->input('checkambil'));
-                $date = date('Y-m-d H_i_s');
+                $date = date('Y-m-d_H_i_s');
                 $filename = Session::get("name") . $date . "." . $request->file("filecv")->getClientOriginalExtension();
                 $path = $request->file('filecv')->storeAs("cv", $filename, 'public');
 
@@ -593,12 +593,22 @@ class projectController extends Controller
         $listProgress = json_decode(json_encode($listProgress), true);
         //$modulFreelancer = json_decode(json_encode($modulFreelancer), true);
         //dd($listProgress);
+
+        $listPayment = payment::whereIn("modul_id", $modulDiambil)->get('modul_id');
+        $listPayment = json_decode(json_encode($listPayment), true);
+
+        $listId = array();
+        foreach($listPayment as $pay){
+            array_push($listId, $pay['modul_id']);
+        }
+        //dd($listId);
         return view('listProyekFreelancer', [
             'listproyek' => $modulFreelancer,
             'custId' => Session::get("cust_id"),
             'listProgress' => $listProgress,
             'allproyek'=>$proyek,
             'checkedRb'=>$selected,
+            "listPayment"=>$listId
         ]);
     }
 
@@ -617,7 +627,8 @@ class projectController extends Controller
         $kontrak = json_decode(json_encode($kontrak), true);
 
         $paymentStatus = payment::where('modul_id', $modulId)->first();
-
+        // $paymentStatus = json_decode(json_encode($paymentStatus), true);
+        // dd($paymentStatus);
         if ($paymentStatus == null) {
             $status = "Tidak ada Pembayaran";
             $tooltip = "Data pembayaran tidak ditemukan.";
@@ -634,7 +645,7 @@ class projectController extends Controller
             $status = "Pembayaran Ditutup";
             $tooltip = "Penutupan pembayaran disetujui dan pembayaran telah di teruskan kepada freelancer.";
         }
-        //dd($kontrak);
+
         return view('detailModulFreelancer', [
             'dataModul' => $dataModul,
             'dataProyek' => $dataProyek,
@@ -1188,5 +1199,32 @@ class projectController extends Controller
             'modul' => $modul,
             'listPembayaran' => $listPembayaran
         ]);
+    }
+
+    public function nonAktifkanProyek($proyekId,$status){
+
+        DB::beginTransaction();
+        $proyek= proyek::where("proyek_id",$proyekId)->first();
+        $proyek->project_active = $status;
+        $proyek->save();
+
+
+        if($proyek){
+            DB::commit();
+            if($status == "true"){
+                $msg = "Proyek Berhasil Di Aktifkan";
+            }else{
+                $msg = "Proyek Berhasil Di Non-Aktifkan";
+            }
+            return redirect()->back()->with("success", $msg);
+        }else{
+            DB::rollBack();
+            if($status == "true"){
+                $msg = "Proyek Gagal Di Aktifkan";
+            }else{
+                $msg = "Proyek Gagal Di Non-Aktifkan";
+            }
+            return redirect()->back()->with("error", $msg);
+        }
     }
 }

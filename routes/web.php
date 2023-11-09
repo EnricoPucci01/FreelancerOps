@@ -99,10 +99,11 @@ Route::middleware([cekLogin::class])->group(function () {
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     //========================================================================================================================
-    //ROUTE UNTUK USER CLIENT
+    //ROUTE CLIENT
     //========================================================================================================================
     Route::middleware([cekCLient::class])->group(function () {
 
+        Route::get('/nonaktifkanProyek/{proyekId}/{status}', [projectController::class, 'nonAktifkanProyek']);
         //Dashboard client
         Route::get('/dashboardClient', [loginController::class, 'loadDashboardClient']);
         //-----------------------------------------------------------------------------

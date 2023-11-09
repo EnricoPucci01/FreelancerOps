@@ -114,7 +114,8 @@
 
                                             {{-- -------------------------------------------------MODAL----------------------------------------------- --}}
                                             {{-- Modal Post --}}
-                                            <div class="modal fade" tabindex="-1"aria-hidden="true" id="modalPost{{$proyek->modul_id}}" style="text-align: left">
+                                            <div class="modal fade" tabindex="-1"aria-hidden="true"
+                                                id="modalPost{{ $proyek->nama_proyek }}" style="text-align: left">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <form
                                                         action="{{ url("/updateProgress/$proyek[modul_id]/$proj[tipe_proyek]") }}"
@@ -124,7 +125,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="exampleModalToggleLabel2">
-                                                                    Selesaikan Modul {{$proyek->title}}</h5>
+                                                                    Selesaikan Modul {{ $proyek->title }}</h5>
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
@@ -138,14 +139,15 @@
                                                                 <textarea class="form-control" aria-label="Deskripsikan dalam 1000 huruf" name="progDesc" maxlength="1000"
                                                                     id='desc'></textarea>
                                                                 <input type="checkbox" class="form-check-input ml-0"
-                                                                    id="exampleCheck1" name='cb[]' value='finish' checked
-                                                                    disabled>
+                                                                    id="exampleCheck1" name='cb[]' value='finish'
+                                                                    checked>
                                                                 <label class="form-check-label ml-3 fw-bold"
                                                                     for="exampleCheck1">&nbsp;Modul Sudah
                                                                     Selesai</label>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="submit" class="btn btn-primary">Selesaikan</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Selesaikan</button>
                                                             </div>
                                                         </div>
                                                     </form>
@@ -181,9 +183,15 @@
                                     class="btn btn-primary btn-sm">Lihat Detail</a>
                                 <a href={{ url("/loadError/$proyek[modul_id]") }} class="btn btn-warning btn-sm">Lihat
                                     Laporan Error</a>
-                                <button type="button" data-bs-target="#modalPost{{$proyek->modul_id}}" data-bs-toggle="modal"
-                                    class="btn btn-success btn-sm">Selesaikan Modul
+                                @if (in_array($proyek->modul_id, $listPayment))
+                                    <button type="button" data-bs-target="#modalPost{{ $proyek->modul_id }}"
+                                        data-bs-toggle="modal" disabled class="btn btn-success btn-sm">Selesaikan Modul
+                                    </button>
+                                @else
+                                <button type="button" data-bs-target="#modalPost{{ $proyek->modul_id }}"
+                                    data-bs-toggle="modal" class="btn btn-success btn-sm">Selesaikan Modul
                                 </button>
+                                @endif
                             </div>
                         </div>
                     </tr>
