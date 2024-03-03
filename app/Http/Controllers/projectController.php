@@ -40,6 +40,7 @@ class projectController extends Controller
 
     public function loadPostModul(Request $request)
     {
+        $date = Carbon::now()->format('dmYHis');
         if ($request->input('tipe_proyek') == "magang") {
             $formValidate = $request->validate([
                 'name_project' => 'required|max:255',
@@ -80,11 +81,11 @@ class projectController extends Controller
             Session::put('kategori_project', $request->input("kategori_project"));
             Session::put('deadline', $request->input("deadline"));
             Session::put('tanggal_mulai', $request->input("tanggal_mulai"));
-
+            Session::put('kota', $request->input('kota'));
             $filename = "";
 
             if (!empty($request->file("dokumen"))) {
-                $filename = "Dokumen" . str_replace(' ', '', $request->input("name_project")) . "." . $request->file("dokumen")->getClientOriginalExtension();
+                $filename = "Dokumen" . str_replace(' ', '', $request->input("name_project"))."$date" . "." . $request->file("dokumen")->getClientOriginalExtension();
                 $path = $request->file('dokumen')->storeAs("dokumen", $filename, 'public');
                 if ($path != "" && $path != null) {
                     $image = $request->file('dokumen'); //image file from frontend
@@ -116,14 +117,15 @@ class projectController extends Controller
         $modulArr = [];
         $modulMagangArr = [];
         $hid_val = $request->input('hid_val');
+        $date = Carbon::now()->format("dmYHis");
         if (Session::get('tipe_proyek') == 'magang') {
 
             for ($i = 0; $i < (int)$hid_val; $i++) {
-                if ($request->hasAny("nama_modul" . $i . "")){
+                if ($request->hasAny("nama_modul" . $i . "")) {
                     $filename = "";
 
                     if (!empty($request->file("dokumenModul" . $i . ""))) {
-                        $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                        $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . ""))."$date". "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
                         $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
                         if ($path != "" && $path != null) {
                             $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
@@ -157,7 +159,7 @@ class projectController extends Controller
                     $filename = "";
 
                     if (!empty($request->file("dokumenModul" . $i . ""))) {
-                        $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+                        $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . ""))."$date" . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
                         $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
                         if ($path != "" && $path != null) {
                             $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
@@ -197,6 +199,7 @@ class projectController extends Controller
             $postProject->nama_proyek = Session::get('name_project');
             $postProject->desc_proyek = Session::get('desc_project');
             $postProject->dokumentasi_proyek = Session::get('dokumen_name');
+            $postProject->daerah_proyek = Session::get('kota');
             if (Session::get('tipe_proyek') == "magang") {
                 $postProject->total_pembayaran = "0";
                 $postProject->range_bayaran1 = $request->input('rentang_pembayaran1');
@@ -292,6 +295,14 @@ class projectController extends Controller
         ]);
     }
 
+    public function backSyncProject(){
+        $listProject = proyek::where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->get();
+        $listProject=json_decode(json_encode($listProject),true);
+
+
+        return $listProject;
+    }
+
     public function loadBrowseProjectClient()
     {
         $listProject = proyek::where('cust_id', Session::get('cust_id'))->paginate(5);
@@ -326,15 +337,31 @@ class projectController extends Controller
         $listKategori = kategori::get();
         $listKategori = json_decode(json_encode($listKategori), true);
 
+        $proyekFilterKategori = [];
+
+        $key=$request->input('searchProyek');
+
+        $query = proyek::
+        where('tipe_proyek', $request->tipe_proyek)->
+        where('nama_proyek', 'LIKE', "%{$key}%")->
+        where('start_proyek', ">=", Carbon::now())->
+        where('project_active', 'true');
+
         if ($request->input('kategori_browse') != NULL) {
+
             $proyekFilterKategori = tag::whereIn('kategori_id', $request->kategori_browse)->get('proyek_id');
             $proyekFilterKategori = json_decode(json_encode($proyekFilterKategori), true);
 
-            $listProyek = proyek::whereIn('proyek_id', $proyekFilterKategori)
-                ->where('tipe_proyek', $request->tipe_proyek)->where('nama_proyek', 'like', '%' . $request->searchProyek . '%')->where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->paginate(5)->appends($request->all());
-        } else {
-            $listProyek = proyek::where('tipe_proyek', $request->tipe_proyek)->where('nama_proyek', 'like', '%' . $request->searchProyek . '%')->where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->paginate(5)->appends($request->all());
+            $query->whereIn('proyek_id', $proyekFilterKategori);
         }
+        if ($request->input('kota') != null) {
+            $query->where("daerah_proyek", $request->input("kota"));
+        }
+
+        $listProyek = $query->paginate(5)->appends($request->all());
+
+        //$listProyek = json_decode(json_encode($listProyek), true);
+        //dd($request->input('kota'));
 
         return view('browseproject', [
             'listkategori' => $listKategori,
@@ -517,9 +544,10 @@ class projectController extends Controller
     public function terimaApplicant($custId, $modulId, $proyekId, $applicantId)
     {
         $dateTime = date('Y-m-d');
+        $date= Carbon::now()->format('dmYHis');
         $nama = customer::where('cust_id', $custId)->first();
         $modul = modul::where('modul_id', $modulId)->first();
-        $nama_kontrak = 'Modul ' . $modul->title . '.pdf';
+        $nama_kontrak = 'Modul ' . $modul->title . $date .'.pdf';
         DB::beginTransaction();
         $insertTakenModul = new modulDiambil();
         $insertTakenModul->cust_id = $custId;
@@ -557,6 +585,7 @@ class projectController extends Controller
                 if ($upModul && $newNotif) {
                     DB::commit();
                     Session::put('idProyek', $proyekId);
+                    Session::put('idModulDiambil', $modulId);
                     return Redirect::to("/generatePDF/$custId/$nama_kontrak");
                 }
             } else {
@@ -566,21 +595,21 @@ class projectController extends Controller
         }
     }
 
-    public function loadListProyekFreelancer(Request $request,$mode)
+    public function loadListProyekFreelancer(Request $request, $mode)
     {
         $proyek = proyek::get();
         $modulDiambil = modulDiambil::where('cust_id', Session::get("cust_id"))->where('status', "!=", 'dibatalkan')->get('modul_id');
         $modulDiambil = json_decode(json_encode($modulDiambil), true);
-        $selected="";
+        $selected = "";
         if ($mode == "sort") {
-            if($request->input("rbsort") == "tanggalDeadline"){
+            if ($request->input("rbsort") == "tanggalDeadline") {
                 $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('end', 'ASC')->paginate(5);
-            }else if($request->input("rbsort")=="tanggalMulai"){
+            } else if ($request->input("rbsort") == "tanggalMulai") {
                 $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->orderBy('start', 'ASC')->paginate(5);
             }
-            $selected=$request->input("rbsort");
-        } else if($mode == "default"){
-            $selected="reset";
+            $selected = $request->input("rbsort");
+        } else if ($mode == "default") {
+            $selected = "reset";
             $modulFreelancer = modul::whereIn('modul_id', $modulDiambil)->paginate(5);
         }
 
@@ -598,7 +627,7 @@ class projectController extends Controller
         $listPayment = json_decode(json_encode($listPayment), true);
 
         $listId = array();
-        foreach($listPayment as $pay){
+        foreach ($listPayment as $pay) {
             array_push($listId, $pay['modul_id']);
         }
         //dd($listId);
@@ -606,9 +635,9 @@ class projectController extends Controller
             'listproyek' => $modulFreelancer,
             'custId' => Session::get("cust_id"),
             'listProgress' => $listProgress,
-            'allproyek'=>$proyek,
-            'checkedRb'=>$selected,
-            "listPayment"=>$listId
+            'allproyek' => $proyek,
+            'checkedRb' => $selected,
+            "listPayment" => $listId
         ]);
     }
 
@@ -630,7 +659,7 @@ class projectController extends Controller
         // $paymentStatus = json_decode(json_encode($paymentStatus), true);
         // dd($paymentStatus);
 
-        $progress = progress::where('modul_id', $modulId)->orderBy('progress_id','desc')->first();
+        $progress = progress::where('modul_id', $modulId)->orderBy('progress_id', 'desc')->first();
         if ($paymentStatus == null) {
             $status = "Tidak ada Pembayaran";
             $tooltip = "Data pembayaran tidak ditemukan.";
@@ -655,7 +684,7 @@ class projectController extends Controller
             'custId' => $custId,
             'statusPay' => $status,
             'tooltip' => $tooltip,
-            'progress'=>$progress
+            'progress' => $progress
         ]);
     }
 
@@ -888,23 +917,28 @@ class projectController extends Controller
     public function reportError(Request $request, $modulId, $freelancerId, $progressId)
     {
         DB::beginTransaction();
-
+        $filename = "";
         $date = date('Y-m-d H:i:s');
-        $filename = date('YmdHis') . '_' . $modulId . "." . $request->file("fileError")->getClientOriginalExtension();
-        $path = $request->file('fileError')->storeAs("error", $filename, 'public');
-        $progressDate = progress::find($progressId);
+        if (!empty($request->file("fileError"))) {
 
-        if ($path != "" && $path != null) {
-            $image = $request->file('fileError'); //image file from frontend
-            $firebase_storage_path = 'error/';
-            $localfolder = public_path('firebase-temp-uploads') . '/';
-            if ($image->move($localfolder, $filename)) {
-                $uploadedfile = fopen($localfolder . $filename, 'r');
-                app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
-                //will remove from local laravel folder
-                unlink($localfolder . $filename);
+            $filename = date('YmdHis') . '_' . $modulId . "." . $request->file("fileError")->getClientOriginalExtension();
+            $path = $request->file('fileError')->storeAs("error", $filename, 'public');
+
+            if ($path != "" && $path != null) {
+                $image = $request->file('fileError'); //image file from frontend
+                $firebase_storage_path = 'error/';
+                $localfolder = public_path('firebase-temp-uploads') . '/';
+                if ($image->move($localfolder, $filename)) {
+                    $uploadedfile = fopen($localfolder . $filename, 'r');
+                    app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+                    //will remove from local laravel folder
+                    unlink($localfolder . $filename);
+                }
             }
         }
+        $progressDate = progress::find($progressId);
+
+
 
         $insertError = new error_report();
         $insertError->modul_id = $modulId;
@@ -968,9 +1002,13 @@ class projectController extends Controller
     public function selesaikanError(Request $request, $modulId)
     {
         $UploadDate = date('d/m/Y H:i:s');
-        $date = date('Y-m-dH_i_s');
-        $filename = $modulId . $date . "." . $request->file("fileSelesai")->getClientOriginalExtension();
-        $path = $request->file('fileSelesai')->storeAs("progress", $filename, 'public');
+        $filename = '';
+        if (!empty($request->file("fileSelesai"))) {
+
+            $date = date('Y-m-dH_i_s');
+            $filename = $modulId . $date . "." . $request->file("fileSelesai")->getClientOriginalExtension();
+            $path = $request->file('fileSelesai')->storeAs("progress", $filename, 'public');
+        }
 
         foreach ($request->input('checkError') as $errorSelesai) {
             DB::beginTransaction();
@@ -981,7 +1019,7 @@ class projectController extends Controller
             $progress->modul_id = $modulId;
             $progress->upload_time = $UploadDate;
             $progress->file_dir = $filename;
-            $progress->progress = "[Perbaikan Untuk Laporan Error Tanggal " . $error['report_time']."] ".$request->input("descPerbaikan");
+            $progress->progress = "[Perbaikan Untuk Laporan Error Tanggal " . $error['report_time'] . "] " . $request->input("descPerbaikan");
             $progress->status = 'Error Fix';
             $progress->save();
 
@@ -1034,6 +1072,7 @@ class projectController extends Controller
 
                 $listKategori = kategori::get();
                 $listKategori = json_decode(json_encode($listKategori), true);
+                //dd();
                 return view('RekomendasiProyek', [
                     'recomendProyek' => $recommendedProyek,
                     'listkategori' => $listKategori,
@@ -1204,27 +1243,28 @@ class projectController extends Controller
         ]);
     }
 
-    public function nonAktifkanProyek($proyekId,$status){
+    public function nonAktifkanProyek($proyekId, $status)
+    {
 
         DB::beginTransaction();
-        $proyek= proyek::where("proyek_id",$proyekId)->first();
+        $proyek = proyek::where("proyek_id", $proyekId)->first();
         $proyek->project_active = $status;
         $proyek->save();
 
 
-        if($proyek){
+        if ($proyek) {
             DB::commit();
-            if($status == "true"){
+            if ($status == "true") {
                 $msg = "Proyek Berhasil Di Aktifkan";
-            }else{
+            } else {
                 $msg = "Proyek Berhasil Di Non-Aktifkan";
             }
             return redirect()->back()->with("success", $msg);
-        }else{
+        } else {
             DB::rollBack();
-            if($status == "true"){
+            if ($status == "true") {
                 $msg = "Proyek Gagal Di Aktifkan";
-            }else{
+            } else {
                 $msg = "Proyek Gagal Di Non-Aktifkan";
             }
             return redirect()->back()->with("error", $msg);

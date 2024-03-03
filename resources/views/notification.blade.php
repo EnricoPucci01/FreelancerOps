@@ -13,7 +13,6 @@
                             <td>
                                 {{$notif->message}}
                             </td>
-
                         </tr>
                         @endforeach
 

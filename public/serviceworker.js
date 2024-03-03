@@ -1,6 +1,8 @@
 // const { define } = require("laravel-mix");
 
 var staticCacheName = "pwa-v" + new Date().getTime();
+var projectLength = 0;
+const broadcast = new BroadcastChannel('sw-update-channel');
 var filesToCache = [
     '/offline',
     '/css/app.css',
@@ -44,6 +46,8 @@ self.addEventListener("fetch", event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
+                // console.log("URL: ", event.request.url);
+                // console.log("RESP: ", response);
                 return response || fetch(event.request);
             })
             .catch(() => {
@@ -54,29 +58,46 @@ self.addEventListener("fetch", event => {
 
 self.addEventListener('sync', event => {
     if (event.tag == 'sync') {
-        console.log('Backsync');
         event.waitUntil(badge());
     }
 });
 
+self.addEventListener('message', (event) => {
+    let notification = event.data;
+
+    fetch("/backSyncProject").then((response) => response.json()).then((responseJSON) => {
+        // /console.log(JSON.stringify(responseJSON));
+        var obj = JSON.parse(JSON.stringify(responseJSON));
+        var length = obj.length;
+        if(length>projectLength){
+            projectLength = length;
+            self.registration.showNotification(
+                notification.title,
+                notification.options
+            ).catch((error) => {
+                console.log(error);
+            });
+        }
+        console.log(projectLength);
+    });
+
+});
+
 function badge() {
-    console.log("I am here");
     fetch("/setAppBadge")
         .then((response) => response.json())
         .then((responseJSON) => {
-            console.log(responseJSON);
-            console.log('onload');
             isSupported('v2', responseJSON);
             isSupported('v1', responseJSON);
             isSupported('v3', responseJSON);
-
         });
+
 }
 
+
+
 function setBadge(badgeVal) {
-    console.log('set');
     if (navigator.setAppBadge) {
-        console.log('setBadge');
         navigator.setAppBadge(badgeVal);
     } else if (navigator.setExperimentalAppBadge) {
         navigator.setExperimentalAppBadge(badgeVal);
@@ -96,6 +117,5 @@ function clearBadge() {
 }
 
 function isSupported(kind, badgeVal) {
-    console.log('supported', kind);
     setBadge(badgeVal);
 }

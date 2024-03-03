@@ -81,18 +81,18 @@
                 <a href="{{ url('/dashboardfreelancer') }}">Dashboard</a>
                 <a href={{ url('/browse') }}>Browse</a>
                 <a href={{ url('/listProyekFreelancer/default') }}>My Projects</a>
-                <a href={{url('/loadNotif/'.session()->get('cust_id'))}} class="notification">
+                <a href={{ url('/loadNotif/' . session()->get('cust_id')) }} class="notification">
                     <i class="bi bi-bell-fill"></i>
-                    <span class="badge">{{ session()->get('notif') }}</span>
+                    <span class="badge" id="notifBadge">{{ session()->get('notif') }}</span>
                 </a>
             @endif
             @if (session()->get('role') == 'client')
                 <a href="{{ url('/dashboardClient') }}">Dashboard</a>
                 {{-- <a href="{{url("/browse")}}">Browse</a> --}}
                 <a href="{{ url('/postproject') }}">Post Project</a>
-                <a href={{url('/loadNotif/'.session()->get('cust_id'))}} class="notification">
+                <a href={{ url('/loadNotif/' . session()->get('cust_id')) }} class="notification">
                     <i class="bi bi-bell-fill"></i>
-                    <span class="badge">{{ session()->get('notif') }}</span>
+                    <span class="badge" id="notifBadge">{{ session()->get('notif') }}</span>
                 </a>
             @endif
             @if (session()->get('role') == 'admin')
@@ -144,18 +144,36 @@
                 </div>
             @endif
         @endif
-
     </nav>
+
     <script>
+        function run() {
+            var badge=document.getElementById("notifBadge");
+            // Creating Our XMLHttpRequest object
+            let xhr = new XMLHttpRequest();
+
+            // Making our connection
+            let url = '/setAppBadge';
+            xhr.open("GET", url, true);
+
+            // function execute after request is successful
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("AJAX BADGE: ",this.responseText);
+                    badge.innerHTML=this.responseText;
+                }
+            }
+            // Sending our request
+            xhr.send();
+        }
         (function() {
-
+            //registerPeriodicSync();
             setInterval(() => {
-                console.log("Interval");
+                run();
                 navigator.serviceWorker.ready.then(function(sw) {
-                return sw.sync.register('sync');
-            });
-            }, 10000);
-
+                    return sw.sync.register('sync').then(function(e) {});
+                });
+            }, 5000);
         })();
     </script>
     <script>

@@ -25,9 +25,9 @@
     <div class="card" style="width: 30rem;" >
         <div class="card-body">
           <h3 class="card-title">Login</h5>
-          <form action={{url("/loginops")}} method="GET">
+          <form action={{url("/loginops")}} method="POST">
             @csrf
-            @method('GET')
+            @method('POST')
               <table>
                   <tr>
                     <td>

@@ -115,7 +115,7 @@
                                             {{-- -------------------------------------------------MODAL----------------------------------------------- --}}
                                             {{-- Modal Post --}}
                                             <div class="modal fade" tabindex="-1"aria-hidden="true"
-                                                id="modalPost{{ $proyek->nama_proyek }}" style="text-align: left">
+                                                id="modalPost{{ $proyek->modul_id }}" style="text-align: left">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <form
                                                         action="{{ url("/updateProgress/$proyek[modul_id]/$proj[tipe_proyek]") }}"

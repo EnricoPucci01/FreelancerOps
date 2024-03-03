@@ -17,6 +17,7 @@ use App\Http\Controllers\xenditController;
 use App\Http\Middleware\cekCLient;
 use App\Http\Middleware\cekFreelancer;
 use App\Http\Middleware\cekLogin;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +44,21 @@ Route::get('/', function () {
 Route::get('/freelanceropsadminlogin', function () {
     return view('loginAdmin');
 });
+
+Route::get('/loadKontrakPDF',function(){
+
+    return view("kontrak", [
+        "date"=>Carbon::now()->format("d-m-Y H:i"),
+        "freelancer"=>"Enrico",
+        "sign"=>"Maxmillan",
+        "proyek"=>"proyek 1",
+        "modul"=>"modul 1",
+        "tanggalMulai"=>Carbon::now(),
+        "deskripsi"=>"membuat web interaktif untuk landing page perusahaan",
+        "deadline"=>Carbon::now(),
+        "total_pembayaran"=>10000000
+    ]);
+});
 Route::get('/create-symlink', function () {
     symlink(storage_path('/app/public'), public_path('storage'));
     echo "Symlink Created. Thanks";
@@ -51,7 +67,7 @@ Route::get('/offline', function () {
 
     return view('vendor/laravelpwa/offline');
 });
-Route::get('/loginops', [loginController::class, 'login']);
+Route::post('/loginops', [loginController::class, 'login']);
 Route::get('/loginopsAdmin', [loginController::class, 'loginAdmin']);
 Route::get('/register', [registerController::class, 'loadRegister']);
 
@@ -86,6 +102,7 @@ Route::middleware([cekLogin::class])->group(function () {
     Route::get('/clearNotif/{idCust}', [profilController::class, 'clearNotif']);
     Route::get('/cariproyek', [projectController::class, 'cariProyek']);
     Route::get('/browse', [projectController::class, 'loadBrowseProject']);
+    Route::get('/backSyncProject', [projectController::class, 'backSyncProject']);
     Route::get('/autoRejectApplicant', [loginController::class, 'autoRejectApplicant']);
     Route::get('/batalFreelancerAdmin/{modulTakenId}/{pembatalanId}/{mode}',[adminController::class,'batalkanFreelancerAdmin']);
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

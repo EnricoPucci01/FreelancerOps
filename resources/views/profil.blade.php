@@ -23,7 +23,7 @@
                     <tr>
                         <td style='width: 1%; white-space: nowrap;'>
                             @if (empty($dataProfil['foto']))
-                                <img src='...' style="width: 200px; height: 240px;" class="img-thumbnail">
+                                <img src={{asset("storage/profilePic/profileHolder.jpg")}} style="width: 200px; height: 240px;" class="img-thumbnail">
                             @else
                                 <img src={{ asset("storage/profilePic/$dataProfil[foto]") }}
                                     style="width: 200px; height: 240px;" class="img-thumbnail">

@@ -1,31 +1,77 @@
-@extends('header')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
+<head>
+    @laravelPWA
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
     <style tyle="text/css">
-         body { text-align: center; padding: 150px; }
-        h1 { font-size: 50px; }
-        body { font: 20px Helvetica, sans-serif; color: #333; }
-        article { display: block; text-align: left; width: 650px; margin: 0 auto; }
-        a { color: #dc8100; text-decoration: none; }
-        a:hover { color: #333; text-decoration: none; }
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: relative;
+            margin: 0;
+            padding: 0;
+            background: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+        }
+
+        .wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            align-items: center;
+            justify-content: center;
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        h1 {
+            color: #e7880d;
+            font-family: arial;
+            font-weight: bold;
+            font-size: 50px;
+            letter-spacing: 5px;
+            line-height: 1rem;
+            text-shadow: 0 0 3px #e7880d;
+        }
+
+        h4 {
+            color: #f1f1f1;
+            font-family: arial;
+            font-weight: 300;
+            font-size: 16px;
+        }
     </style>
-    <meta content="JavaScript" name="vs_defaultClientScript">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+
+
+    <title>FreelancerOPS</title>
+
+    <script>
+        (function() {
+            setInterval(() => {
+                if (navigator.onLine) {
+                    location.reload(true);
+                }
+            }, 5000);
+
+        })();
+    </script>
 </head>
+
 <body>
-    <article>
-        <h1>Oops, Anda sedang offline!</h1>
-        <div>
-        <p>Koneksi internet anda sedang buruk atau anda sedang tidak terhubung pada internet.</p>
-        <p>Silahkan periksa kembali koneksi internet anda atau tunggu sesaat.</p>
-        </div>
-    </article>
+    <div class="wrapper">
+        <h1 id="status">OFFLINE</h1>
+        <h4 id="message" style="font-weight: bold">Anda sedang tidak terhubung pada internet. Silahkan tunggu hingga
+            anda terhubung kembali pada internet dan web akan memuat ulang secara otomatis</h4>
+
+    </div>
 </body>
+
 </html>
-
-
-@endsection

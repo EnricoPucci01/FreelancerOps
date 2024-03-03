@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 //use App\Http\Controllers\DB;
 
 use App\Models\customer;
+use App\Models\profil;
 use App\Models\skill;
 use App\Models\spesialisasi;
 use Illuminate\Http\Request;
@@ -95,9 +96,22 @@ class registerController extends Controller
                         $insertSpesialisasi->save();
                     }
                 }
+                $id = DB::select($query)[0]->cust_id;
+                $editProf = new profil();
+                $editProf->cust_id = $id;
+                $editProf->pekerjaan = "";
+                $editProf->deskripsi_diri = "";
+                $editProf->foto = "";
+                $editProf->save();
 
-                DB::commit();
-                return \redirect("/")->with("success", "Account registration success");
+                if($editProf){
+                    DB::commit();
+                    return \redirect("/")->with("success", "Account registration success");
+                }else{
+                    DB::rollBack();
+                    return \redirect("/register")->with("error", "Account registration failed!");
+                }
+
             }else{
                 DB::rollBack();
                 return \redirect("/register")->with("error", "Account registration failed!");

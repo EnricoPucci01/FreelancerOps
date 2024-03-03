@@ -243,8 +243,22 @@ class chatController extends Controller
         }
 
         $recieverPic = profil::where('cust_id', $room['reciever_id'])->first();
-        $senderPic = profil::where('cust_id', $room['sender_id'])->first();
 
+        if($recieverPic == null){
+            $profil = new profil();
+            $profil->cust_id = $room['reciever_id'];
+            $profil->save();
+        }
+        $recieverPic = profil::where('cust_id', $room['reciever_id'])->first();
+
+        $senderPic = profil::where('cust_id', $room['sender_id'])->first();
+        if($senderPic == null){
+            $profil = new profil();
+            $profil->cust_id = $room['sender_id'];
+            $profil->save();
+        }
+        $senderPic = profil::where('cust_id', $room['sender_id'])->first();
+        //dd($recieverPic);
         return view('chatbox', [
             'chat' => $chat,
             'roomId' => $roomId,

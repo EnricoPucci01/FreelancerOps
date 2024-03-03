@@ -164,6 +164,18 @@ class xenditController extends Controller
                 $proyekId = Session::get('pembayaranProyek');
                 $custId = Session::get('cust_id');
                 if (Session::get('paymentType') == 'normal') {
+                    if(Session::has('paymentType'))
+                    {
+                        Session::forget('paymentType');
+                    }
+                    if(Session::has('pembayaranProyek'))
+                    {
+                        Session::forget('pembayaranProyek');
+                    }
+                    if(Session::has('idCustFreelancer'))
+                    {
+                        Session::forget('idCustFreelancer');
+                    }
                     return redirect("/loadDetailProyekClient/$proyekId/c")->with('success', 'Pembayaran Berhasil!');
                 } else {
                     $updateProyek = proyek::where('proyek_id', Session::get('pembayaranProyek'))->first();
@@ -174,6 +186,20 @@ class xenditController extends Controller
                         $updateSaldoAdmin->saldo = $updateSaldoAdmin->saldo + 100000;
                         $updateSaldoAdmin->save();
                         DB::commit();
+                        if(Session::has('paymentType'))
+                        {
+                            Session::forget('paymentType');
+                        }
+                        if(Session::has('pembayaranProyek'))
+                        {
+                            Session::forget('pembayaranProyek');
+                        }
+                        if(Session::has('idCustFreelancer'))
+                        {
+                            Session::forget('idCustFreelancer');
+                        }
+
+
                         return redirect("/loadDetailProyekClient/$proyekId/c")->with('success', 'Pembayaran Berhasil!');
                     } else {
                         DB::rollback();

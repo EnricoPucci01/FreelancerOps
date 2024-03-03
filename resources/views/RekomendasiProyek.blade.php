@@ -35,10 +35,10 @@
                                     <hr>
                                     <p class="card-text">{{ $proyek->desc_proyek }}</p>
 
-                                    @if ($dataproyek['tipe_proyek'] == 'magang')
-                                        @money($modul['bayaran_min'], 'IDR', true) - @money($modul['bayaran_max'], 'IDR', true)
+                                    @if ($proyek->tipe_proyek == 'magang')
+                                        @money($proyek->range_bayaran1, 'IDR', true) - @money($proyek->range_bayaran2, 'IDR', true)
                                     @else
-                                        @money($modul['bayaran'], 'IDR', true)
+                                        @money($proyek->total_pembayaran, 'IDR', true)
                                     @endif
                                     <hr>
                                     <p class="card-text">Dimulai:

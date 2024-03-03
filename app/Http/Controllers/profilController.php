@@ -533,6 +533,7 @@ class profilController extends Controller
             'dataNotif' => $getNotif
         ]);
     }
+
     public function clearNotif($idCust)
     {
         $getNotif = notificationModel::where('customer_id', $idCust)->where('status', "S")->update(["status" => "R"]);
