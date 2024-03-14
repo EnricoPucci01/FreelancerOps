@@ -282,6 +282,7 @@
                     setInterval(() => {
                         navigator.serviceWorker.ready.then(function(sw) {
                             let notification = {
+                                action: 'notification'
                                 title: 'Project Baru',
                                 options: {
                                     body: 'Silahkan muat ulang halaman untuk melihat!'

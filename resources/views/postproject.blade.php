@@ -64,7 +64,8 @@
                         </tr>
                         <tr>
                             <td>
-                                <select class="selectpicker form-control" data-style="btn-default btn-lg" data-live-search="true" name="kota" id="Kota">
+                                <select class="selectpicker form-control" data-style="btn-default btn-lg"
+                                    data-live-search="true" name="kota" id="Kota">
                                     <option disabled selected value> Kota </option>
                                     <option value="Banda Aceh">Banda Aceh</option>
                                     <option value="Langsa">Langsa</option>
@@ -254,7 +255,7 @@
                     Tekan <b>Ya</b> untuk melanjutkan proses pendaftaran proyek.
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Ya</button>
+                    <button type="submit" id="submitPostProyek" class="btn btn-primary">Ya</button>
                 </div>
             </div>
         </div>

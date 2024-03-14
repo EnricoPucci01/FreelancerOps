@@ -106,7 +106,7 @@ class registerController extends Controller
 
                 if($editProf){
                     DB::commit();
-                    return \redirect("/")->with("success", "Account registration success");
+                    return \redirect("/loginMember")->with("success", "Account registration success");
                 }else{
                     DB::rollBack();
                     return \redirect("/register")->with("error", "Account registration failed!");

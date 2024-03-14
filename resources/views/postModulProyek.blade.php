@@ -1,7 +1,8 @@
 @extends('header')
 @section('content')
     <center>
-        <form action={{ url('/submitpostproject') }} method="POST" style="padding: 10px" enctype="multipart/form-data">
+        {{-- action={{ url('/submitpostproject') }}  method="POST" --}}
+        <form action={{ url('/submitpostproject') }} id="formModul" style="padding: 10px" method="POST" enctype="multipart/form-data">
             @csrf
             @method('POST')
             <input type='hidden' name="tipeProyek" id="tipeProyek" value={{ session()->get('tipe_proyek') }}>
@@ -47,10 +48,12 @@
                         </tr>
                         <tr>
                             <td>
-                                Deadline: <p class="fw-bold"> {{Carbon\Carbon::parse(session()->get('deadline'))->format('d-m-Y') }}</p>
+                                Deadline: <p class="fw-bold">
+                                    {{ Carbon\Carbon::parse(session()->get('deadline'))->format('d-m-Y') }}</p>
                             </td>
                             <td>
-                                Mulai: <p class="fw-bold"> {{ Carbon\Carbon::parse(session()->get('tanggal_mulai'))->format('d-m-Y') }}</p>
+                                Mulai: <p class="fw-bold">
+                                    {{ Carbon\Carbon::parse(session()->get('tanggal_mulai'))->format('d-m-Y') }}</p>
                             </td>
                         </tr>
                         @if (session()->get('tipe_proyek') == 'normal')
@@ -97,8 +100,8 @@
 
                     <button type='button' class='btn btn-primary form-control mt-2' id="btnok">Tambah Modul</button>
                     @if (session()->get('tipe_proyek') == 'normal')
-                        <table  class="table table-striped mt-2">
-                            <thead class='thead-light' >
+                        <table class="table table-striped mt-2">
+                            <thead class='thead-light'>
                                 <tr>
                                     <td>
                                         Nama
@@ -160,7 +163,7 @@
                     @endif
 
                     <button type="button" class="btn btn-primary form-control" style="margin-top: 20px"
-                        data-bs-target="#modalPost" data-bs-toggle="modal">Lanjut</button>
+                        data-bs-target="#modalPost" id="submitPostProyek" data-bs-toggle="modal">Lanjut</button>
                 </div>
             </div>
             {{-- -------------------------------------------------MODAL----------------------------------------------- --}}
@@ -183,7 +186,6 @@
                     </div>
                 </div>
             </div>
-            {{-- --------------------------------------------------------------------------------------------------- --}}
         </form>
 
 

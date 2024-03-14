@@ -2,13 +2,11 @@
 <html lang="en">
     <link rel="stylesheet" href="<?php echo asset('cssStyle.css')?>" type="text/css">
   <head>
-    @laravelPWA
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Freelancing Web">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel=“icon” href=”favicon.ico” type=“image/x-icon”>
-
     <link rel=“shortcut icon” href=“favicon.ico” type=“image/x-icon”>
     <center>
         <p class="mainLogo mt-3">
@@ -17,6 +15,7 @@
              </a>
          </p>
     </center>
+
   </head>
   <body class="bodyLogin">
 

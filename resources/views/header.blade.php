@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="<?php echo asset('cssStyle.css'); ?>" type="text/css">
 
 <head>
-    @laravelPWA
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <link rel="manifest" href="manifest.json" />
@@ -148,7 +147,7 @@
 
     <script>
         function run() {
-            var badge=document.getElementById("notifBadge");
+            var badge = document.getElementById("notifBadge");
             // Creating Our XMLHttpRequest object
             let xhr = new XMLHttpRequest();
 
@@ -159,8 +158,11 @@
             // function execute after request is successful
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    console.log("AJAX BADGE: ",this.responseText);
-                    badge.innerHTML=this.responseText;
+                    console.log("AJAX BADGE: ", this.responseText);
+                    if(!isNaN(this.responseText)){
+                        badge.innerHTML = this.responseText;
+                    }
+
                 }
             }
             // Sending our request
@@ -168,50 +170,52 @@
         }
         (function() {
             //registerPeriodicSync();
+            // navigator.serviceWorker.ready.then(function(sw) {
+            //     return sw.sync.register('sync');
+            // });
             setInterval(() => {
                 run();
-                navigator.serviceWorker.ready.then(function(sw) {
-                    return sw.sync.register('sync').then(function(e) {});
-                });
             }, 5000);
         })();
     </script>
-    <script>
-        // import {
-        //     initializeApp
-        // } from "/firebase/app";
-        // import {
-        //     getAnalytics
-        // } from "/firebase/analytics";
-        // import {
-        //     getDatabase
-        // } from "/firebase/database";
-        // import {
-        //     getMessaging
-        // } from "/firebase/messaging/sw";
-        // Import the functions you need from the SDKs you need
+ <script>
+    // import {
+    //     initializeApp
+    // } from "/firebase/app";
+    // import {
+    //     getAnalytics
+    // } from "/firebase/analytics";
+    // import {
+    //     getDatabase
+    // } from "/firebase/database";
+    // import {
+    //     getMessaging
+    // } from "/firebase/messaging/sw";
+    // Import the functions you need from the SDKs you need
 
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
 
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-            apiKey: "AIzaSyDdoggNAdJ08JuC-Ms6CaNtuZ2IWM-cDxg",
-            authDomain: "freelancerops.firebaseapp.com",
-            projectId: "freelancerops",
-            storageBucket: "freelancerops.appspot.com",
-            messagingSenderId: "661837197172",
-            appId: "1:661837197172:web:14284773ee4107fa330621",
-            measurementId: "G-P9S7LLCT2J"
-        };
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyDdoggNAdJ08JuC-Ms6CaNtuZ2IWM-cDxg",
+        authDomain: "freelancerops.firebaseapp.com",
+        projectId: "freelancerops",
+        storageBucket: "freelancerops.appspot.com",
+        messagingSenderId: "661837197172",
+        appId: "1:661837197172:web:14284773ee4107fa330621",
+        measurementId: "G-P9S7LLCT2J"
+    };
 
-        // Initialize Firebase
-        //const app = initializeApp(firebaseConfig);
-        firebase.initializeApp(firebaseConfig);
-        //const analytics = getAnalytics(app);
-        //const messaging = getMessaging(app);
-    </script>
+    // Initialize Firebase
+    //const app = initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
+    //const analytics = getAnalytics(app);
+    //const messaging = getMessaging(app);
+</script>
+
+
 </head>
 
 <body class="bg-light" style="padding:10px">
@@ -230,6 +234,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
     @yield('script')
+
+
 </body>
 
 </html>

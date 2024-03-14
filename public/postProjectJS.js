@@ -16,7 +16,7 @@
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
             var cell7 = row.insertCell(6);
-            cell1.innerHTML = '<input type="text" class="form-control" name="nama_modul' + hid_val.value + '">';
+            cell1.innerHTML = '<input type="text" class="form-control" id="nama_modul' + hid_val.value + '" name="nama_modul' + hid_val.value + '">';
             cell2.innerHTML = '<textarea class="form-control" name="desc_modul' + hid_val.value + '"></textarea>';
             cell3.innerHTML = '<input type="file" class="form-control" accept=".png,.jpg,.pdf" name="dokumenModul' + hid_val.value + '">';
             cell4.innerHTML = '<input type="text" class="form-control" onkeyup="editTotal(' + hid_val.value + ')" id="rentang1_bayaran' + hid_val.value + '" name="rentang1_bayaran' + hid_val.value + '">';
@@ -34,11 +34,11 @@
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
-            cell1.innerHTML = '<input type="text" class="form-control" name="nama_modul' + hid_val.value + '">';
-            cell2.innerHTML = '<textarea class="form-control" name="desc_modul' + hid_val.value + '"></textarea>';
-            cell3.innerHTML = '<input type="file" class="form-control" accept=".pdf,.jpg,.png" name="dokumenModul' + hid_val.value + '">';
+            cell1.innerHTML = '<input type="text" class="form-control" id="nama_modul' + hid_val.value + '" name="nama_modul' + hid_val.value + '">';
+            cell2.innerHTML = '<textarea class="form-control"  id="desc_modul' + hid_val.value + '" name="desc_modul' + hid_val.value + '"></textarea>';
+            cell3.innerHTML = '<input type="file" class="form-control" accept=".pdf,.jpg,.png" id="dokumenModul' + hid_val.value + '" name="dokumenModul' + hid_val.value + '">';
             cell4.innerHTML = '<input type="text" class="form-control" onkeyup="editTotal(' + hid_val.value + ')" id="bayaran' + hid_val.value + '" name="bayaran' + hid_val.value + '">';
-            cell5.innerHTML = '<input type="date" class="form-control" name="deadline_modul' + hid_val.value + '">';
+            cell5.innerHTML = '<input type="date" class="form-control" id="deadline_modul' + hid_val.value + '" name="deadline_modul' + hid_val.value + '">';
             cell6.innerHTML = '<button type="button" class="btn btn-danger deletebtn" value=' + hid_val.value + ' onclick=delFunction(' + hid_val_del.value + ')> <i class="bi bi-trash-fill"></i> </button>';
             hid_val.value = parseInt(hid_val.value) + 1;
             hid_val_del.value = parseInt(hid_val_del.value) + 1;

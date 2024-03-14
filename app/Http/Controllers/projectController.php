@@ -85,7 +85,7 @@ class projectController extends Controller
             $filename = "";
 
             if (!empty($request->file("dokumen"))) {
-                $filename = "Dokumen" . str_replace(' ', '', $request->input("name_project"))."$date" . "." . $request->file("dokumen")->getClientOriginalExtension();
+                $filename = "Dokumen" . str_replace(' ', '', $request->input("name_project")) . "$date" . "." . $request->file("dokumen")->getClientOriginalExtension();
                 $path = $request->file('dokumen')->storeAs("dokumen", $filename, 'public');
                 if ($path != "" && $path != null) {
                     $image = $request->file('dokumen'); //image file from frontend
@@ -272,6 +272,170 @@ class projectController extends Controller
         }
     }
 
+    // public function submitPostProject(Request $request)
+    // {
+    //     // $deadlineModulIsGreater = false;
+    //     // $modulArr = [];
+    //     // $modulMagangArr = [];
+    //     // $length=0;
+    //     // //$hid_val = $request->input('hid_val');
+    //     // $date = Carbon::now()->format("dmYHis");
+    //     // if(is_countable($request)){
+    //     //     $length =  count($request);
+    //     // }
+    //     // if (Session::get('tipe_proyek') == 'magang') {
+
+    //     //     for ($i = 0; $i < $length; $i++) {
+    //     //         $filename = "";
+
+    //     //         if (!empty($request[$i]['dokumenModul'])) {
+    //     //             $filename = "DokumenModul" . str_replace(' ', '', $request[0]['judul']) . "$date" . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+    //     //             $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
+    //     //             if ($path != "" && $path != null) {
+    //     //                 $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
+    //     //                 $firebase_storage_path = 'dokumenModul/';
+    //     //                 $localfolder = public_path('firebase-temp-uploads') . '/';
+    //     //                 if ($image->move($localfolder, $filename)) {
+    //     //                     $uploadedfile = fopen($localfolder . $filename, 'r');
+    //     //                     app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+    //     //                     //will remove from local laravel folder
+    //     //                     unlink($localfolder . $filename);
+    //     //                 }
+    //     //             }
+    //     //         }
+    //     //         $modulTemp = array(
+    //     //             "nama_modul" => $request->input("nama_modul" . $i . ""),
+    //     //             "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
+    //     //             "dokumen_modul" => $filename,
+    //     //             "bayaran1" => $request->input("rentang1_bayaran" . $i . ""),
+    //     //             "bayaran2" => $request->input("rentang2_bayaran" . $i . ""),
+    //     //             "deadline_modul" => $request->input("deadline_modul" . $i . ""),
+    //     //         );
+    //     //         array_push($modulMagangArr, $modulTemp);
+    //     //         if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
+    //     //             $deadlineModulIsGreater = true;
+    //     //         }
+    //     //     }
+    //     // } else {
+    //     //     for ($i = 0; $i < $length; $i++) {
+    //     //         if ($request->hasAny("nama_modul" . $i . "")) {
+    //     //             $filename = "";
+
+    //     //             if (!empty($request->file("dokumenModul" . $i . ""))) {
+    //     //                 $filename = "DokumenModul" . str_replace(' ', '', $request->input("nama_modul" . $i . "")) . "$date" . "." . $request->file("dokumenModul" . $i . "")->getClientOriginalExtension();
+    //     //                 $path = $request->file("dokumenModul" . $i . "")->storeAs("dokumenModul", $filename, 'public');
+    //     //                 if ($path != "" && $path != null) {
+    //     //                     $image = $request->file("dokumenModul" . $i . ""); //image file from frontend
+    //     //                     $firebase_storage_path = 'dokumenModul/';
+    //     //                     $localfolder = public_path('firebase-temp-uploads') . '/';
+    //     //                     if ($image->move($localfolder, $filename)) {
+    //     //                         $uploadedfile = fopen($localfolder . $filename, 'r');
+    //     //                         app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $filename]);
+    //     //                         //will remove from local laravel folder
+    //     //                         unlink($localfolder . $filename);
+    //     //                     }
+    //     //                 }
+    //     //             }
+    //     //             $modulTemp = array(
+    //     //                 "nama_modul" => $request->input("nama_modul" . $i . ""),
+    //     //                 "deskripsi_modul" => $request->input("desc_modul" . $i . ""),
+    //     //                 "dokumen_modul" => $filename,
+    //     //                 "bayaran" => $request->input("bayaran" . $i . ""),
+    //     //                 "deadline_modul" => $request->input("deadline_modul" . $i . ""),
+    //     //             );
+    //     //             array_push($modulArr, $modulTemp);
+
+    //     //             if (Carbon::parse($request->input("deadline_modul" . $i . ""))->gt(Carbon::parse(Session::get('deadline')))) {
+    //     //                 $deadlineModulIsGreater = true;
+    //     //             }
+    //     //         }
+    //     //     }
+    //     //     //dd($modulArr);
+    //     // }
+    //     // if ($deadlineModulIsGreater) {
+    //     //     return \redirect("/postproject")->with('error', 'Deadline modul tidak dapat melebihi deadline proyek');
+    //     //     //return Redirect::back()->with('error','Deadline modul tidak dapat melebihi deadline proyek');
+    //     // } else {
+    //     //     DB::beginTransaction();
+    //     //     $postProject = new proyek();
+    //     //     $postProject->cust_id = Session::get('cust_id');
+    //     //     $postProject->nama_proyek = Session::get('name_project');
+    //     //     $postProject->desc_proyek = Session::get('desc_project');
+    //     //     $postProject->dokumentasi_proyek = Session::get('dokumen_name');
+    //     //     $postProject->daerah_proyek = Session::get('kota');
+    //     //     if (Session::get('tipe_proyek') == "magang") {
+    //     //         $postProject->total_pembayaran = "0";
+    //     //         $postProject->range_bayaran1 = $request->input('rentang_pembayaran1');
+    //     //         $postProject->range_bayaran2 = $request->input('rentang_pembayaran2');
+    //     //         $postProject->project_active = 'false';
+    //     //     } else {
+    //     //         $postProject->total_pembayaran = $request->input('total_pembayaran');
+    //     //         $postProject->project_active = 'true';
+    //     //     }
+
+    //     //     $postProject->tipe_proyek = Session::get('tipe_proyek');
+    //     //     $postProject->start_proyek = Session::get('tanggal_mulai');
+    //     //     $postProject->deadline = Session::get('deadline');
+    //     //     $postProject->kategorijob_id = Session::get('kategorijob_project');
+    //     //     $postProject->save();
+
+    //     //     if ($postProject) {
+    //     //         $query = "SELECT proyek_id FROM proyek order by proyek_id desc limit 1";
+    //     //         $id = DB::select($query)[0]->proyek_id;
+
+    //     //         foreach (Session::get('kategori_project') as $kategoriId) {
+    //     //             $tag = new tag();
+    //     //             $tag->kategori_id = $kategoriId;
+    //     //             $tag->proyek_id = $id;
+    //     //             $tag->save();
+    //     //         }
+
+    //     //         if (Session::get('tipe_proyek') == "magang") {
+    //     //             //dd($modulMagangArr);
+    //     //             foreach ($modulMagangArr as $itemArr) {
+    //     //                 $modul = new modul();
+    //     //                 $modul->proyek_id = $id;
+    //     //                 $modul->title = $itemArr['nama_modul'];
+    //     //                 $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
+    //     //                 $modul->dokumentasi = $itemArr['dokumen_modul'];
+    //     //                 $modul->bayaran = 0;
+    //     //                 $modul->bayaran_min = $itemArr['bayaran1'];
+    //     //                 $modul->bayaran_max = $itemArr['bayaran2'];
+    //     //                 $modul->status = 'not taken';
+    //     //                 $modul->end = $itemArr['deadline_modul'];
+    //     //                 $modul->save();
+    //     //             }
+    //     //         }
+    //     //         if (Session::get('tipe_proyek') == "normal") {
+
+    //     //             foreach ($modulArr as $itemArr) {
+    //     //                 $modul = new modul();
+    //     //                 $modul->proyek_id = $id;
+    //     //                 $modul->title = $itemArr['nama_modul'];
+    //     //                 $modul->deskripsi_modul = $itemArr['deskripsi_modul'];
+    //     //                 $modul->dokumentasi = $itemArr['dokumen_modul'];
+    //     //                 $modul->bayaran = $itemArr['bayaran'];
+    //     //                 $modul->bayaran_min = 0;
+    //     //                 $modul->bayaran_max = 0;
+    //     //                 $modul->status = 'not taken';
+    //     //                 $modul->end = $itemArr['deadline_modul'];
+    //     //                 $modul->save();
+    //     //             }
+    //     //         }
+
+    //     //         if ($modul && $tag && $postProject) {
+    //     //             DB::commit();
+    //     //             if (Session::get('tipe_proyek') == "magang") {
+    //     //                 return \redirect("/generatevaPostMagang/$id");
+    //     //             } else {
+    //     //                 return \redirect("/postproject")->with('success', 'proyek anda telah berhasil di publikasikan');
+    //     //             }
+    //     //         }
+    //     //     }
+    //     // }
+    //     return $request['dokumenModul0'];
+    // }
+
     public function loadBrowseProject()
     {
         $listProject = proyek::where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->paginate(5);
@@ -295,9 +459,10 @@ class projectController extends Controller
         ]);
     }
 
-    public function backSyncProject(){
+    public function backSyncProject()
+    {
         $listProject = proyek::where('start_proyek', ">=", Carbon::now())->where('project_active', 'true')->get();
-        $listProject=json_decode(json_encode($listProject),true);
+        $listProject = json_decode(json_encode($listProject), true);
 
 
         return $listProject;
@@ -339,13 +504,9 @@ class projectController extends Controller
 
         $proyekFilterKategori = [];
 
-        $key=$request->input('searchProyek');
+        $key = $request->input('searchProyek');
 
-        $query = proyek::
-        where('tipe_proyek', $request->tipe_proyek)->
-        where('nama_proyek', 'LIKE', "%{$key}%")->
-        where('start_proyek', ">=", Carbon::now())->
-        where('project_active', 'true');
+        $query = proyek::where('tipe_proyek', $request->tipe_proyek)->where('nama_proyek', 'LIKE', "%{$key}%")->where('start_proyek', ">=", Carbon::now())->where('project_active', 'true');
 
         if ($request->input('kategori_browse') != NULL) {
 
@@ -544,10 +705,10 @@ class projectController extends Controller
     public function terimaApplicant($custId, $modulId, $proyekId, $applicantId)
     {
         $dateTime = date('Y-m-d');
-        $date= Carbon::now()->format('dmYHis');
+        $date = Carbon::now()->format('dmYHis');
         $nama = customer::where('cust_id', $custId)->first();
         $modul = modul::where('modul_id', $modulId)->first();
-        $nama_kontrak = 'Modul ' . $modul->title . $date .'.pdf';
+        $nama_kontrak = 'Modul ' . $modul->title . $date . '.pdf';
         DB::beginTransaction();
         $insertTakenModul = new modulDiambil();
         $insertTakenModul->cust_id = $custId;

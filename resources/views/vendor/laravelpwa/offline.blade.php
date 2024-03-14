@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    @laravelPWA
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -55,18 +54,29 @@
 
     <script>
         (function() {
-            setInterval(() => {
-                if (navigator.onLine) {
-                    location.reload(true);
-                }
-            }, 5000);
+            navigator.serviceWorker.ready.then(function(sw) {
+                    return sw.sync.register('offlineSync');
+                });
+            // window.onload = function() {
 
+            // }
+            const channel = new BroadcastChannel('sw-messages');
+            channel.addEventListener('message', event => {
+                if(event.data.title == "online"){
+
+                    console.log('Received', event.data);
+                    location.reload();
+                }
+            });
         })();
     </script>
 </head>
 
 <body>
     <div class="wrapper">
+        <img src="{{ URL::to('images/LogoTA.png') }}" alt="FreelancerOPS Web Logo" width="350"
+        height="80">
+
         <h1 id="status">OFFLINE</h1>
         <h4 id="message" style="font-weight: bold">Anda sedang tidak terhubung pada internet. Silahkan tunggu hingga
             anda terhubung kembali pada internet dan web akan memuat ulang secara otomatis</h4>

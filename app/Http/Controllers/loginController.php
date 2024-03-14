@@ -34,7 +34,7 @@ class loginController extends Controller
         $loginResult = customer::where("email", $request->input('email_login'))->withTrashed()->get();
         $dataLogin = json_decode(json_encode($loginResult), true);
         if (count($loginResult) <= 0) {
-            return \redirect("/")->with('error', 'Email anda tidak terdaftar');
+            return \redirect("/loginMember")->with('error', 'Email anda tidak terdaftar');
         } else {
             if ($dataLogin[0]['deleted_at'] == null) {
                 $dataLogin = json_decode(json_encode($loginResult), true);
@@ -55,13 +55,13 @@ class loginController extends Controller
 
                         return \redirect('/dashboardClient');
                     }else{
-                        return \redirect("/")->with('error', 'Akun ini tidak terdaftar');
+                        return \redirect("/loginMember")->with('error', 'Akun ini tidak terdaftar');
                     }
                 } else {
-                    return \redirect("/")->with('error', 'Password anda tidak terdaftar');
+                    return \redirect("/loginMember")->with('error', 'Password anda tidak terdaftar');
                 }
             } else {
-                return \redirect("/")->with('error', 'Akun Anda Tidak Aktif Harap Hubungi Admin Untuk Mengaktifkan Akun Kembali');
+                return \redirect("/loginMember")->with('error', 'Akun Anda Tidak Aktif Harap Hubungi Admin Untuk Mengaktifkan Akun Kembali');
             }
         }
     }
@@ -85,7 +85,7 @@ class loginController extends Controller
         $dataLogin = json_decode(json_encode($loginResult), true);
         if ($dataLogin[0]['deleted_at'] == null) {
             if (count($loginResult) <= 0) {
-                return \redirect("/")->with('error', 'Email anda tidak terdaftar');
+                return \redirect("/freelanceropsadminlogin")->with('error', 'Email anda tidak terdaftar');
             } else {
                 $dataLogin = json_decode(json_encode($loginResult), true);
                 if (Hash::check($request->input('pass_login'), $dataLogin[0]['password'])) {
@@ -100,11 +100,11 @@ class loginController extends Controller
                         return \redirect('/autoClosePayment');
                     }
                 } else {
-                    return \redirect("/")->with('error', 'Password anda tidak terdaftar');
+                    return \redirect("/freelanceropsadminlogin")->with('error', 'Password anda tidak terdaftar');
                 }
             }
         } else {
-            return \redirect("/")->with('error', 'Akun Anda Tidak Aktif Harap Hubungi Admin Untuk Mengaktifkan Akun Kembali');
+            return \redirect("/freelanceropsadminlogin")->with('error', 'Akun Anda Tidak Aktif Harap Hubungi Admin Untuk Mengaktifkan Akun Kembali');
         }
     }
     public function loadDashboardFreelancer()
@@ -138,6 +138,7 @@ class loginController extends Controller
     {
         $getNotif = notificationModel::where('customer_id', FacadesSession::get('cust_id'))->where("status", "S")->count();
         FacadesSession::put("notif", $getNotif);
+        //dd($getNotif);
         return $getNotif;
     }
 
@@ -175,7 +176,7 @@ class loginController extends Controller
     public function logout()
     {
         FacadesSession::flush();
-        return redirect('/');
+        return redirect('/loginMember');
     }
 
     public function autoRejectApplicant()

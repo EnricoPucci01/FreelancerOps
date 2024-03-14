@@ -145,7 +145,7 @@
                     </tr>
                   </table>
                   <button type="submit" class="btn btn-primary" style="margin-top: 10px">Daftar</button>
-                  <a href="{{url('/')}}" class="btn btn-danger" style="margin-top: 10px">Kembali</a>
+                  <a href="{{url('/loginMember')}}" class="btn btn-danger" style="margin-top: 10px">Kembali</a>
               </form>
             </div>
           </div>

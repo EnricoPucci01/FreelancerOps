@@ -38,13 +38,19 @@ use Illuminate\Support\Facades\Route;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Route tanpa perlu pengecekan middleware
-Route::get('/', function () {
+Route::get("/", function(){
+    return view("landing");
+});
+
+Route::get('/loginMember', function () {
     return view('login');
 });
 Route::get('/freelanceropsadminlogin', function () {
     return view('loginAdmin');
 });
-
+Route::get('/header', function(){
+    return view('header');
+});
 Route::get('/loadKontrakPDF',function(){
 
     return view("kontrak", [
@@ -64,7 +70,6 @@ Route::get('/create-symlink', function () {
     echo "Symlink Created. Thanks";
 });
 Route::get('/offline', function () {
-
     return view('vendor/laravelpwa/offline');
 });
 Route::post('/loginops', [loginController::class, 'login']);
