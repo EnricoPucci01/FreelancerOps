@@ -16,7 +16,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" name="name_project" class="form-control">
+                                <input type="text" name="name_project" maxlength="55" class="form-control">
                             </td>
                         </tr>
                         <!-- deskripsi -->
@@ -27,7 +27,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <textarea type="text" name="desc_project" class="form-control"></textarea>
+                                <textarea type="text" name="desc_project" minlength="20"  maxlength="1000" class="form-control"></textarea>
                             </td>
                         </tr>
                         <tr>

@@ -58,15 +58,15 @@ class registerController extends Controller
             Session::put('pendidikan',$request->input('pendidikan_register'));
         }
         $email=$request->input("email_register");
-        //return redirect("/registerUser");
-        return redirect("sendEmail/$email/verify");
+        return redirect("/registerUser");
+        //return redirect("sendEmail/$email/verify");
     }
 
     public function registerUser(Request $request){
 
         DB::beginTransaction();
-        $cekEmail=customer::where("email","=",$request->input('email_register'))->count();
-
+        //$cekEmail=customer::where("email","=",$request->input('email_register'))->count();
+        $cekEmail=customer::where("email","=",Session::get('email_register'))->count();
         if($cekEmail<=0){
             $insertNewCust= new customer;
             $insertNewCust->nama=Session::get('name_register');
@@ -86,8 +86,8 @@ class registerController extends Controller
             $insertNewCust->save();
 
             if($insertNewCust){
+                $query = "SELECT cust_id FROM customer order by cust_id desc limit 1";
                 if(Session::get('role_register')=="freelancer"){
-                    $query = "SELECT cust_id FROM customer order by cust_id desc limit 1";
                     $id = DB::select($query)[0]->cust_id;
                     foreach(Session::get('skill_register') as $idSKill){
                         $insertSpesialisasi= new spesialisasi;

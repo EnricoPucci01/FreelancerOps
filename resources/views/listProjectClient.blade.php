@@ -76,8 +76,16 @@
                                     @endif
                                 @endforeach
                                 <p class="card-subtitle mb-2 " style="text-align: left">
-                                    Total Bayaran: <b>
-                                        @money($proyek->total_pembayaran,'IDR',true)</b>
+                                    Total Bayaran:
+                                    @if($proyek->tipe_proyek == 'normal')
+                                    <b>
+                                        @money($proyek->total_pembayaran,'IDR',true)
+                                    </b>
+                                    @else
+                                    <b>
+                                        @money($proyek->range_bayaran1,'IDR',true) - @money($proyek->range_bayaran2,'IDR',true)
+                                    </b>
+                                    @endif
                                 </p>
                             </div>
                             <div style="float: right">

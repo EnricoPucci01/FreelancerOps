@@ -16,8 +16,8 @@
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
             var cell7 = row.insertCell(6);
-            cell1.innerHTML = '<input type="text" class="form-control" id="nama_modul' + hid_val.value + '" name="nama_modul' + hid_val.value + '">';
-            cell2.innerHTML = '<textarea class="form-control" name="desc_modul' + hid_val.value + '"></textarea>';
+            cell1.innerHTML = '<input type="text" maxlength="50" class="form-control" id="nama_modul' + hid_val.value + '" name="nama_modul' + hid_val.value + '">';
+            cell2.innerHTML = '<textarea class="form-control" minlength="20"  maxlength="1000" name="desc_modul' + hid_val.value + '"></textarea>';
             cell3.innerHTML = '<input type="file" class="form-control" accept=".png,.jpg,.pdf" name="dokumenModul' + hid_val.value + '">';
             cell4.innerHTML = '<input type="text" class="form-control" onkeyup="editTotal(' + hid_val.value + ')" id="rentang1_bayaran' + hid_val.value + '" name="rentang1_bayaran' + hid_val.value + '">';
             cell5.innerHTML = '<input type="text" class="form-control" onkeyup="editTotal(' + hid_val.value + ')" id="rentang2_bayaran' + hid_val.value + '" name="rentang2_bayaran' + hid_val.value + '">';

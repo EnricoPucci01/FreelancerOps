@@ -107,7 +107,8 @@
                     <!-- Skill-->
                     <tr>
                         <td>
-                            Pilih ke-ahlian anda
+                            <label for="skill_register[]">Pilih ke-ahlian anda</label>
+
                         </td>
                     </tr>
                     <tr>
